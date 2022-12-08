@@ -6,11 +6,58 @@ frameworkVersion: '3'
 provider:
   name: aws
   runtime: nodejs14.x
+  httpApi:
+    payload: '2.0'
+    authorizers:
+        customAuthorizer:
+          type: request
+          functionName: verifytoken
+    # cors:
+    #   allowedHeaders:
+    #     - Content-Type
+    #     - Authorization
+      # allowedMethods:
+      #   - GET
+      #   - OPTIONS
+      # allowedOrigins:
+      #   - https://localhost:3000
+
+custom:
+  allowedHeaders:
+    - Accept
+    - Content-Type
+    - Content-Length
+    - Authorization
+  
+  # stage: ${opt:stage, self:provider.stage}
+
+  #jwt setup for local after deployment need to be remove
+  # offline:
+  #   customAuthenticationProvider: './v1/localAuth'
 
 functions:
-  hello:
-    handler: handler.hello
+  verifytoken:
+    handler: /v1/tokenVerification.handler
+
+  adduser:
+    handler: /v1/adduser.handler
+    events: 
+      - httpApi:
+          path: /api/v1/add-user
+          method: post
+          cors: true
+          authorizer: 
+            name: customAuthorizer
+  login:
+    handler: /v1/login.handler
     events:
       - httpApi:
-          path: /
-          method: get
+          path: /api/v1/login
+          method: post
+          
+  
+          
+plugins:
+  - serverless-offline
+
+
