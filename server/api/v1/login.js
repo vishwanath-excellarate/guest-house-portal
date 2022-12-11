@@ -5,8 +5,12 @@ const jwt = require('jsonwebtoken');
 const secret_key = 'ueoirhdsmnfsdgfygstnbgweroeroirthdjfgmcxvsiehjsdfh'
 
 
-module.exports.handler = async (event) => {
+module.exports.handler = async (event, context) => {
+  context.callbackWaitsForEmptyEventLoop = false;
+
+  
   try {
+    
     const body = JSON.parse(event.body);
     const response = await connectDB().then(async (connection) => {
       return new Promise((resolve, reject) => {
@@ -16,19 +20,24 @@ module.exports.handler = async (event) => {
           if(!result.length){
             var res = {
                 statusCode: 200,
-                headers: util.getResponseHeaders(),
+                headers: util.getResponseHeaders(""),
                 body: JSON.stringify({ message: "Invalid email/ password" , queryResult: result}),
               };
               resolve(res);
 
           } else {
-            const token = jwt.sign({id: result[0].name, password:result[0].password}, secret_key)
+            // const token = jwt.sign({id: result[0].name, password:result[0].password}, secret_key)
+           const token =  jwt.sign({ id: result[0].name, password:result[0].password, role:result[0].role }, secret_key, {
+                expiresIn: 86400 // expires in 24 hours
+              });
+              // console.log(token);
 
 
             var res = {
                 statusCode: 200,
                 headers: util.getResponseHeaders(token),
-                body: JSON.stringify({ message: "successfully verified" , queryResult: result[0].name}),
+                body: JSON.stringify({      
+                  message: "successfully verified"}),
               };
             //   res.headers('auth-token', token, );
 

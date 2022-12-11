@@ -6,12 +6,20 @@ frameworkVersion: '3'
 provider:
   name: aws
   runtime: nodejs14.x
+  timeout: 30
+  # vpc:
+  #   securityGroupIds:
+  #     - sg-0d4da11213fbde4b7 
+  #   subnetIds:
+  #     - subnet-058280ac48c1db6e4
+  #     - subnet-02b57b77120b37a81
+  #     - subnet-0f61d602d2912a3e9
   httpApi:
     payload: '2.0'
-    authorizers:
-        customAuthorizer:
-          type: request
-          functionName: verifytoken
+    # authorizers:
+    #     customAuthorizer:
+    #       type: request
+    #       functionName: verifytoken
     # cors:
     #   allowedHeaders:
     #     - Content-Type
@@ -22,12 +30,12 @@ provider:
       # allowedOrigins:
       #   - https://localhost:3000
 
-custom:
-  allowedHeaders:
-    - Accept
-    - Content-Type
-    - Content-Length
-    - Authorization
+# custom:
+#   allowedHeaders:
+#     - Accept
+#     - Content-Type
+#     - Content-Length
+#     - Authorization
   
   # stage: ${opt:stage, self:provider.stage}
 
@@ -46,8 +54,10 @@ functions:
           path: /api/v1/add-user
           method: post
           cors: true
-          authorizer: 
-            name: customAuthorizer
+          # authorizer: 
+          #   name: customAuthoveririzer
+          #   identitySource: method.request.header.Authorization
+          #   type: token
   login:
     handler: /v1/login.handler
     events:

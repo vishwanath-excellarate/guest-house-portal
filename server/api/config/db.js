@@ -1,9 +1,11 @@
 var mysql = require('mysql');
 var pool  = mysql.createPool({
-    host     : "localhost",
-    user     : "root",
-    password : "",
-    database : "guest_house"
+       
+        host     : 'localhost',
+        user     : 'root',
+        password : '',
+        port: '3306',
+        database : 'guest_house'
   });
 
 exports.connectDB = () => {
@@ -12,7 +14,9 @@ exports.connectDB = () => {
           if (err) {
               return reject(err);
           }
+          console.log("Database connected !");
           resolve(connection);
       });
-  });
+  
+    });
 };
