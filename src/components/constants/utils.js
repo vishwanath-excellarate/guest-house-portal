@@ -1,0 +1,1 @@
+export const emailRegex = new RegExp('[a-z0-9]+@excellarate.com');
