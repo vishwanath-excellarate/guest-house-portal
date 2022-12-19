@@ -188,7 +188,8 @@ const AdminDashboard = () => {
                   <MenuItem
                     key={item.id}
                     onClick={() => {
-                      setAuthHeaders(null);
+                      localStorage.removeItem("token");
+                      // setAuthHeaders(null);
                       handleCloseUserMenu();
                       navigation("/login");
                     }}

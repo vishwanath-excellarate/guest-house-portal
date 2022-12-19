@@ -1,6 +1,6 @@
 import { Box, Button, Grid, Typography } from "@mui/material";
-import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import {
   USERS_COLUMN,
   USER_SCREEN_CONSTANT,
@@ -9,9 +9,11 @@ import CustomModal from "../../ghcomponents/CustomModal";
 import CustomTable from "../../ghcomponents/CustomTable";
 import { Toaster } from "../../ghcomponents/Loader";
 import NoDataFound from "../../ghcomponents/NoDataFound";
+import appConfig from "../../services/appConfig";
 import { COLORS } from "../../themes/Colors";
 import { fontStyle } from "../../themes/Styles";
 import AddUser from "./AddUser";
+import { getUserRequest } from "./User.action";
 
 const rows = [
   { slNo: 1, email: "vishwa@gmail.com" },
@@ -22,12 +24,21 @@ const rows = [
 ];
 
 const Users = () => {
+  const dispatch = useDispatch();
   const userDetails = useSelector((state) => state.userReducer);
-  console.log("userDetails", userDetails);
+  // console.log("userDetails", userDetails);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteClicked, setIsDeleteClicked] = useState(false);
+
+  useEffect(() => {
+    async function fetchData() {
+      const result = await getUserRequest(appConfig.API_BASE_URL, dispatch);
+      console.log("result", result.response);
+    }
+    fetchData();
+  }, []);
 
   if (!rows.length) {
     return <NoDataFound />;

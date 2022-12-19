@@ -1,8 +1,12 @@
 import axios from "axios";
 
 export function post(apiBaseURL, location, body) {
+  const token = localStorage.getItem("token");
+  const config = {
+    headers: { Authorization: `Bearer ${token}` },
+  };
   return axios
-    .post(`${apiBaseURL}${location}`, body)
+    .post(`${apiBaseURL}${location}`, body, config)
     .then((response) => {
       return { error: null, response };
     })
@@ -27,9 +31,13 @@ export function put(apiBaseURL, location, body) {
 }
 
 export function get(apiBaseURL, location) {
+  const token = localStorage.getItem("token");
+  const config = {
+    headers: { Authorization: `Bearer ${token}` },
+  };
   const url = `${apiBaseURL}${location}`;
   return axios
-    .get(`${url}`)
+    .get(`${url}`, config)
     .then((response) => {
       return { error: null, response };
     })
@@ -72,6 +80,7 @@ export function remove(apiBaseURL, location, id) {
 }
 
 export function setAuthHeaders(token) {
-  console.log('token', token);
-  axios.defaults.headers.common = { Authorization: `Bearer ${token}` };
+  console.log("token", token);
+  axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  // axios.defaults.headers.common = { Authorization: `Bearer ${token}` };
 }
