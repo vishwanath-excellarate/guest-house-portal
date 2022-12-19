@@ -48,7 +48,7 @@ const CustomTable = ({
             </TableRow>
           </TableHead>
           <TableBody>
-            {dataArray.map((row) => {
+            {dataArray.map((row, index) => {
               return (
                 <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
                   {columns.map((column) => {
@@ -60,7 +60,9 @@ const CustomTable = ({
                         sx={{ fontSize: 16 }}
                       >
                         {typeof value === "undefined"
-                          ? renderActionButton()
+                          ? column.id === "slNo"
+                            ? index + 1
+                            : renderActionButton(row)
                           : value}
                       </TableCell>
                     );

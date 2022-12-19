@@ -8,10 +8,8 @@ import { fontStyle } from "../../themes/Styles";
 import { COLORS } from "../../themes/Colors";
 import { addUserRequest } from "./User.action";
 import appConfig from "../../services/appConfig";
-import { useDispatch } from "react-redux";
 
-const AddUser = ({ isModalOpen, setIsModalOpen }) => {
-  const dispatch = useDispatch();
+const AddUser = ({ isModalOpen, setIsModalOpen, dispatch }) => {
   const [email, setEmail] = useState("");
   const [isError, setIsError] = useState(false);
 
@@ -24,14 +22,12 @@ const AddUser = ({ isModalOpen, setIsModalOpen }) => {
       const userData = {
         email: email,
       };
+      setIsModalOpen(false);
       const response = await addUserRequest(
         appConfig.API_BASE_URL,
         userData,
         dispatch
       );
-      if (response.response) {
-        setIsModalOpen(false);
-      }
     }
   };
 
