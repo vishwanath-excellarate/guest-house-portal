@@ -11,9 +11,9 @@ import {
     result: [],
     requestStatus: null,
     requestError: null,
-    getUserRes: [],
-    getUserStatus: null,
-    getUserError: null,
+    getRoomRes: [],
+    getRoomStatus: null,
+    getRoomError: null,
   });
   
   export default function roomReducer(state = initialState, action) {
@@ -48,18 +48,19 @@ import {
       case GET_ROOM_REQUEST: {
         return {
           ...state,
-          requestError: "error",
-          requestStatus: "failled",
-          result: [],
+          requestError: null,
+          requestStatus: "started",
         };
       }
   
       case GET_ROOM_SUCCESS: {
+        const data = action.payload;
+
         return {
           ...state,
-          requestError: "error",
-          requestStatus: "failled",
-          result: [],
+          requestError: null,
+          requestStatus: "finished",
+          getRoomRes : data,
         };
       }
   
@@ -71,6 +72,7 @@ import {
           result: [],
         };
       }
+      
   
       
       default:

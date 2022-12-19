@@ -34,4 +34,12 @@ export async function addRooms(baseURL,data, dispatch) {
     }
     return { response, error };
   }
-  
+  export async function deleteRoomRequest(baseURL, data, dispatch) {
+    const { error, response } = await post(
+      `${baseURL}`,
+      `${"/delete-room"}`,
+      data
+    );
+    deleteRoomRequest(baseURL, dispatch);
+    return { response, error };
+  }

@@ -50,7 +50,7 @@ export const ROOM_SCREEN_CONSTANT = {
 export const ROOMS_CONSTANT = [
   { id: "slNo", label: "Sl No.", align: "center" },
   { id: "location", label: "Location", align: "center" },
-  { id: "room_no", label: "Room No", align: "center" },
+  { id: "room_id", label: "Room No", align: "center" },
   { id: "action", label: "Action", align: "center", minWidth: 250 },
 ];
 

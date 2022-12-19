@@ -9,3 +9,9 @@ export const GET_ROOM_SUCCESS = "GET_ROOM_SUCCESS";
 export const GET_ROOM_FAILURE = "GET_ROOM_FAILURE";
 
 
+// get rooms constants
+export const DELETE_ROOM_REQUEST = "GET_ROOM_REQUEST";
+export const DELETE_ROOM_SUCCESS = "GET_ROOM_SUCCESS";
+export const DELETE_ROOM_FAILURE = "GET_ROOM_FAILURE";
+
+
