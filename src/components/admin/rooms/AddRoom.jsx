@@ -5,17 +5,39 @@ import CustomInput from "../../ghcomponents/CustomInput";
 import CloseIcon from "@mui/icons-material/Close";
 import { fontStyle } from "../../themes/Styles";
 import { COLORS } from "../../themes/Colors";
+import { addRooms,  } from "./Room.action";
+import appConfig from "../../services/appConfig";
+import { useDispatch } from "react-redux";
+
+
 
 const AddRoom = ({ isModalOpen, setIsModalOpen }) => {
+  const dispatch = useDispatch();
   const [roomDetails, setRoomDetails] = useState({ location: "", roomNo: "" });
   const [isError, setIsError] = useState(false);
 
-  const handleSubmit = () => {
+  
+  const handleSubmit = async () => {
     if (!roomDetails.location && !roomDetails.roomNo) {
       setIsError(true);
       return;
+    } else {
+      setIsError(false);
+      const roomData = {
+        location: roomDetails.location,
+        room_id : roomDetails.roomNo
+      
+      };
+      const response = await addRooms(
+        appConfig.API_BASE_URL,
+        roomData,
+        dispatch
+      );
+      if (response.response) {
+        setIsModalOpen(false);
+      }
+
     }
-    setIsError(false);
   };
 
   return (

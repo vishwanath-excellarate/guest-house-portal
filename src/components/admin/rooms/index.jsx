@@ -1,5 +1,5 @@
 import { Box, Button, Grid, Typography } from "@mui/material";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   ROOMS_CONSTANT,
   ROOM_SCREEN_CONSTANT,
@@ -9,21 +9,35 @@ import CustomTable from "../../ghcomponents/CustomTable";
 import NoDataFound from "../../ghcomponents/NoDataFound";
 import { fontStyle } from "../../themes/Styles";
 import AddRoom from "./AddRoom";
+import { getRooms  } from "./Room.action";
+import appConfig from "../../services/appConfig";
+import { useDispatch } from "react-redux";
+
 
 const rows = [
-  { slNo: 1, location: "Pune", room_no: "p-101" },
-  { slNo: 2, location: "Hubli", room_no: "h-101" },
-  { slNo: 3, location: "Pune", room_no: "p-102" },
-  { slNo: 4, location: "Hydarabad", room_no: "hb-101" },
-  { slNo: 5, location: "Hydarabad", room_no: "hb-102" },
+ 
 ];
 
 const Rooms = () => {
+  const dispatch = useDispatch();
+
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteClicked, setIsDeleteClicked] = useState(false);
+  const [deleteId, setDeleteId]  = useState("") 
+  const [rows, setRows] = useState([])
 
+  useEffect(() => {
+    async function fetchData() {
+      const result = await getRooms(appConfig.API_BASE_URL, dispatch);
+      console.log("result:////", result.response.data.result);
+      setRows(result.response.data.result);
+    }
+    fetchData();
+  }, []);
+  
+ console.log('Roww//', rows)
   if (!rows.length) {
     return <NoDataFound />;
   }
@@ -49,6 +63,10 @@ const Rooms = () => {
   };
 
   const DeletePopUp = () => {
+    const deleteHandler =() => {
+      console.log("Prppppppppppppp",deleteId);
+
+    }
     return (
       <CustomModal
         open={isDeleteClicked}
@@ -65,14 +83,14 @@ const Rooms = () => {
             {ROOM_SCREEN_CONSTANT.ARE_YOU_SURE}
           </Typography>
           <Button
-            onClick={() => setIsDeleteClicked(!isDeleteClicked)}
+            onClick={() => deleteHandler () }
             variant="contained"
             sx={{
               marginTop: 2,
               bgcolor: "#EE4B2B",
             }}
           >
-            Delete
+           A Delete
           </Button>
         </Box>
       </CustomModal>
@@ -110,17 +128,17 @@ const Rooms = () => {
         onRowsPerPageChange={handleChangeRowsPerPage}
         renderActionButton={() => (
           <Box>
-            <Button
+            {/* <Button
               sx={{ marginRight: 2 }}
               variant="contained"
               // onClick={() => setIsDeleteClicked(!isDeleteClicked)}
             >
               Edit
-            </Button>
+            </Button> */}
             <Button
               variant="contained"
               sx={{ bgcolor: "#C41E3A" }}
-              onClick={() => setIsDeleteClicked(!isDeleteClicked)}
+              onClick={() => {setDeleteId(rows.uid) ; setIsDeleteClicked(!isDeleteClicked)}}
             >
               Delete
             </Button>
@@ -128,7 +146,7 @@ const Rooms = () => {
         )}
       />
       <ModalComponent />
-      <DeletePopUp />
+      <DeletePopUp/>
     </Grid>
   );
 };
