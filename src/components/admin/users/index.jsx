@@ -1,11 +1,13 @@
 import { Box, Button, Grid, Typography } from "@mui/material";
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import {
   USERS_COLUMN,
   USER_SCREEN_CONSTANT,
 } from "../../constants/commonString";
 import CustomModal from "../../ghcomponents/CustomModal";
 import CustomTable from "../../ghcomponents/CustomTable";
+import { Toaster } from "../../ghcomponents/Loader";
 import NoDataFound from "../../ghcomponents/NoDataFound";
 import { COLORS } from "../../themes/Colors";
 import { fontStyle } from "../../themes/Styles";
@@ -20,6 +22,8 @@ const rows = [
 ];
 
 const Users = () => {
+  const userDetails = useSelector((state) => state.userReducer);
+  console.log("userDetails", userDetails);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -42,7 +46,7 @@ const Users = () => {
     return (
       <CustomModal
         open={isModalOpen}
-        onClose={() => setIsModalOpen(!isModalOpen)}
+        // onClose={() => setIsModalOpen(!isModalOpen)}
       >
         <AddUser isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
       </CustomModal>
@@ -125,6 +129,7 @@ const Users = () => {
       />
       <ModalComponent />
       <DeletePopUp />
+      {/* <Toaster messgae={'Email sent to an user'} /> */}
     </Grid>
   );
 };

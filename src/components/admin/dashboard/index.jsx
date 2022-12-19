@@ -24,6 +24,7 @@ import {
   PROFILE_INFO,
 } from "../../constants/commonString";
 import { COLORS } from "../../themes/Colors";
+import { setAuthHeaders } from "../../services/api";
 
 const AdminDashboard = () => {
   const navigation = useNavigate();
@@ -187,6 +188,7 @@ const AdminDashboard = () => {
                   <MenuItem
                     key={item.id}
                     onClick={() => {
+                      setAuthHeaders(null);
                       handleCloseUserMenu();
                       navigation("/login");
                     }}

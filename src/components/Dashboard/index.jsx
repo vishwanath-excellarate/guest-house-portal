@@ -23,6 +23,7 @@ import {
   ADMIN_PROFILE_CONSTANT,
   PROFILE_INFO,
 } from "../constants/commonString";
+import { setAuthHeaders } from "../services/api";
 
 const pages = [
   { id: 1, name: "My Requests" },
@@ -30,7 +31,7 @@ const pages = [
 ];
 const requests = [
   { id: 1, name: "Room Request" },
-  { id: 2, name: "Extend/Cancel Request" },
+  { id: 2, name: "Extend Request" },
 ];
 
 const Dashboard = () => {
@@ -230,6 +231,7 @@ const Dashboard = () => {
                   <MenuItem
                     key={item.id}
                     onClick={() => {
+                      setAuthHeaders(null);
                       handleCloseUserMenu();
                       navigation("/login");
                     }}

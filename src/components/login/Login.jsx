@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import Button from "@mui/material/Button";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
@@ -22,12 +23,19 @@ import { SIGN_IN } from "../constants/commonString";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { emailRegex } from "../constants/utils";
 import { COLORS } from "../themes/Colors";
+import { loginUserOrAdmin } from "./Login.action";
+import appConfig from "../services/appConfig";
+import { CircularLoader, DisabledBackground } from "../ghcomponents/Loader";
 
 const Login = () => {
-  const navigate = useNavigate();
   const isAuthenticated = true;
-  const isAdmin = false;
+  const isAdmin = true;
+  // const loginData = useSelector((state) => state.loginReducer);
+  // console.log('loginData', loginData);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [logInDetails, setLogInDetails] = useState({
     email: "",
     password: "",
@@ -37,32 +45,38 @@ const Login = () => {
     isPasswordError: false,
   });
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    if (!isAdmin && isAuthenticated) {
-      navigate("/dashboard");
-      return;
+    if (!logInDetails.email && !logInDetails.password) {
+      setErrors({ isEmailError: true, isPasswordError: true });
+    } else if (!logInDetails.email) {
+      setErrors({ ...errors, isEmailError: true });
+    } else if (!logInDetails.password) {
+      setErrors({ ...errors, isPasswordError: true });
     } else {
-      navigate("/admin-dashboard");
-      return;
-    }
+      setErrors({ isEmailError: false, isPasswordError: false });
+      // if (!isAdmin && isAuthenticated) {
+      //   navigate("/dashboard");
+      //   return;
+      // } else {
+      setLoading(true);
+      const userData = {
+        email: logInDetails.email,
+        password: logInDetails.password,
+      };
+      const loginResult = await loginUserOrAdmin(
+        appConfig.API_BASE_URL,
+        userData,
+        dispatch
+      );
 
-    // if (!logInDetails.email && !logInDetails.password) {
-    //   setErrors({ isEmailError: true, isPasswordError: true });
-    // } else if (!logInDetails.email || !emailRegex.test(logInDetails.email)) {
-    //   setErrors({ ...errors, isEmailError: true });
-    // } else if (!logInDetails.password) {
-    //   setErrors({ ...errors, isPasswordError: true });
-    // } else {
-    //   setErrors({ isEmailError: false, isPasswordError: false });
-    //   if (!isAdmin && isAuthenticated) {
-    //     navigate("/dashboard");
-    //     return;
-    //   } else {
-    //     navigate("/admin-dashboard");
-    //     return;
-    //   }
-    // }
+      if (loginResult.response) {
+        setLoading(false);
+        // navigate("/dashboard");
+        navigate("/admin-dashboard");
+      }
+      // }
+    }
   };
 
   const handleEmailChange = (event) => {
@@ -82,6 +96,15 @@ const Login = () => {
       isPasswordError: value.length ? false : true,
     });
   };
+
+  if (loading) {
+    return (
+      <>
+        <CircularLoader />
+        {/* <DisabledBackground /> */}
+      </>
+    );
+  }
 
   return (
     <Container
@@ -200,7 +223,7 @@ const Login = () => {
           >
             {SIGN_IN.SIGN_IN}
           </Button>
-          <Grid textAlign={"center"}>
+          {/* <Grid textAlign={"center"}>
             <Link
               href="/register"
               variant="body1"
@@ -209,7 +232,7 @@ const Login = () => {
             >
               {SIGN_IN.DONT_AN_ACCOUNT}
             </Link>
-          </Grid>
+          </Grid> */}
         </Box>
       </Box>
     </Container>

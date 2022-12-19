@@ -6,17 +6,33 @@ import CloseIcon from "@mui/icons-material/Close";
 import { USER_SCREEN_CONSTANT } from "../../constants/commonString";
 import { fontStyle } from "../../themes/Styles";
 import { COLORS } from "../../themes/Colors";
+import { addUserRequest } from "./User.action";
+import appConfig from "../../services/appConfig";
+import { useDispatch } from "react-redux";
 
 const AddUser = ({ isModalOpen, setIsModalOpen }) => {
+  const dispatch = useDispatch();
   const [email, setEmail] = useState("");
   const [isError, setIsError] = useState(false);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!email.length) {
       setIsError(true);
       return;
+    } else {
+      setIsError(false);
+      const userData = {
+        email: email,
+      };
+      const response = await addUserRequest(
+        appConfig.API_BASE_URL,
+        userData,
+        dispatch
+      );
+      if (response.response) {
+        setIsModalOpen(false);
+      }
     }
-    setIsError(false);
   };
 
   return (
@@ -57,19 +73,19 @@ const AddUser = ({ isModalOpen, setIsModalOpen }) => {
         sx={{
           paddingTop: 3,
           display: "flex",
-          justifyContent: "flex-end",
+          justifyContent: "center",
         }}
       >
         <Button
           variant="contained"
-          sx={{ marginRight: 2, ...fontStyle() }}
+          sx={{ ...fontStyle(), width: "100%" }}
           onClick={() => handleSubmit()}
         >
-          Add
+          Send Invite Link
         </Button>
-        <Button variant="contained" sx={{ ...fontStyle(COLORS.red) }}>
+        {/* <Button variant="contained" sx={{ ...fontStyle(COLORS.red) }}>
           Cacnel
-        </Button>
+        </Button> */}
       </Box>
     </Container>
   );

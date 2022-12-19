@@ -3,6 +3,25 @@ import PropTypes from "prop-types";
 import CircularProgress from "@mui/material/CircularProgress";
 import LinearProgress from "@mui/material/LinearProgress";
 import { Box, styled } from "@mui/system";
+import { Alert } from "@mui/material";
+
+export const Toaster = ({ severity = "success", messgae }) => {
+  return (
+    <Alert
+      sx={{
+        position: "absolute",
+        right: 10,
+        bottom: 50,
+        zIndex: 2,
+        width: 400,
+      }}
+      variant="filled"
+      severity={severity}
+    >
+      {messgae}
+    </Alert>
+  );
+};
 
 export const CircularLoader = ({ size, color }) => {
   return (

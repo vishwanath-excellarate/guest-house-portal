@@ -71,8 +71,7 @@ export function remove(apiBaseURL, location, id) {
     });
 }
 
-// export function setAuthHeaders(headerConfig) {
-//   axios.defaults.headers.common.secret = headerConfig.secret;
-//   axios.defaults.headers.common.devMode = headerConfig.devMode;
-//   axios.defaults.headers.common.location = headerConfig.location || "";
-// }
+export function setAuthHeaders(token) {
+  console.log('token', token);
+  axios.defaults.headers.common = { Authorization: `Bearer ${token}` };
+}

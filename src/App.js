@@ -3,9 +3,9 @@ import { lazy, Suspense } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import PrivateRoute from "./components/routes/PrivateRoute";
 
-const LoginPage = lazy(() => import("./components/pages/Login"));
-const Register = lazy(() => import("./components/pages/Signup"));
-const ForgotPassword = lazy(() => import("./components/pages/ForgotPassword"));
+const LoginPage = lazy(() => import("./components/login/Login"));
+const Register = lazy(() => import("./components/login/Signup"));
+const ForgotPassword = lazy(() => import("./components/login/ForgotPassword"));
 const NoFoundComponent = lazy(() =>
   import("./components/pages/noFoundComponent")
 );
@@ -14,7 +14,7 @@ const AdminDashboard = lazy(() => import("./components/admin/dashboard"));
 
 const App = () => {
   const isAuthenticated = true;
-  const isAdmin = false;
+  const isAdmin = true;
 
   return (
     <Router>

@@ -107,7 +107,7 @@ export const ROOM_REQUEST = {
 };
 
 export const EXTEND_OR_CANCEL_REQUEST = {
-  EXTEND_REQUEST: "Extend/ Cancel Request Form",
+  EXTEND_REQUEST: "Extend Request Form",
   SEND: "Send",
 };
 
