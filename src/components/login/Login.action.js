@@ -9,7 +9,7 @@ export async function loginUserOrAdmin(baseURL, data, dispatch) {
   dispatch({ type: LOGIN_REQUEST });
   const { error, response } = await post(`${baseURL}`, `${"/login"}`, data);
   if (response) {
-    dispatch({ type: LOGIN_SUCCESS, data: response?.data });
+    dispatch({ type: LOGIN_SUCCESS, payload: response?.data });
     localStorage.setItem("token", response.headers.authorization);
     // setAuthHeaders(response.headers.authorization);
   }

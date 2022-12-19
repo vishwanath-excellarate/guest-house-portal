@@ -13,7 +13,7 @@ import appConfig from "../../services/appConfig";
 import { COLORS } from "../../themes/Colors";
 import { fontStyle } from "../../themes/Styles";
 import AddUser from "./AddUser";
-import { getUserRequest } from "./User.action";
+import { deleteUserRequest, getUserRequest } from "./User.action";
 
 const rows = [
   { slNo: 1, email: "vishwa@gmail.com" },
@@ -26,21 +26,17 @@ const rows = [
 const Users = () => {
   const dispatch = useDispatch();
   const userDetails = useSelector((state) => state.userReducer);
-  // console.log("userDetails", userDetails);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteClicked, setIsDeleteClicked] = useState(false);
+  const [selectedEmail, setSelectedEmail] = useState("");
 
   useEffect(() => {
-    async function fetchData() {
-      const result = await getUserRequest(appConfig.API_BASE_URL, dispatch);
-      console.log("result", result.response);
-    }
-    fetchData();
+    getUserRequest(appConfig.API_BASE_URL, dispatch);
   }, []);
 
-  if (!rows.length) {
+  if (!userDetails.getUserRes.length) {
     return <NoDataFound />;
   }
 
@@ -59,7 +55,11 @@ const Users = () => {
         open={isModalOpen}
         // onClose={() => setIsModalOpen(!isModalOpen)}
       >
-        <AddUser isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
+        <AddUser
+          isModalOpen={isModalOpen}
+          setIsModalOpen={setIsModalOpen}
+          dispatch={dispatch}
+        />
       </CustomModal>
     );
   };
@@ -68,7 +68,7 @@ const Users = () => {
     return (
       <CustomModal
         open={isDeleteClicked}
-        onClose={() => setIsDeleteClicked(!isDeleteClicked)}
+        // onClose={() => setIsDeleteClicked(!isDeleteClicked)}
       >
         <Box
           sx={{
@@ -81,7 +81,14 @@ const Users = () => {
             {USER_SCREEN_CONSTANT.ARE_YOU_SURE}
           </Typography>
           <Button
-            onClick={() => setIsDeleteClicked(!isDeleteClicked)}
+            onClick={() => {
+              setIsDeleteClicked(!isDeleteClicked);
+              deleteUserRequest(
+                appConfig.API_BASE_URL,
+                selectedEmail,
+                dispatch
+              );
+            }}
             variant="contained"
             sx={{
               marginTop: 2,
@@ -123,16 +130,19 @@ const Users = () => {
       </Grid>
       <CustomTable
         columns={USERS_COLUMN}
-        rows={rows}
+        rows={userDetails?.getUserRes || []}
         page={page}
         rowsPerPage={rowsPerPage}
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
-        renderActionButton={() => (
+        renderActionButton={(value) => (
           <Button
             sx={{ bgcolor: "#C41E3A" }}
             variant="contained"
-            onClick={() => setIsDeleteClicked(!isDeleteClicked)}
+            onClick={() => {
+              setIsDeleteClicked(!isDeleteClicked);
+              setSelectedEmail(value);
+            }}
           >
             Delete
           </Button>

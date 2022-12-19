@@ -13,6 +13,7 @@ export async function addUserRequest(baseURL, data, dispatch) {
   const { error, response } = await post(`${baseURL}`, `${"/add-user"}`, data);
   if (response) {
     dispatch({ type: ADD_USER_SUCCESS, payload: response?.data });
+    getUserRequest(baseURL, dispatch);
   }
   if (error) {
     dispatch({ type: ADD_USER_FAILURE });
@@ -29,5 +30,15 @@ export async function getUserRequest(baseURL, dispatch) {
   if (error) {
     dispatch({ type: GET_USER_FAILURE });
   }
+  return { response, error };
+}
+
+export async function deleteUserRequest(baseURL, data, dispatch) {
+  const { error, response } = await post(
+    `${baseURL}`,
+    `${"/delete-user"}`,
+    data
+  );
+  getUserRequest(baseURL, dispatch);
   return { response, error };
 }
