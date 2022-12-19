@@ -9,13 +9,13 @@ import CustomTable from "../../ghcomponents/CustomTable";
 import NoDataFound from "../../ghcomponents/NoDataFound";
 import { fontStyle } from "../../themes/Styles";
 import AddRoom from "./AddRoom";
-import { getRooms  } from "./Room.action";
+import { getRooms } from "./Room.action";
 import appConfig from "../../services/appConfig";
 import { useDispatch } from "react-redux";
 
 
 const rows = [
- 
+
 ];
 
 const Rooms = () => {
@@ -25,19 +25,28 @@ const Rooms = () => {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteClicked, setIsDeleteClicked] = useState(false);
-  const [deleteId, setDeleteId]  = useState("") 
+  const [deleteId, setDeleteId] = useState("")
   const [rows, setRows] = useState([])
 
   useEffect(() => {
     async function fetchData() {
       const result = await getRooms(appConfig.API_BASE_URL, dispatch);
-      console.log("result:////", result.response.data.result);
-      setRows(result.response.data.result);
+      const data = result.response.data.result;
+      const updatedRow = data.map(({ uid: slNo, room_id:room_no, ...rest }) => ({
+        slNo,
+        room_no, 
+        ...rest,
+      }));
+
+      setRows(updatedRow);
+
     }
+
     fetchData();
+
   }, []);
-  
- console.log('Roww//', rows)
+
+  console.log('Roww//', rows)
   if (!rows.length) {
     return <NoDataFound />;
   }
@@ -63,8 +72,8 @@ const Rooms = () => {
   };
 
   const DeletePopUp = () => {
-    const deleteHandler =() => {
-      console.log("Prppppppppppppp",deleteId);
+    const deleteHandler = () => {
+      console.log("Prppppppppppppp", deleteId);
 
     }
     return (
@@ -83,14 +92,14 @@ const Rooms = () => {
             {ROOM_SCREEN_CONSTANT.ARE_YOU_SURE}
           </Typography>
           <Button
-            onClick={() => deleteHandler () }
+            onClick={() => deleteHandler()}
             variant="contained"
             sx={{
               marginTop: 2,
               bgcolor: "#EE4B2B",
             }}
           >
-           A Delete
+            A Delete
           </Button>
         </Box>
       </CustomModal>
@@ -126,7 +135,7 @@ const Rooms = () => {
         rowsPerPage={rowsPerPage}
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
-        renderActionButton={() => (
+        renderActionButton={(value) => (
           <Box>
             {/* <Button
               sx={{ marginRight: 2 }}
@@ -135,10 +144,13 @@ const Rooms = () => {
             >
               Edit
             </Button> */}
-            <Button
+            
+            
+             <Button
               variant="contained"
               sx={{ bgcolor: "#C41E3A" }}
-              onClick={() => {setDeleteId(rows.uid) ; setIsDeleteClicked(!isDeleteClicked)}}
+              onClick={() => {          console.log(value); 
+                setDeleteId(rows["slNo"]); setIsDeleteClicked(!isDeleteClicked) }}
             >
               Delete
             </Button>
@@ -146,7 +158,7 @@ const Rooms = () => {
         )}
       />
       <ModalComponent />
-      <DeletePopUp/>
+      <DeletePopUp />
     </Grid>
   );
 };

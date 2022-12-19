@@ -48,10 +48,9 @@ export const ROOM_SCREEN_CONSTANT = {
 };
 
 export const ROOMS_CONSTANT = [
-  { id: "uid", label: "uid", align: "center" },
-  { id: "room_id", label: "Room id", align: "center" },
+  { id: "slNo", label: "Sl No.", align: "center" },
   { id: "location", label: "Location", align: "center" },
-  { id: "added_by", label: "Added by", align: "center" },
+  { id: "room_no", label: "Room No", align: "center" },
   { id: "action", label: "Action", align: "center", minWidth: 250 },
 ];
 

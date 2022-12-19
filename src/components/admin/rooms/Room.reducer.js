@@ -16,7 +16,7 @@ import {
     getUserError: null,
   });
   
-  export default function userReducer(state = initialState, action) {
+  export default function roomReducer(state = initialState, action) {
     switch (action.type) {
       case ADD_ROOM_REQUEST: {
         return {
@@ -37,7 +37,7 @@ import {
         };
       }
   
-      case GET_ROOM_REQUEST: {
+      case ADD_ROOM_FAILURE: {
         return {
           ...state,
           requestError: "error",
