@@ -9,7 +9,7 @@ import { COLORS } from "../../themes/Colors";
 import { addUserRequest } from "./User.action";
 import appConfig from "../../services/appConfig";
 
-const AddUser = ({ isModalOpen, setIsModalOpen, dispatch }) => {
+const AddUser = ({ isModalOpen, setIsModalOpen, dispatch, setLoading }) => {
   const [email, setEmail] = useState("");
   const [isError, setIsError] = useState(false);
 
@@ -18,6 +18,7 @@ const AddUser = ({ isModalOpen, setIsModalOpen, dispatch }) => {
       setIsError(true);
       return;
     } else {
+      setLoading(true);
       setIsError(false);
       const userData = {
         email: email,
@@ -28,6 +29,7 @@ const AddUser = ({ isModalOpen, setIsModalOpen, dispatch }) => {
         userData,
         dispatch
       );
+      setLoading(false);
     }
   };
 

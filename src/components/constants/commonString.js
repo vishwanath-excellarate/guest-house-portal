@@ -7,14 +7,16 @@ export const SIGN_IN = {
   PASSWORD_HELPER_TEXT: "Enter Password",
 };
 
-export const SIGN_UP = {
-  SIGN_UP: "Sign Up",
-  ALREADY_ACCOUNT: "Already have an account? Sign In",
+export const ACCOUNT_SETUP = {
+  ACCOUNT_REGISTER: "Account Register",
+  REGISTER: "Register",
   NAME_HELPER_TEXT: "Enter Full Name",
   DESIGNATION_HELPER_TEXT: "Enter Designation",
   PHONE_HELPER_TEXT: "Enter Phone Number",
   EMAIL_HELPER_TEXT: "Enter Office Email Address",
   PASSWORD_HELPER_TEXT: "Enter Password",
+  GENDER_HELPER_TEXT: 'Select Gender',
+  GENDER: ["Male", "Female", "Other"],
 };
 
 export const FORGOT_PASSWORD = {

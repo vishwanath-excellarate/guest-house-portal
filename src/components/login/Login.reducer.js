@@ -15,8 +15,8 @@ export default function loginReducer(state = initialState, action) {
     case LOGIN_REQUEST: {
       return {
         ...state,
-        loginOrRegRequestError: null,
-        loginOrRegRequestStatus: "started",
+        loginRequestError: null,
+        loginRequestStatus: "started",
       };
     }
 
@@ -25,8 +25,8 @@ export default function loginReducer(state = initialState, action) {
 
       return {
         ...state,
-        loginOrRegRequestError: null,
-        loginOrRegRequestStatus: "finished",
+        loginRequestError: null,
+        loginRequestStatus: "finished",
         loginResult: data,
       };
     }
@@ -34,8 +34,8 @@ export default function loginReducer(state = initialState, action) {
     case LOGIN_FAILURE: {
       return {
         ...state,
-        loginOrRegRequestError: "error",
-        loginOrRegRequestStatus: "failled",
+        loginRequestError: "error",
+        loginRequestStatus: "failled",
         loginResult: [],
       };
     }

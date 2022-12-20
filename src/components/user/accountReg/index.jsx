@@ -1,14 +1,12 @@
 import React, { useState } from "react";
 import Button from "@mui/material/Button";
-import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import { useNavigate } from "react-router-dom";
-import CustomInput from "../ghcomponents/CustomInput";
-import { EXCELLARATE_ICON } from "../assets/images";
-import { SIGN_UP } from "../constants/commonString";
+import { useLocation, useNavigate } from "react-router-dom";
+import CustomInput from "../../ghcomponents/CustomInput";
+import { ACCOUNT_SETUP } from "../../constants/commonString";
 import {
   FormControl,
   FormHelperText,
@@ -18,23 +16,30 @@ import {
   OutlinedInput,
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import { COLORS } from "../themes/Colors";
+import { COLORS } from "../../themes/Colors";
+import CustomSelect from "../../ghcomponents/CustomSelect";
+import { userAccountReg } from "./AccountRegister.action";
+import appConfig from "../../services/appConfig";
+import { useDispatch } from "react-redux";
 
-const Signup = () => {
+const AccountRegister = () => {
+  const queryString = window.location.search;
+  const urlParams = new URLSearchParams(queryString);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
-  const [signUpdetails, setSignUpdetails] = useState({
+  const [userDetails, setUserDetails] = useState({
     fullName: "",
     designation: "",
     phoneNo: "",
-    email: "",
+    gender: "",
     password: "",
   });
   const [errors, setErrors] = useState({
     isFullName: false,
     isDesignation: false,
     isPhone: false,
-    isEmail: false,
+    isGender: false,
     isPassword: false,
   });
 
@@ -42,45 +47,60 @@ const Signup = () => {
     event.preventDefault();
 
     if (
-      !signUpdetails.fullName &&
-      !signUpdetails.designation &&
-      !signUpdetails.phoneNo &&
-      !signUpdetails.email &&
-      !signUpdetails.password
+      !userDetails.fullName &&
+      !userDetails.designation &&
+      !userDetails.phoneNo &&
+      !userDetails.password
     ) {
       setErrors({
         isFullName: true,
         isDesignation: true,
         isPhone: true,
-        isEmail: true,
+        isGender: true,
         isPassword: true,
       });
-    } else if (!signUpdetails.fullName) {
+    } else if (!userDetails.fullName) {
       setErrors({ ...errors, isFullName: true });
-    } else if (!signUpdetails.designation) {
+    } else if (!userDetails.designation) {
       setErrors({ ...errors, isDesignation: true });
-    } else if (!signUpdetails.phoneNo) {
+    } else if (!userDetails.phoneNo) {
       setErrors({ ...errors, isPhone: true });
-    } else if (!signUpdetails.email) {
-      setErrors({ ...errors, isEmail: true });
-    } else if (!signUpdetails.password) {
+    } else if (!userDetails.gender) {
+      setErrors({ ...errors, isGender: true });
+    } else if (!userDetails.password) {
       setErrors({ ...errors, isPassword: true });
     } else {
       setErrors({
         isFullName: false,
         isDesignation: false,
         isPhone: false,
-        isEmail: false,
+        isGender: false,
         isPassword: false,
       });
-      navigate("/login");
+      const data = {
+        hash: {
+          iv: urlParams.get("vi"),
+          content: urlParams.get("content"),
+        },
+        fullname: userDetails.fullName,
+        designation: userDetails.designation,
+        gender: userDetails.gender,
+        password: userDetails.password,
+        number: userDetails.phoneNo,
+      };
+      const { response, error } = userAccountReg(
+        appConfig.API_BASE_URL,
+        data,
+        dispatch,
+        navigate
+      );
     }
   };
 
   const handleFullNameChange = (event) => {
     const value = event.target.value;
-    setSignUpdetails({
-      ...signUpdetails,
+    setUserDetails({
+      ...userDetails,
       fullName: value,
     });
     setErrors({ ...errors, isFullName: value ? false : true });
@@ -88,8 +108,8 @@ const Signup = () => {
 
   const handleDesignationChange = (event) => {
     const value = event.target.value;
-    setSignUpdetails({
-      ...signUpdetails,
+    setUserDetails({
+      ...userDetails,
       designation: value,
     });
     setErrors({ ...errors, isDesignation: value ? false : true });
@@ -97,26 +117,26 @@ const Signup = () => {
 
   const handlePhoneNoChange = (event) => {
     const value = event.target.value;
-    setSignUpdetails({
-      ...signUpdetails,
+    setUserDetails({
+      ...userDetails,
       phoneNo: value,
     });
     setErrors({ ...errors, isPhone: value ? false : true });
   };
 
-  const handleEmailChange = (event) => {
+  const handleGenderChange = (event) => {
     const value = event.target.value;
-    setSignUpdetails({
-      ...signUpdetails,
-      email: value,
+    setUserDetails({
+      ...userDetails,
+      gender: value,
     });
-    setErrors({ ...errors, isEmail: value ? false : true });
+    setErrors({ ...errors, isGender: value ? false : true });
   };
 
   const handlePasswordChange = (event) => {
     const value = event.target.value;
-    setSignUpdetails({
-      ...signUpdetails,
+    setUserDetails({
+      ...userDetails,
       password: value,
     });
     setErrors({ ...errors, isPassword: value ? false : true });
@@ -140,18 +160,8 @@ const Signup = () => {
           alignItems: "center",
         }}
       >
-        {/* <Box
-          component="img"
-          sx={{
-            height: 65,
-            width: 65,
-          }}
-          alt="logo"
-          src={EXCELLARATE_ICON}
-          loading="lazy"
-        /> */}
         <Typography component="h1" variant="h5">
-          {SIGN_UP.SIGN_UP}
+          {ACCOUNT_SETUP.ACCOUNT_REGISTER}
         </Typography>
         <Box component="form" noValidate sx={{ mt: 3 }}>
           <Grid container spacing={2}>
@@ -164,10 +174,10 @@ const Signup = () => {
                 label="Full Name"
                 name="Full Name"
                 autoComplete="given-name"
-                value={signUpdetails.fullName}
+                value={userDetails.fullName}
                 onChange={(event) => handleFullNameChange(event)}
                 error={errors.isFullName}
-                helperText={errors.isFullName && SIGN_UP.NAME_HELPER_TEXT}
+                helperText={errors.isFullName && ACCOUNT_SETUP.NAME_HELPER_TEXT}
               />
             </Grid>
             <Grid item xs={12}>
@@ -178,11 +188,11 @@ const Signup = () => {
                 label="Designation"
                 name="Designation"
                 autoComplete="Designation"
-                value={signUpdetails.designation}
+                value={userDetails.designation}
                 onChange={(event) => handleDesignationChange(event)}
                 error={errors.isDesignation}
                 helperText={
-                  errors.isDesignation && SIGN_UP.DESIGNATION_HELPER_TEXT
+                  errors.isDesignation && ACCOUNT_SETUP.DESIGNATION_HELPER_TEXT
                 }
               />
             </Grid>
@@ -195,26 +205,28 @@ const Signup = () => {
                 label="Phone No."
                 name="phone-number"
                 autoComplete="phone-number"
-                value={signUpdetails.phoneNo}
+                value={userDetails.phoneNo}
                 onChange={(event) => handlePhoneNoChange(event)}
                 error={errors.isPhone}
-                helperText={errors.isPhone && SIGN_UP.PHONE_HELPER_TEXT}
+                helperText={errors.isPhone && ACCOUNT_SETUP.PHONE_HELPER_TEXT}
               />
             </Grid>
             <Grid item xs={12}>
-              <CustomInput
+              <CustomSelect
                 required
-                fullWidth
-                type={"email"}
-                id="email"
-                label="Email"
-                name="email"
-                autoComplete="email"
-                value={signUpdetails.email}
-                onChange={(event) => handleEmailChange(event)}
-                error={errors.isEmail}
-                helperText={errors.isEmail && SIGN_UP.EMAIL_HELPER_TEXT}
+                error={errors.isGender}
+                formStyle={{ width: "100%" }}
+                menuItems={ACCOUNT_SETUP.GENDER}
+                label={"Gender"}
+                inputLabelText={"Gender"}
+                value={userDetails.gender}
+                handleChange={(event) => handleGenderChange(event)}
               />
+              {errors.isGender && (
+                <FormHelperText error>
+                  {ACCOUNT_SETUP.GENDER_HELPER_TEXT}
+                </FormHelperText>
+              )}
             </Grid>
             <Grid item xs={12}>
               <FormControl variant="outlined" fullWidth>
@@ -229,7 +241,7 @@ const Signup = () => {
                   required
                   id="outlined-adornment-password"
                   type={showPassword ? "text" : "password"}
-                  value={signUpdetails.password}
+                  value={userDetails.password}
                   onChange={(event) => handlePasswordChange(event)}
                   endAdornment={
                     <InputAdornment position="end">
@@ -247,7 +259,7 @@ const Signup = () => {
                 />
                 {errors.isPassword && (
                   <FormHelperText error>
-                    {SIGN_UP.PASSWORD_HELPER_TEXT}
+                    {ACCOUNT_SETUP.PASSWORD_HELPER_TEXT}
                   </FormHelperText>
                 )}
               </FormControl>
@@ -267,28 +279,12 @@ const Signup = () => {
             }}
             onClick={(event) => handleSubmit(event)}
           >
-            {SIGN_UP.SIGN_UP}
+            {ACCOUNT_SETUP.REGISTER}
           </Button>
-          <Grid container justifyContent="center">
-            <Grid item>
-              <Link
-                href="/login"
-                variant="body2"
-                onClick={() => navigate("/login")}
-                sx={{
-                  color: COLORS.blue_azure,
-                  letterSpacing: 0.3,
-                  fontSize: 16,
-                }}
-              >
-                {SIGN_UP.ALREADY_ACCOUNT}
-              </Link>
-            </Grid>
-          </Grid>
         </Box>
       </Box>
     </Container>
   );
 };
 
-export default Signup;
+export default AccountRegister;

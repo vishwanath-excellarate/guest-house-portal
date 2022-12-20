@@ -28,8 +28,6 @@ import appConfig from "../services/appConfig";
 import { CircularLoader, DisabledBackground } from "../ghcomponents/Loader";
 
 const Login = () => {
-  const isAuthenticated = true;
-  const isAdmin = true;
   // const loginData = useSelector((state) => state.loginReducer);
   // console.log('loginData', loginData);
   const navigate = useNavigate();
@@ -55,27 +53,24 @@ const Login = () => {
       setErrors({ ...errors, isPasswordError: true });
     } else {
       setErrors({ isEmailError: false, isPasswordError: false });
-      // if (!isAdmin && isAuthenticated) {
-      //   navigate("/dashboard");
-      //   return;
-      // } else {
       setLoading(true);
       const userData = {
         email: logInDetails.email,
         password: logInDetails.password,
       };
-      const loginResult = await loginUserOrAdmin(
+      const { response, error } = await loginUserOrAdmin(
         appConfig.API_BASE_URL,
         userData,
         dispatch
       );
-
-      if (loginResult.response) {
+      if (response.data) {
+        if (response.data.role === "admin") {
+          navigate("/admin-dashboard");
+        } else {
+          navigate("/dashboard");
+        }
         setLoading(false);
-        // navigate("/dashboard");
-        navigate("/admin-dashboard");
       }
-      // }
     }
   };
 
@@ -97,15 +92,6 @@ const Login = () => {
     });
   };
 
-  if (loading) {
-    return (
-      <>
-        <CircularLoader />
-        {/* <DisabledBackground /> */}
-      </>
-    );
-  }
-
   return (
     <Container
       component="div"
@@ -117,6 +103,12 @@ const Login = () => {
         justifyContent: "center",
       }}
     >
+      {loading && (
+        <>
+          <CircularLoader />
+          <DisabledBackground />
+        </>
+      )}
       <Box
         sx={{
           display: "flex",

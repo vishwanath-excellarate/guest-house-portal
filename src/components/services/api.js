@@ -80,7 +80,6 @@ export function remove(apiBaseURL, location, id) {
 }
 
 export function setAuthHeaders(token) {
-  console.log("token", token);
   axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
   // axios.defaults.headers.common = { Authorization: `Bearer ${token}` };
 }
