@@ -56,9 +56,7 @@ const Dashboard = () => {
   }, []);
   
 
-
-
-  console.log('Row//', data);
+  console.log('Row//', profileDetails?.getProfileRes[0].name);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
