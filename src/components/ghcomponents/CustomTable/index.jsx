@@ -60,9 +60,7 @@ const CustomTable = ({
                         sx={{ fontSize: 16 }}
                       >
                         {typeof value === "undefined"
-                          ? column.id === "slNo"
-                            ? index + 1
-                            : renderActionButton(row)
+                          ? renderActionButton(row)
                           : value}
                       </TableCell>
                     );

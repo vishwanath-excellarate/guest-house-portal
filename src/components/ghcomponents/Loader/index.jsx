@@ -10,15 +10,13 @@ export const Toaster = ({ severity = "success", messgae }) => {
     <Alert
       sx={{
         position: "absolute",
-        right: 10,
-        bottom: 50,
+        right: 5,
         zIndex: 2,
-        width: 400,
       }}
       variant="filled"
       severity={severity}
     >
-      {messgae}
+      {messgae || ''}
     </Alert>
   );
 };

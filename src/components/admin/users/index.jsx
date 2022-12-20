@@ -7,21 +7,17 @@ import {
 } from "../../constants/commonString";
 import CustomModal from "../../ghcomponents/CustomModal";
 import CustomTable from "../../ghcomponents/CustomTable";
-import { Toaster } from "../../ghcomponents/Loader";
+import {
+  CircularLoader,
+  DisabledBackground,
+  Toaster,
+} from "../../ghcomponents/Loader";
 import NoDataFound from "../../ghcomponents/NoDataFound";
 import appConfig from "../../services/appConfig";
 import { COLORS } from "../../themes/Colors";
 import { fontStyle } from "../../themes/Styles";
 import AddUser from "./AddUser";
 import { deleteUserRequest, getUserRequest } from "./User.action";
-
-const rows = [
-  { slNo: 1, email: "vishwa@gmail.com" },
-  { slNo: 2, email: "test@gmail.com" },
-  { slNo: 3, email: "abc@gmail.com" },
-  { slNo: 4, email: "asasa@gmail.com" },
-  { slNo: 5, email: "qwqw@gmail.com" },
-];
 
 const Users = () => {
   const dispatch = useDispatch();
@@ -31,10 +27,23 @@ const Users = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteClicked, setIsDeleteClicked] = useState(false);
   const [selectedEmail, setSelectedEmail] = useState("");
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    getUserRequest(appConfig.API_BASE_URL, dispatch);
+    const { response, error } = getUserRequest(
+      appConfig.API_BASE_URL,
+      dispatch
+    );
   }, []);
+
+  useEffect(() => {
+    const result = userDetails.getUserRes.map((item, index) => ({
+      slNo: index + 1,
+      ...item,
+    }));
+    setData(result);
+  }, [userDetails.getUserRes]);
 
   if (!userDetails.getUserRes.length) {
     return <NoDataFound />;
@@ -59,6 +68,7 @@ const Users = () => {
           isModalOpen={isModalOpen}
           setIsModalOpen={setIsModalOpen}
           dispatch={dispatch}
+          setLoading={setLoading}
         />
       </CustomModal>
     );
@@ -82,12 +92,16 @@ const Users = () => {
           </Typography>
           <Button
             onClick={() => {
+              setLoading(true);
               setIsDeleteClicked(!isDeleteClicked);
-              deleteUserRequest(
+              const { response, error } = deleteUserRequest(
                 appConfig.API_BASE_URL,
                 selectedEmail,
                 dispatch
               );
+              setTimeout(() => {
+                setLoading(false);
+              }, 1000);
             }}
             variant="contained"
             sx={{
@@ -104,6 +118,12 @@ const Users = () => {
 
   return (
     <Grid container>
+      {loading && (
+        <>
+          <CircularLoader />
+          <DisabledBackground />
+        </>
+      )}
       <Grid
         item
         xl={12}
@@ -130,7 +150,7 @@ const Users = () => {
       </Grid>
       <CustomTable
         columns={USERS_COLUMN}
-        rows={userDetails?.getUserRes || []}
+        rows={data}
         page={page}
         rowsPerPage={rowsPerPage}
         onPageChange={handleChangePage}
