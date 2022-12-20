@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState , useEffect} from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -23,7 +23,10 @@ import {
   ADMIN_PROFILE_CONSTANT,
   PROFILE_INFO,
 } from "../constants/commonString";
-import { setAuthHeaders } from "../services/api";
+import { useDispatch, useSelector } from "react-redux";
+import { getProfileRequest } from "./Dashboard.action";
+import appConfig from "../services/appConfig";
+
 
 const pages = [
   { id: 1, name: "My Requests" },
@@ -35,6 +38,7 @@ const requests = [
 ];
 
 const Dashboard = () => {
+  const dispatch = useDispatch();
   const navigation = useNavigate();
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
@@ -42,6 +46,11 @@ const Dashboard = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedRequest, setSelectedRequest] = useState("");
   const [currentTab, setCurrentTab] = useState(1);
+
+  useEffect(() => {
+    const profile = getProfileRequest(appConfig.API_BASE_URL, dispatch);
+     console.log('Roww////', profile);
+  }, []);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
