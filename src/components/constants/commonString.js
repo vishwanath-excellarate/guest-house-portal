@@ -15,7 +15,7 @@ export const ACCOUNT_SETUP = {
   PHONE_HELPER_TEXT: "Enter Phone Number",
   EMAIL_HELPER_TEXT: "Enter Office Email Address",
   PASSWORD_HELPER_TEXT: "Enter Password",
-  GENDER_HELPER_TEXT: 'Select Gender',
+  GENDER_HELPER_TEXT: "Select Gender",
   GENDER: ["Male", "Female", "Other"],
 };
 
@@ -106,6 +106,14 @@ export const HISTORY_SCREEN_CONSTANT = {
 export const ROOM_REQUEST = {
   ROOM_REQUEST_FORM: "Room Request Form",
   SEND: "Send",
+  BU_REQUIRED: "BU is required",
+  PROJECT: "Project/Client is required",
+  LOCATION: "Location is required",
+  APPROVED_BY: "Approved is required",
+  CHECK_IN: "Check In is required",
+  CHECK_OUT: "Check Out is required",
+  PURPOSE_OF_VISIT: "Purpose of visit is required",
+  TIME: "Time is required",
 };
 
 export const EXTEND_OR_CANCEL_REQUEST = {

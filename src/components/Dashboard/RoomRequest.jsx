@@ -1,12 +1,24 @@
-import { Button, Container, Grid, Typography } from "@mui/material";
+import {
+  Button,
+  Container,
+  FormHelperText,
+  Grid,
+  Typography,
+} from "@mui/material";
 import { Box } from "@mui/system";
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
 import { ROOM_REQUEST } from "../constants/commonString";
 import CustomInput from "../ghcomponents/CustomInput";
 import CustomSelect from "../ghcomponents/CustomSelect";
+import appConfig from "../services/appConfig";
 import { COLORS } from "../themes/Colors";
+import { userRoomRequest } from "./dashboard.action";
+import moment from "moment";
+import { toast } from "react-toastify";
 
-const RoomRequest = () => {
+const RoomRequest = ({ setLoading, setIsModalOpen }) => {
+  const dispatch = useDispatch();
   const [roomRequestFormDetails, setRoomRequestFormDetails] = useState({
     buName: "",
     project: "",
@@ -17,34 +29,124 @@ const RoomRequest = () => {
     purpose: "",
     arrivalTime: "",
   });
+  const [errors, setErrors] = useState({
+    isBu: false,
+    isProject: false,
+    isLocation: false,
+    isApproved: false,
+    isCheckIn: false,
+    isCheckOut: false,
+    isPurpose: false,
+    isTime: false,
+  });
+
+  const handleRoomReqSubmit = async (event) => {
+    event.preventDefault();
+    if (
+      !roomRequestFormDetails.buName &&
+      !roomRequestFormDetails.project &&
+      !roomRequestFormDetails.location &&
+      !roomRequestFormDetails.approvedBy &&
+      !roomRequestFormDetails.checkIn &&
+      !roomRequestFormDetails.checkOut &&
+      !roomRequestFormDetails.purpose &&
+      !roomRequestFormDetails.arrivalTime
+    ) {
+      setErrors({
+        isBu: true,
+        isProject: true,
+        isLocation: true,
+        isApproved: true,
+        isCheckIn: true,
+        isCheckOut: true,
+        isPurpose: true,
+        isTime: true,
+      });
+    } else if (!roomRequestFormDetails.buName) {
+      setErrors({ ...errors, isBu: true });
+    } else if (!roomRequestFormDetails.project) {
+      setErrors({ ...errors, isProject: true });
+    } else if (!roomRequestFormDetails.location) {
+      setErrors({ ...errors, isLocation: true });
+    } else if (!roomRequestFormDetails.approvedBy) {
+      setErrors({ ...errors, isApproved: true });
+    } else if (!roomRequestFormDetails.checkIn) {
+      setErrors({ ...errors, isCheckIn: true });
+    } else if (!roomRequestFormDetails.checkOut) {
+      setErrors({ ...errors, isCheckOut: true });
+    } else if (!roomRequestFormDetails.purpose) {
+      setErrors({ ...errors, isPurpose: true });
+    } else if (!roomRequestFormDetails.arrivalTime) {
+      setErrors({ ...errors, isTime: true });
+    } else {
+      setErrors({
+        isBu: false,
+        isProject: false,
+        isLocation: false,
+        isApproved: false,
+        isCheckIn: false,
+        isCheckOut: false,
+        isPurpose: false,
+        isTime: false,
+      });
+      setLoading(true);
+      const data = {
+        bu: roomRequestFormDetails.buName,
+        client: roomRequestFormDetails.project,
+        location: roomRequestFormDetails.location,
+        approved_by: roomRequestFormDetails.approvedBy,
+        checkin: moment(roomRequestFormDetails.checkIn).format("DD/MM/YYYY"),
+        checkout: moment(roomRequestFormDetails.checkOut).format("DD/MM/YYYY"),
+        arrival: roomRequestFormDetails.arrivalTime,
+        purpose: roomRequestFormDetails.purpose,
+      };
+      const { response, error } = await userRoomRequest(
+        appConfig.API_BASE_URL,
+        data,
+        dispatch
+      );
+      if (response) {
+        toast.success(response?.data?.message);
+        setIsModalOpen(false);
+      }
+      if (error) {
+        toast.error(error?.data.message);
+      }
+      setTimeout(() => {
+        setLoading(false);
+      }, 1000);
+    }
+  };
 
   return (
     <Container component="main" maxWidth="xs">
       <Typography variant="h5">{ROOM_REQUEST.ROOM_REQUEST_FORM}</Typography>
-      <Box
-        component="form"
-        noValidate
-        onSubmit={() => console.log("hi")}
-        sx={{ mt: 3 }}
-      >
+      <Box component="form" sx={{ mt: 3 }}>
         <Grid container spacing={2}>
           <Grid item xs={12} sm={6}>
             <CustomSelect
+              error={errors.isBu}
               formStyle={{ minWidth: "100%" }}
               menuItems={["BU-1", "BU-2", "BU-3", "BU-4", "BU-5", "BU-6"]}
               label={"Choose BU"}
               inputLabelText={"Choose BU"}
               value={roomRequestFormDetails.buName}
-              handleChange={(e) =>
+              handleChange={(e) => {
+                const value = e.target.value;
                 setRoomRequestFormDetails({
                   ...roomRequestFormDetails,
-                  buName: e.target.value,
-                })
-              }
+                  buName: value,
+                });
+                setErrors({ ...errors, isBu: value ? false : true });
+              }}
             />
+            {errors.isBu && (
+              <FormHelperText error>{ROOM_REQUEST.BU_REQUIRED}</FormHelperText>
+            )}
           </Grid>
           <Grid item xs={12} sm={6}>
             <CustomInput
+              error={errors.isProject}
               required
               fullWidth
               id="Project/ Client"
@@ -52,16 +154,20 @@ const RoomRequest = () => {
               name="Project/ Client"
               autoComplete="family-name"
               value={roomRequestFormDetails.project}
-              onChange={(e) =>
+              onChange={(e) => {
+                const value = e.target.value;
                 setRoomRequestFormDetails({
                   ...roomRequestFormDetails,
-                  project: e.target.value,
-                })
-              }
+                  project: value,
+                });
+                setErrors({ ...errors, isProject: value ? false : true });
+              }}
+              helperText={errors.isProject && ROOM_REQUEST.PROJECT}
             />
           </Grid>
           <Grid item xs={12}>
             <CustomInput
+              error={errors.isLocation}
               required
               fullWidth
               id="Location"
@@ -69,16 +175,20 @@ const RoomRequest = () => {
               name="Location"
               autoComplete="Location"
               value={roomRequestFormDetails.location}
-              onChange={(e) =>
+              onChange={(e) => {
+                const value = e.target.value;
                 setRoomRequestFormDetails({
                   ...roomRequestFormDetails,
-                  location: e.target.value,
-                })
-              }
+                  location: value,
+                });
+                setErrors({ ...errors, isLocation: value ? false : true });
+              }}
+              helperText={errors.isLocation && ROOM_REQUEST.LOCATION}
             />
           </Grid>
           <Grid item xs={12}>
             <CustomInput
+              error={errors.isApproved}
               required
               fullWidth
               id="Approved By"
@@ -86,16 +196,20 @@ const RoomRequest = () => {
               name="Approved By"
               autoComplete="Approved By"
               value={roomRequestFormDetails.approvedBy}
-              onChange={(e) =>
+              onChange={(e) => {
+                const value = e.target.value;
                 setRoomRequestFormDetails({
                   ...roomRequestFormDetails,
-                  approvedBy: e.target.value,
-                })
-              }
+                  approvedBy: value,
+                });
+                setErrors({ ...errors, isApproved: value ? false : true });
+              }}
+              helperText={errors.isApproved && ROOM_REQUEST.APPROVED_BY}
             />
           </Grid>
           <Grid item xs={12}>
             <CustomInput
+              error={errors.isCheckIn}
               required
               fullWidth
               id="Check In"
@@ -105,16 +219,20 @@ const RoomRequest = () => {
               type="date"
               InputLabelProps={{ shrink: true, required: true }}
               value={roomRequestFormDetails.checkIn}
-              onChange={(e) =>
+              onChange={(e) => {
+                const value = e.target.value;
                 setRoomRequestFormDetails({
                   ...roomRequestFormDetails,
-                  checkIn: e.target.value,
-                })
-              }
+                  checkIn: value,
+                });
+                setErrors({ ...errors, isCheckIn: value ? false : true });
+              }}
+              helperText={errors.isCheckIn && ROOM_REQUEST.CHECK_IN}
             />
           </Grid>
           <Grid item xs={12}>
             <CustomInput
+              error={errors.isCheckOut}
               required
               fullWidth
               name="Check Out"
@@ -124,16 +242,20 @@ const RoomRequest = () => {
               type="date"
               InputLabelProps={{ shrink: true, required: true }}
               value={roomRequestFormDetails.checkOut}
-              onChange={(e) =>
+              onChange={(e) => {
+                const value = e.target.value;
                 setRoomRequestFormDetails({
                   ...roomRequestFormDetails,
-                  checkOut: e.target.value,
-                })
-              }
+                  checkOut: value,
+                });
+                setErrors({ ...errors, isCheckOut: value ? false : true });
+              }}
+              helperText={errors.isCheckOut && ROOM_REQUEST.CHECK_OUT}
             />
           </Grid>
           <Grid item xs={12}>
             <CustomInput
+              error={errors.isPurpose}
               required
               fullWidth
               name="Purpose Of Visit"
@@ -141,16 +263,20 @@ const RoomRequest = () => {
               id="Purpose Of Visit"
               autoComplete="Purpose Of Visit"
               value={roomRequestFormDetails.purpose}
-              onChange={(e) =>
+              onChange={(e) => {
+                const value = e.target.value;
                 setRoomRequestFormDetails({
                   ...roomRequestFormDetails,
-                  purpose: e.target.value,
-                })
-              }
+                  purpose: value,
+                });
+                setErrors({ ...errors, isPurpose: value ? false : true });
+              }}
+              helperText={errors.isPurpose && ROOM_REQUEST.PURPOSE_OF_VISIT}
             />
           </Grid>
           <Grid item xs={12}>
             <CustomInput
+              error={errors.isTime}
               required
               fullWidth
               name="Arrival Time"
@@ -160,12 +286,15 @@ const RoomRequest = () => {
               type="time"
               InputLabelProps={{ shrink: true, required: true }}
               value={roomRequestFormDetails.arrivalTime}
-              onChange={(e) =>
+              onChange={(e) => {
+                const value = e.target.value;
                 setRoomRequestFormDetails({
                   ...roomRequestFormDetails,
-                  arrivalTime: e.target.value,
-                })
-              }
+                  arrivalTime: value,
+                });
+                setErrors({ ...errors, isTime: value ? false : true });
+              }}
+              helperText={errors.isTime && ROOM_REQUEST.TIME}
             />
           </Grid>
         </Grid>
@@ -174,6 +303,7 @@ const RoomRequest = () => {
           fullWidth
           variant="contained"
           sx={{ mt: 3, mb: 2, backgroundColor: COLORS.blue_azure }}
+          onClick={(event) => handleRoomReqSubmit(event)}
         >
           {ROOM_REQUEST.SEND}
         </Button>

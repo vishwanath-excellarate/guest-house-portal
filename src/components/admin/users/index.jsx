@@ -7,11 +7,7 @@ import {
 } from "../../constants/commonString";
 import CustomModal from "../../ghcomponents/CustomModal";
 import CustomTable from "../../ghcomponents/CustomTable";
-import {
-  CircularLoader,
-  DisabledBackground,
-  Toaster,
-} from "../../ghcomponents/Loader";
+import { CircularLoader, DisabledBackground } from "../../ghcomponents/Loader";
 import NoDataFound from "../../ghcomponents/NoDataFound";
 import appConfig from "../../services/appConfig";
 import { COLORS } from "../../themes/Colors";
@@ -170,7 +166,6 @@ const Users = () => {
       />
       <ModalComponent />
       <DeletePopUp />
-      {/* <Toaster messgae={'Email sent to an user'} /> */}
     </Grid>
   );
 };
