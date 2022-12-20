@@ -39,6 +39,7 @@ const requests = [
 
 const Dashboard = () => {
   const dispatch = useDispatch();
+  const profileDetails = useSelector((state) => state.profileReducer);
   const navigation = useNavigate();
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
@@ -46,11 +47,18 @@ const Dashboard = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedRequest, setSelectedRequest] = useState("");
   const [currentTab, setCurrentTab] = useState(1);
+  const [data, setData] = useState([]);
+
+
 
   useEffect(() => {
-    const profile = getProfileRequest(appConfig.API_BASE_URL, dispatch);
-     console.log('Roww////', profile);
+    const { response, error } =  getProfileRequest(appConfig.API_BASE_URL, dispatch);
   }, []);
+  
+
+
+
+  console.log('Row//', data);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
