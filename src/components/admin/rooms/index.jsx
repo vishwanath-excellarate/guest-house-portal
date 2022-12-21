@@ -1,5 +1,5 @@
 import { Box, Button, Grid, Typography } from "@mui/material";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   ROOMS_CONSTANT,
   ROOM_SCREEN_CONSTANT,
@@ -9,6 +9,10 @@ import CustomTable from "../../ghcomponents/CustomTable";
 import NoDataFound from "../../ghcomponents/NoDataFound";
 import { fontStyle } from "../../themes/Styles";
 import AddRoom from "./AddRoom";
+import { getRooms, deleteRoomRequest } from "./Room.action";
+import appConfig from "../../services/appConfig";
+import { useDispatch, useSelector } from "react-redux";
+
 
 const rows = [
   { slNo: 1, location: "Pune", room_no: "p-101" },
@@ -16,15 +20,45 @@ const rows = [
   { slNo: 3, location: "Pune", room_no: "p-102" },
   { slNo: 4, location: "Hydarabad", room_no: "hb-101" },
   { slNo: 5, location: "Hydarabad", room_no: "hb-102" },
+
 ];
 
 const Rooms = () => {
+  const dispatch = useDispatch();
+  const roomDetails = useSelector((state) => state.roomReducer);
+
+  // const roomDetails = useSelector((state) => state.roomReducer);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteClicked, setIsDeleteClicked] = useState(false);
+  const [deleteId, setDeleteId] = useState("")
+  // const [rows, setRows] = useState([])
 
-  if (!rows.length) {
+  // useEffect(() => {
+  //   async function fetchData() {
+  //     const result = await getRooms(appConfig.API_BASE_URL, dispatch);
+  //     const data = result.response.data.result;
+  //     const updatedRow = data.map(({ uid: slNo, room_id:room_no, ...rest }) => ({
+  //       slNo,
+  //       room_no, 
+  //       ...rest,
+  //     }));
+
+  //     setRows(updatedRow);
+
+  //   }
+
+  //   fetchData();
+
+  // }, []);
+
+  useEffect(() => {
+    getRooms(appConfig.API_BASE_URL, dispatch);
+  }, []);
+
+  // console.log('Roww//', rows)
+  if (!roomDetails.getRoomRes.length) {
     return <NoDataFound />;
   }
 
@@ -49,6 +83,10 @@ const Rooms = () => {
   };
 
   const DeletePopUp = () => {
+    const deleteHandler = () => {
+      console.log("Prppppppppppppp", deleteId);
+
+    }
     return (
       <CustomModal
         open={isDeleteClicked}
@@ -65,14 +103,25 @@ const Rooms = () => {
             {ROOM_SCREEN_CONSTANT.ARE_YOU_SURE}
           </Typography>
           <Button
-            onClick={() => setIsDeleteClicked(!isDeleteClicked)}
+            onClick={() => {
+              setIsDeleteClicked(!isDeleteClicked);
+              const data = { uid: deleteId.uid}
+              // console.log(data)
+              deleteRoomRequest(
+                appConfig.API_BASE_URL,
+               data,
+                dispatch
+              );
+            
+            
+            }}
             variant="contained"
             sx={{
               marginTop: 2,
               bgcolor: "#EE4B2B",
             }}
           >
-            Delete
+             Delete
           </Button>
         </Box>
       </CustomModal>
@@ -103,24 +152,18 @@ const Rooms = () => {
       </Grid>
       <CustomTable
         columns={ROOMS_CONSTANT}
-        rows={rows}
+        rows={roomDetails?.getRoomRes || []}
         page={page}
         rowsPerPage={rowsPerPage}
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
-        renderActionButton={() => (
+        renderActionButton={(value) => (
           <Box>
-            <Button
-              sx={{ marginRight: 2 }}
-              variant="contained"
-              // onClick={() => setIsDeleteClicked(!isDeleteClicked)}
-            >
-              Edit
-            </Button>
-            <Button
+             <Button
               variant="contained"
               sx={{ bgcolor: "#C41E3A" }}
-              onClick={() => setIsDeleteClicked(!isDeleteClicked)}
+              onClick={() => {          console.log(value); 
+                setDeleteId(value); setIsDeleteClicked(!isDeleteClicked) }}
             >
               Delete
             </Button>
