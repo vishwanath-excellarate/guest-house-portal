@@ -5,6 +5,12 @@ import {
   PROFILE_REQUEST_SUCCESS,
   PROFILE_REQUEST_FAILURE,
   PROFILE_REQUEST,
+  FORGOT_REQUEST, 
+  FORGOT_SUCCESS, 
+  FORGOT_FAILURE,
+  RESET_REQUEST, 
+  RESET_SUCCESS, 
+  RESET_FAILURE,
 } from "./Login.action.constant";
 
 const initialState = Object.freeze({
@@ -14,6 +20,15 @@ const initialState = Object.freeze({
   profileInfo: [],
   profileInfoStatus: null,
   profileInfoError: null,
+  forgotResult:[],
+  forgotRequestStatus:null, 
+  forgotRequestError:null,
+  resetResult:[],
+  resetRequestStatus:null, 
+  resetRequestError:null,
+  
+
+
 });
 
 export default function loginReducer(state = initialState, action) {
@@ -71,6 +86,61 @@ export default function loginReducer(state = initialState, action) {
         profileInfoError: "error",
         profileInfoStatus: "failled",
         profileInfo: [],
+      };
+    }
+
+    case FORGOT_REQUEST: {
+      return {
+        ...state,
+        forgotRequestError: null,
+        forgotRequestStatus: "started",
+      };
+    }
+
+    case FORGOT_SUCCESS: {
+      const data = action.payload.result;
+
+      return {
+        ...state,
+        forgotRequestError: null,
+        forgotRequestStatus: "finished",
+        forgotResult: data,
+      };
+    }
+
+    case FORGOT_FAILURE: {
+      return {
+        ...state,
+        forgotRequestError: "error",
+        forgotRequestStatus: "failled",
+        forgotResult: [],
+      };
+    }
+    case RESET_REQUEST: {
+      return {
+        ...state,
+        resetRequestError: null,
+        resetRequestStatus: "started",
+      };
+    }
+
+    case RESET_SUCCESS: {
+      const data = action.payload.result;
+
+      return {
+        ...state,
+        resetRequestError: null,
+        resetRequestStatus: "finished",
+        resetResult: data,
+      };
+    }
+
+    case RESET_FAILURE: {
+      return {
+        ...state,
+        resetRequestError: "error",
+        resetRequestStatus: "failled",
+        resetResult: [],
       };
     }
 

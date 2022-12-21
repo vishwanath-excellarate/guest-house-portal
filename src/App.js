@@ -8,6 +8,8 @@ import { Toaster } from "./components/ghcomponents/Loader";
 const LoginPage = lazy(() => import("./components/login/Login"));
 const Register = lazy(() => import("./components/user/accountReg"));
 const ForgotPassword = lazy(() => import("./components/login/ForgotPassword"));
+const ResetPassword = lazy(() => import("./components/login/reset"));
+
 const NoFoundComponent = lazy(() =>
   import("./components/pages/noFoundComponent")
 );
@@ -45,6 +47,8 @@ const App = () => {
           <Route exact path="/register" element={<Register />} />
           <Route exact path="/forgot-password" element={<ForgotPassword />} />
           <Route exact path="/account-setup" element={<AccountSetup />} />
+          <Route exact path="/reset" element={<ResetPassword />} />
+
           <Route
             exact
             path="/"

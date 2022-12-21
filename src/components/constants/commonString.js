@@ -22,6 +22,8 @@ export const ACCOUNT_SETUP = {
 export const FORGOT_PASSWORD = {
   FORGOT_PASSWORD: "Forgot Password",
   SEND: "Send",
+  RESET: "Update Password",
+  RESET_TITLE: "Enter your new password"
 };
 
 export const ADMIN_APP_BAR_CONSTANT = [
