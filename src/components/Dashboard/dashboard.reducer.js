@@ -3,6 +3,7 @@ import {
   USER_ROOM_REQUEST_SUCCESS,
   USER_ROOM_REQUEST_FAILURE,
   USER_MY_REQUEST,
+  USER_MY_REQUEST_SUCCESS,
   USER_MY_REQUEST_FAILURE,
 } from "./dashboard.action.constants";
 
@@ -49,7 +50,7 @@ export default function userRoomRequestReducer(state = initialState, action) {
       };
     }
 
-    case USER_ROOM_REQUEST_SUCCESS: {
+    case USER_MY_REQUEST_SUCCESS: {
       const data = action.payload;
 
       return {
