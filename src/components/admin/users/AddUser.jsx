@@ -86,7 +86,7 @@ const AddUser = ({ isModalOpen, setIsModalOpen, dispatch, setLoading }) => {
           sx={{
             ...fontStyle(),
             width: "100%",
-            "&:hover": { backgroundColor: COLORS.blue_azure },
+           
           }}
           onClick={() => handleSubmit()}
         >

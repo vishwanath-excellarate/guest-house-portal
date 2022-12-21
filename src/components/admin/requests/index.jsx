@@ -1,4 +1,4 @@
-import { Box, Button, Grid, Typography } from "@mui/material";
+import { Box, Button, FormHelperText, Grid, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -11,8 +11,16 @@ import CustomSelect from "../../ghcomponents/CustomSelect";
 import CustomTable from "../../ghcomponents/CustomTable";
 import NoDataFound from "../../ghcomponents/NoDataFound";
 import appConfig from "../../services/appConfig";
-import { getAllRomRequests } from "./requests.action";
+import {
+  allocateRoom,
+  deleteRoomRequest,
+  getAllRomRequests,
+  getAvailableRoom,
+} from "./requests.action";
 import { CircularLoader, DisabledBackground } from "../../ghcomponents/Loader";
+import { fontStyle } from "../../themes/Styles";
+import CloseIcon from "@mui/icons-material/Close";
+import { toast } from "react-toastify";
 
 const Requests = () => {
   const dispatch = useDispatch();
@@ -21,12 +29,19 @@ const Requests = () => {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteClicked, setIsDeleteClicked] = useState(false);
-  const [requestType, setRequestType] = useState("");
+  const [requestType, setRequestType] = useState("Pending");
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [roomsData, setRoomsData] = useState([]);
+  const [selectedRoom, setSelectedRoom] = useState("");
+  const [error, setError] = useState(false);
+  const [selectedRow, setSelectedRow] = useState("");
 
   useEffect(() => {
-    const result = roomRequests?.allRoomRequests?.map((item, index) => ({
+    let result = roomRequests?.allRoomRequests?.filter(
+      (item) => requestType.toLowerCase() === item.status
+    );
+    result = result.map((item, index) => ({
       slNo: index + 1,
       contact_no: item.pnumber,
       project: item.client,
@@ -35,23 +50,25 @@ const Requests = () => {
       ...item,
     }));
     setData(result);
-  }, [roomRequests.allRoomRequests]);
+  }, [roomRequests.allRoomRequests, requestType]);
+
+  useEffect(() => {
+    const result = roomRequests?.availableRooms?.map(
+      (item) => `${item.location} - ${item.room_id}`
+    );
+    setRoomsData(result);
+  }, [roomRequests.availableRooms]);
 
   useEffect(() => {
     async function fetchData() {
-      setLoading(true);
-      const { response, error } = await getAllRomRequests(
-        appConfig.API_BASE_URL,
-        dispatch
-      );
-      setLoading(false);
+      // setLoading(true);
+      await getAllRomRequests(appConfig.API_BASE_URL, dispatch);
+      await getAvailableRoom(appConfig.API_BASE_URL, dispatch);
+      // setLoading(false);
     }
     fetchData();
   }, []);
 
-  if (!data.length) {
-    return <NoDataFound />;
-  }
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -61,13 +78,97 @@ const Requests = () => {
     setPage(0);
   };
 
-  const ModalComponent = () => {
+  const handleSubmit = async () => {
+    if (!selectedRoom.length) {
+      setError(true);
+    } else {
+      setError(false);
+      setLoading(true);
+      const data = {
+        request_id: selectedRow.ruid,
+        room_id: selectedRoom.split("-").slice(1).toString(),
+      };
+      const { response, error } = await allocateRoom(
+        appConfig.API_BASE_URL,
+        data,
+        dispatch
+      );
+      if (response) {
+        toast.success(response?.data?.message);
+        await getAllRomRequests(appConfig.API_BASE_URL, dispatch);
+      }
+      if (error) {
+        toast.error(error?.data.message);
+      }
+      setLoading(false);
+      setIsModalOpen(!isModalOpen);
+      setSelectedRoom("");
+      setSelectedRow("");
+    }
+  };
+
+  if (!data.length) {
+    return <NoDataFound />;
+  }
+
+  const ApproveModal = () => {
     return (
       <CustomModal
         open={isModalOpen}
-        onClose={() => setIsModalOpen(!isModalOpen)}
+        // onClose={() => setIsModalOpen(!isModalOpen)}
       >
-        {/* <AddRoom isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} /> */}
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            flexDirection: "row",
+            paddingBottom: 1,
+          }}
+        >
+          <Typography component="h1" variant="h6" textAlign={"left"}>
+            Allocate Room
+          </Typography>
+
+          <CloseIcon
+            onClick={() => {
+              setIsModalOpen(!isModalOpen);
+              setSelectedRoom("");
+            }}
+          />
+        </Box>
+
+        <Box sx={{ mt: 2 }}>
+          <CustomSelect
+            error={error}
+            formStyle={{ width: "100%" }}
+            menuItems={roomsData}
+            label={"Select Room"}
+            inputLabelText={"Select Room"}
+            value={selectedRoom}
+            handleChange={(e) => {
+              const value = e.target.value;
+              setSelectedRoom(value);
+              setError(value ? false : true);
+            }}
+          />
+          {error && (
+            <FormHelperText error>
+              {"Room Allocation is Required"}
+            </FormHelperText>
+          )}
+        </Box>
+        <Button
+          variant="contained"
+          sx={{
+            ...fontStyle(),
+            width: "100%",
+            marginTop: 3,
+          }}
+          onClick={() => handleSubmit()}
+        >
+          Approve
+        </Button>
       </CustomModal>
     );
   };
@@ -80,20 +181,44 @@ const Requests = () => {
       >
         <Box
           sx={{
-            alignItems: "center",
-            display: "flex",
-            flexDirection: "column",
+            paddingBottom: 1,
           }}
         >
-          <Typography component="h6" variant="body1" textAlign={"center"}>
+          <Typography component="h1" variant="h6" textAlign={"center"}>
             {REQUEST_SCREEN_CONSTANT.ARE_YOU_SURE}
           </Typography>
+        </Box>
+
+        <Box sx={{ mt: 2 }}>
           <Button
-            onClick={() => setIsDeleteClicked(!isDeleteClicked)}
+            onClick={async () => {
+              setLoading(true);
+              const data = {
+                request_id: selectedRow.ruid,
+              };
+
+              const { response, error } = await deleteRoomRequest(
+                appConfig.API_BASE_URL,
+                data,
+                dispatch
+              );
+              if (response) {
+                toast.success(response?.data?.message);
+                await getAllRomRequests(appConfig.API_BASE_URL, dispatch);
+              }
+              if (error) {
+                toast.error(error?.data.message);
+              }
+              setIsDeleteClicked(!isDeleteClicked);
+              setLoading(false);
+              setSelectedRow("");
+            }}
             variant="contained"
             sx={{
+              width: "100%",
               marginTop: 2,
               bgcolor: "#EE4B2B",
+              "&:hover": { backgroundColor: "#EE4B2B" },
             }}
           >
             Delete
@@ -104,17 +229,15 @@ const Requests = () => {
   };
 
   return (
-    <Grid container>
-      {/* {loading && (
-        <>
+    <Grid container sx={{ px: 4 }}>
+      {loading && (
+        <DisabledBackground>
           <CircularLoader />
-          <DisabledBackground />
-        </>
-      )} */}
+        </DisabledBackground>
+      )}
       <Grid
         item
         xs={12}
-        // sm={6}
         sx={{
           display: "flex",
           justifyContent: "flex-end",
@@ -138,22 +261,37 @@ const Requests = () => {
         rowsPerPage={rowsPerPage}
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
-        renderActionButton={() => (
-          <Box>
-            <Button sx={{ marginRight: 2 }} variant="contained">
-              Approve
-            </Button>
-            <Button
-              variant="contained"
-              sx={{ bgcolor: "#C41E3A" }}
-              onClick={() => setIsDeleteClicked(!isDeleteClicked)}
-            >
-              Decline
-            </Button>
-          </Box>
-        )}
+        renderActionButton={(value) =>
+          requestType.toLowerCase() === "pending" && (
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+              <Button
+                sx={{ marginRight: 2, ...fontStyle() }}
+                variant="contained"
+                onClick={() => {
+                  setIsModalOpen(!isModalOpen);
+                  setSelectedRow(value);
+                }}
+              >
+                Approve
+              </Button>
+              <Button
+                variant="contained"
+                sx={{
+                  bgcolor: "#C41E3A",
+                  "&:hover": { backgroundColor: "#C41E3A" },
+                }}
+                onClick={() => {
+                  setIsDeleteClicked(!isDeleteClicked);
+                  setSelectedRow(value);
+                }}
+              >
+                Decline
+              </Button>
+            </Box>
+          )
+        }
       />
-      <ModalComponent />
+      <ApproveModal />
       <DeletePopUp />
     </Grid>
   );

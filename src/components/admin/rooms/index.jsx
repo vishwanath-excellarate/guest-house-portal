@@ -12,53 +12,36 @@ import AddRoom from "./AddRoom";
 import { getRooms, deleteRoomRequest } from "./Room.action";
 import appConfig from "../../services/appConfig";
 import { useDispatch, useSelector } from "react-redux";
-
-
-const rows = [
-  { slNo: 1, location: "Pune", room_no: "p-101" },
-  { slNo: 2, location: "Hubli", room_no: "h-101" },
-  { slNo: 3, location: "Pune", room_no: "p-102" },
-  { slNo: 4, location: "Hydarabad", room_no: "hb-101" },
-  { slNo: 5, location: "Hydarabad", room_no: "hb-102" },
-
-];
+import { CircularLoader, DisabledBackground } from "../../ghcomponents/Loader";
+import { toast } from "react-toastify";
 
 const Rooms = () => {
   const dispatch = useDispatch();
   const roomDetails = useSelector((state) => state.roomReducer);
-
-  // const roomDetails = useSelector((state) => state.roomReducer);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteClicked, setIsDeleteClicked] = useState(false);
-  const [deleteId, setDeleteId] = useState("")
-  // const [rows, setRows] = useState([])
+  const [data, setData] = useState([]);
+  const [selectRow, setSelectRow] = useState({});
+  const [loading, setLoading] = useState(false);
 
-  // useEffect(() => {
-  //   async function fetchData() {
-  //     const result = await getRooms(appConfig.API_BASE_URL, dispatch);
-  //     const data = result.response.data.result;
-  //     const updatedRow = data.map(({ uid: slNo, room_id:room_no, ...rest }) => ({
-  //       slNo,
-  //       room_no, 
-  //       ...rest,
-  //     }));
-
-  //     setRows(updatedRow);
-
-  //   }
-
-  //   fetchData();
-
-  // }, []);
+  useEffect(() => {
+    async function fetchData() {
+      const result = roomDetails?.getRoomRes.map((item, index) => ({
+        slNo: index + 1,
+        ...item,
+      }));
+      setData(result);
+    }
+    fetchData();
+  }, [roomDetails?.getRoomRes]);
 
   useEffect(() => {
     getRooms(appConfig.API_BASE_URL, dispatch);
   }, []);
 
-  // console.log('Roww//', rows)
-  if (!roomDetails.getRoomRes.length) {
+  if (!data.length) {
     return <NoDataFound />;
   }
 
@@ -77,59 +60,63 @@ const Rooms = () => {
         open={isModalOpen}
         onClose={() => setIsModalOpen(!isModalOpen)}
       >
-        <AddRoom isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
+        <AddRoom
+          isModalOpen={isModalOpen}
+          setIsModalOpen={setIsModalOpen}
+          setLoading={setLoading}
+        />
       </CustomModal>
     );
   };
 
   const DeletePopUp = () => {
-    const deleteHandler = () => {
-      console.log("Prppppppppppppp", deleteId);
-
-    }
     return (
       <CustomModal
         open={isDeleteClicked}
         onClose={() => setIsDeleteClicked(!isDeleteClicked)}
       >
-        <Box
+        <Typography component="h1" variant="h6" textAlign={"center"}>
+          {ROOM_SCREEN_CONSTANT.ARE_YOU_SURE}
+        </Typography>
+        <Button
+          onClick={async () => {
+            setLoading(true);
+            const data = { uid: selectRow?.uid };
+            const { response, error } = await deleteRoomRequest(
+              appConfig.API_BASE_URL,
+              data,
+              dispatch
+            );
+            if (response) {
+              toast.success(response?.data?.message);
+            }
+            if (error) {
+              toast.error(error?.data?.message);
+            }
+            setLoading(false);
+            setIsDeleteClicked(!isDeleteClicked);
+          }}
+          variant="contained"
           sx={{
-            alignItems: "center",
-            display: "flex",
-            flexDirection: "column",
+            width: "100%",
+            marginTop: 3,
+            bgcolor: "#EE4B2B",
+            "&:hover": { backgroundColor: "#EE4B2B" },
           }}
         >
-          <Typography component="h6" variant="body1" textAlign={"center"}>
-            {ROOM_SCREEN_CONSTANT.ARE_YOU_SURE}
-          </Typography>
-          <Button
-            onClick={() => {
-              setIsDeleteClicked(!isDeleteClicked);
-              const data = { uid: deleteId.uid}
-              // console.log(data)
-              deleteRoomRequest(
-                appConfig.API_BASE_URL,
-               data,
-                dispatch
-              );
-            
-            
-            }}
-            variant="contained"
-            sx={{
-              marginTop: 2,
-              bgcolor: "#EE4B2B",
-            }}
-          >
-             Delete
-          </Button>
-        </Box>
+          Delete
+        </Button>
       </CustomModal>
     );
   };
 
   return (
-    <Grid container>
+    <Grid container sx={{ px: 4 }}>
+      {loading && (
+        <DisabledBackground>
+          <CircularLoader />
+        </DisabledBackground>
+      )}
       <Grid
         item
         xl={12}
@@ -152,18 +139,23 @@ const Rooms = () => {
       </Grid>
       <CustomTable
         columns={ROOMS_CONSTANT}
-        rows={roomDetails?.getRoomRes || []}
+        rows={data}
         page={page}
         rowsPerPage={rowsPerPage}
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
         renderActionButton={(value) => (
           <Box>
-             <Button
+            <Button
               variant="contained"
-              sx={{ bgcolor: "#C41E3A" }}
-              onClick={() => {          console.log(value); 
-                setDeleteId(value); setIsDeleteClicked(!isDeleteClicked) }}
+              sx={{
+                bgcolor: "#C41E3A",
+                "&:hover": { backgroundColor: "#C41E3A" },
+              }}
+              onClick={() => {
+                setSelectRow(value);
+                setIsDeleteClicked(!isDeleteClicked);
+              }}
             >
               Delete
             </Button>
