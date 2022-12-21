@@ -2,12 +2,18 @@ import {
   LOGIN_REQUEST,
   LOGIN_SUCCESS,
   LOGIN_FAILURE,
+  PROFILE_REQUEST_SUCCESS,
+  PROFILE_REQUEST_FAILURE,
+  PROFILE_REQUEST,
 } from "./Login.action.constant";
 
 const initialState = Object.freeze({
   loginResult: [],
   loginRequestStatus: null,
   loginRequestError: null,
+  profileInfo: [],
+  profileInfoStatus: null,
+  profileInfoError: null,
 });
 
 export default function loginReducer(state = initialState, action) {
@@ -15,8 +21,8 @@ export default function loginReducer(state = initialState, action) {
     case LOGIN_REQUEST: {
       return {
         ...state,
-        loginOrRegRequestError: null,
-        loginOrRegRequestStatus: "started",
+        loginRequestError: null,
+        loginRequestStatus: "started",
       };
     }
 
@@ -25,8 +31,8 @@ export default function loginReducer(state = initialState, action) {
 
       return {
         ...state,
-        loginOrRegRequestError: null,
-        loginOrRegRequestStatus: "finished",
+        loginRequestError: null,
+        loginRequestStatus: "finished",
         loginResult: data,
       };
     }
@@ -34,9 +40,37 @@ export default function loginReducer(state = initialState, action) {
     case LOGIN_FAILURE: {
       return {
         ...state,
-        loginOrRegRequestError: "error",
-        loginOrRegRequestStatus: "failled",
+        loginRequestError: "error",
+        loginRequestStatus: "failled",
         loginResult: [],
+      };
+    }
+
+    case PROFILE_REQUEST: {
+      return {
+        ...state,
+        profileInfoError: null,
+        profileInfoStatus: "started",
+      };
+    }
+
+    case PROFILE_REQUEST_SUCCESS: {
+      const data = action.payload.result;
+
+      return {
+        ...state,
+        profileInfoError: null,
+        profileInfoStatus: "finished",
+        profileInfo: data,
+      };
+    }
+
+    case PROFILE_REQUEST_FAILURE: {
+      return {
+        ...state,
+        profileInfoError: "error",
+        profileInfoStatus: "failled",
+        profileInfo: [],
       };
     }
 

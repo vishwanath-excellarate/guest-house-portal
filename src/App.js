@@ -1,34 +1,57 @@
+import "react-toastify/dist/ReactToastify.css";
 import { CircularProgress } from "@mui/material";
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import PrivateRoute from "./components/routes/PrivateRoute";
+import { Toaster } from "./components/ghcomponents/Loader";
 
 const LoginPage = lazy(() => import("./components/login/Login"));
-const Register = lazy(() => import("./components/login/Signup"));
+const Register = lazy(() => import("./components/user/accountReg"));
 const ForgotPassword = lazy(() => import("./components/login/ForgotPassword"));
 const NoFoundComponent = lazy(() =>
   import("./components/pages/noFoundComponent")
 );
 const Dashboard = lazy(() => import("./components/Dashboard"));
 const AdminDashboard = lazy(() => import("./components/admin/dashboard"));
+const AccountSetup = lazy(() => import("./components/user/accountReg"));
 
 const App = () => {
-  const isAuthenticated = true;
-  const isAdmin = true;
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [role, setRole] = useState("");
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const fetchRole = localStorage.getItem("role");
+    setIsAuthenticated(Boolean(token));
+    setRole(fetchRole);
+  }, []);
 
   return (
     <Router>
+      <Toaster />
       <Suspense fallback={<CircularProgress />}>
         <Routes>
           <Route path="*" element={<NoFoundComponent />} />
-          <Route exact path="/login" element={<LoginPage />} />
+          <Route
+            exact
+            path="/login"
+            element={
+              <LoginPage
+                setIsAuthenticated={setIsAuthenticated}
+                setRole={setRole}
+              />
+            }
+          />
           <Route exact path="/register" element={<Register />} />
           <Route exact path="/forgot-password" element={<ForgotPassword />} />
+          <Route exact path="/account-setup" element={<AccountSetup />} />
           <Route
             exact
             path="/"
             element={
-              <PrivateRoute isAuthenticated={!isAdmin && isAuthenticated} />
+              <PrivateRoute
+                isAuthenticated={role === "employee" && isAuthenticated}
+              />
             }
           >
             <Route exact path="/dashboard" element={<Dashboard />} />
@@ -37,7 +60,9 @@ const App = () => {
             exact
             path="/"
             element={
-              <PrivateRoute isAuthenticated={isAdmin && isAuthenticated} />
+              <PrivateRoute
+                isAuthenticated={role === "admin" && isAuthenticated}
+              />
             }
           >
             <Route path="/admin-dashboard" element={<AdminDashboard />} />

@@ -8,8 +8,9 @@ import { fontStyle } from "../../themes/Styles";
 import { COLORS } from "../../themes/Colors";
 import { addUserRequest } from "./User.action";
 import appConfig from "../../services/appConfig";
+import { toast } from "react-toastify";
 
-const AddUser = ({ isModalOpen, setIsModalOpen, dispatch }) => {
+const AddUser = ({ isModalOpen, setIsModalOpen, dispatch, setLoading }) => {
   const [email, setEmail] = useState("");
   const [isError, setIsError] = useState(false);
 
@@ -18,16 +19,24 @@ const AddUser = ({ isModalOpen, setIsModalOpen, dispatch }) => {
       setIsError(true);
       return;
     } else {
+      setLoading(true);
       setIsError(false);
       const userData = {
         email: email,
       };
       setIsModalOpen(false);
-      const response = await addUserRequest(
+      const { response, error } = await addUserRequest(
         appConfig.API_BASE_URL,
         userData,
         dispatch
       );
+      if (response) {
+        toast.success(response?.data?.message);
+      }
+      if (error) {
+        toast.error(error?.data.message);
+      }
+      setLoading(false);
     }
   };
 
@@ -74,14 +83,15 @@ const AddUser = ({ isModalOpen, setIsModalOpen, dispatch }) => {
       >
         <Button
           variant="contained"
-          sx={{ ...fontStyle(), width: "100%" }}
+          sx={{
+            ...fontStyle(),
+            width: "100%",
+            "&:hover": { backgroundColor: COLORS.blue_azure },
+          }}
           onClick={() => handleSubmit()}
         >
           Send Invite Link
         </Button>
-        {/* <Button variant="contained" sx={{ ...fontStyle(COLORS.red) }}>
-          Cacnel
-        </Button> */}
       </Box>
     </Container>
   );

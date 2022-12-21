@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import { Box, Container } from "@mui/system";
 import MenuIcon from "@mui/icons-material/Menu";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Users from "../users";
 import Rooms from "../rooms";
 import Requests from "../requests";
@@ -25,12 +25,31 @@ import {
 } from "../../constants/commonString";
 import { COLORS } from "../../themes/Colors";
 import { setAuthHeaders } from "../../services/api";
+import { getProfileDetails } from "../../login/Login.action";
+import appConfig from "../../services/appConfig";
+import { useDispatch, useSelector } from "react-redux";
 
 const AdminDashboard = () => {
   const navigation = useNavigate();
+  const dispatch = useDispatch();
+  const details = useSelector((state) => state.loginReducer);
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [currentTab, setCurrentTab] = useState(1);
   const [anchorElUser, setAnchorElUser] = useState(null);
+  const [profileInfo, setProfileInfo] = useState(details.profileInfo || []);
+
+  useEffect(() => {
+    async function fetchProfileInfo() {
+      const { response, error } = await getProfileDetails(
+        appConfig.API_BASE_URL,
+        dispatch
+      );
+      if (response) {
+        setProfileInfo(response?.data?.result);
+      }
+    }
+    fetchProfileInfo();
+  }, []);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -177,18 +196,17 @@ const AdminDashboard = () => {
                 onClose={handleCloseUserMenu}
               >
                 <Box sx={{ px: 5, py: 0.5 }}>
-                  <Typography>Name: {PROFILE_INFO.NAME}</Typography>
-                  <Typography>
-                    Designation: {PROFILE_INFO.DESIGNATION}
-                  </Typography>
-                  <Typography>Ph no: {PROFILE_INFO.PHONE_NO}</Typography>
-                  <Typography>Email: {PROFILE_INFO.EMAIL}</Typography>
+                  <Typography>Name: {profileInfo[0]?.name}</Typography>
+                  <Typography>Designation: {profileInfo[0]?.desig}</Typography>
+                  <Typography>Ph no: {profileInfo[0]?.pnumber}</Typography>
+                  <Typography>Email: {profileInfo[0]?.email}</Typography>
                 </Box>
                 {ADMIN_PROFILE_CONSTANT.map((item) => (
                   <MenuItem
                     key={item.id}
                     onClick={() => {
                       localStorage.removeItem("token");
+                      localStorage.removeItem("role");
                       // setAuthHeaders(null);
                       handleCloseUserMenu();
                       navigation("/login");

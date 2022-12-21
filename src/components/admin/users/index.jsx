@@ -7,21 +7,14 @@ import {
 } from "../../constants/commonString";
 import CustomModal from "../../ghcomponents/CustomModal";
 import CustomTable from "../../ghcomponents/CustomTable";
-import { Toaster } from "../../ghcomponents/Loader";
+import { CircularLoader, DisabledBackground } from "../../ghcomponents/Loader";
 import NoDataFound from "../../ghcomponents/NoDataFound";
 import appConfig from "../../services/appConfig";
 import { COLORS } from "../../themes/Colors";
 import { fontStyle } from "../../themes/Styles";
 import AddUser from "./AddUser";
 import { deleteUserRequest, getUserRequest } from "./User.action";
-
-const rows = [
-  { slNo: 1, email: "vishwa@gmail.com" },
-  { slNo: 2, email: "test@gmail.com" },
-  { slNo: 3, email: "abc@gmail.com" },
-  { slNo: 4, email: "asasa@gmail.com" },
-  { slNo: 5, email: "qwqw@gmail.com" },
-];
+import { toast } from "react-toastify";
 
 const Users = () => {
   const dispatch = useDispatch();
@@ -31,10 +24,23 @@ const Users = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteClicked, setIsDeleteClicked] = useState(false);
   const [selectedEmail, setSelectedEmail] = useState("");
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    getUserRequest(appConfig.API_BASE_URL, dispatch);
+    const { response, error } = getUserRequest(
+      appConfig.API_BASE_URL,
+      dispatch
+    );
   }, []);
+
+  useEffect(() => {
+    const result = userDetails.getUserRes.map((item, index) => ({
+      slNo: index + 1,
+      ...item,
+    }));
+    setData(result);
+  }, [userDetails.getUserRes]);
 
   if (!userDetails.getUserRes.length) {
     return <NoDataFound />;
@@ -59,6 +65,7 @@ const Users = () => {
           isModalOpen={isModalOpen}
           setIsModalOpen={setIsModalOpen}
           dispatch={dispatch}
+          setLoading={setLoading}
         />
       </CustomModal>
     );
@@ -81,18 +88,29 @@ const Users = () => {
             {USER_SCREEN_CONSTANT.ARE_YOU_SURE}
           </Typography>
           <Button
-            onClick={() => {
+            onClick={async () => {
+              setLoading(true);
               setIsDeleteClicked(!isDeleteClicked);
-              deleteUserRequest(
+              const { response, error } = await deleteUserRequest(
                 appConfig.API_BASE_URL,
                 selectedEmail,
                 dispatch
               );
+              if (response) {
+                toast.success(response?.data?.message);
+              }
+              if (error) {
+                toast.error(error?.data.message);
+              }
+              setTimeout(() => {
+                setLoading(false);
+              }, 1000);
             }}
             variant="contained"
             sx={{
               marginTop: 2,
               bgcolor: "#EE4B2B",
+              "&:hover": { backgroundColor: '#EE4B2B'},
             }}
           >
             Delete
@@ -104,6 +122,12 @@ const Users = () => {
 
   return (
     <Grid container>
+      {loading && (
+        <>
+          <CircularLoader />
+          <DisabledBackground />
+        </>
+      )}
       <Grid
         item
         xl={12}
@@ -122,6 +146,7 @@ const Users = () => {
             width: 150,
             height: 40,
             ...fontStyle(),
+            "&:hover": { backgroundColor: COLORS.blue_azure },
           }}
           onClick={() => setIsModalOpen(!isModalOpen)}
         >
@@ -130,14 +155,17 @@ const Users = () => {
       </Grid>
       <CustomTable
         columns={USERS_COLUMN}
-        rows={userDetails?.getUserRes || []}
+        rows={data}
         page={page}
         rowsPerPage={rowsPerPage}
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
         renderActionButton={(value) => (
           <Button
-            sx={{ bgcolor: "#C41E3A" }}
+            sx={{
+              bgcolor: "#C41E3A",
+              "&:hover": { backgroundColor: "#C41E3A" },
+            }}
             variant="contained"
             onClick={() => {
               setIsDeleteClicked(!isDeleteClicked);
@@ -150,7 +178,6 @@ const Users = () => {
       />
       <ModalComponent />
       <DeletePopUp />
-      {/* <Toaster messgae={'Email sent to an user'} /> */}
     </Grid>
   );
 };

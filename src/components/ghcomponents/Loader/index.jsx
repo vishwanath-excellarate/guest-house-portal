@@ -3,24 +3,32 @@ import PropTypes from "prop-types";
 import CircularProgress from "@mui/material/CircularProgress";
 import LinearProgress from "@mui/material/LinearProgress";
 import { Box, styled } from "@mui/system";
-import { Alert } from "@mui/material";
+import { ToastContainer } from "react-toastify";
 
-export const Toaster = ({ severity = "success", messgae }) => {
+export const Toaster = ({ position, theme }) => {
   return (
-    <Alert
-      sx={{
-        position: "absolute",
-        right: 10,
-        bottom: 50,
-        zIndex: 2,
-        width: 400,
-      }}
-      variant="filled"
-      severity={severity}
-    >
-      {messgae}
-    </Alert>
+    <ToastContainer
+      position={position}
+      autoClose={2000}
+      hideProgressBar={false}
+      newestOnTop={false}
+      closeOnClick
+      rtl={false}
+      pauseOnFocusLoss={false}
+      draggable={false}
+      pauseOnHover={false}
+      theme={theme}
+    />
   );
+};
+Toaster.propTypes = {
+  position: PropTypes.string,
+  theme: PropTypes.string,
+};
+
+Toaster.defaultProps = {
+  position: "top-right",
+  theme: "colored",
 };
 
 export const CircularLoader = ({ size, color }) => {

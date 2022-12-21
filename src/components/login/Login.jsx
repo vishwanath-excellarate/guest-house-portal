@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Button from "@mui/material/Button";
 import FormControlLabel from "@mui/material/FormControlLabel";
@@ -26,12 +26,9 @@ import { COLORS } from "../themes/Colors";
 import { loginUserOrAdmin } from "./Login.action";
 import appConfig from "../services/appConfig";
 import { CircularLoader, DisabledBackground } from "../ghcomponents/Loader";
+import { toast } from "react-toastify";
 
-const Login = () => {
-  const isAuthenticated = true;
-  const isAdmin = true;
-  // const loginData = useSelector((state) => state.loginReducer);
-  // console.log('loginData', loginData);
+const Login = ({ setIsAuthenticated, setRole }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [showPassword, setShowPassword] = useState(false);
@@ -45,6 +42,16 @@ const Login = () => {
     isPasswordError: false,
   });
 
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const userRole = localStorage.getItem("role");
+    if (token && userRole === "admin") {
+      navigate("/admin-dashboard");
+    } else if (token && userRole === "employee") {
+      navigate("/dashboard");
+    }
+  }, []);
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (!logInDetails.email && !logInDetails.password) {
@@ -55,27 +62,30 @@ const Login = () => {
       setErrors({ ...errors, isPasswordError: true });
     } else {
       setErrors({ isEmailError: false, isPasswordError: false });
-      // if (!isAdmin && isAuthenticated) {
-      //   navigate("/dashboard");
-      //   return;
-      // } else {
       setLoading(true);
       const userData = {
         email: logInDetails.email,
         password: logInDetails.password,
       };
-      const loginResult = await loginUserOrAdmin(
+      const { response, error } = await loginUserOrAdmin(
         appConfig.API_BASE_URL,
         userData,
         dispatch
       );
-
-      if (loginResult.response) {
-        setLoading(false);
-        // navigate("/dashboard");
-        navigate("/admin-dashboard");
+      if (response) {
+        toast.success(response?.data?.message);
+        setIsAuthenticated(Boolean(response.headers.authorization));
+        setRole(response.data.role);
+        if (response.data.role === "admin") {
+          navigate("/admin-dashboard");
+        } else {
+          navigate("/dashboard");
+        }
       }
-      // }
+      if (error) {
+        toast.error(error?.data.message);
+      }
+      setLoading(false);
     }
   };
 
@@ -97,15 +107,6 @@ const Login = () => {
     });
   };
 
-  if (loading) {
-    return (
-      <>
-        <CircularLoader />
-        {/* <DisabledBackground /> */}
-      </>
-    );
-  }
-
   return (
     <Container
       component="div"
@@ -117,6 +118,12 @@ const Login = () => {
         justifyContent: "center",
       }}
     >
+      {loading && (
+        <>
+          <CircularLoader />
+          <DisabledBackground />
+        </>
+      )}
       <Box
         sx={{
           display: "flex",
@@ -223,16 +230,6 @@ const Login = () => {
           >
             {SIGN_IN.SIGN_IN}
           </Button>
-          {/* <Grid textAlign={"center"}>
-            <Link
-              href="/register"
-              variant="body1"
-              onClick={() => navigate("/register")}
-              sx={{ color: COLORS.blue_azure, letterSpacing: 0.3 }}
-            >
-              {SIGN_IN.DONT_AN_ACCOUNT}
-            </Link>
-          </Grid> */}
         </Box>
       </Box>
     </Container>

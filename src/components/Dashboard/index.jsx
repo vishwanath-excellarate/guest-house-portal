@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -24,6 +24,10 @@ import {
   PROFILE_INFO,
 } from "../constants/commonString";
 import { setAuthHeaders } from "../services/api";
+import { CircularLoader, DisabledBackground } from "../ghcomponents/Loader";
+import { useDispatch, useSelector } from "react-redux";
+import { getProfileDetails } from "../login/Login.action";
+import appConfig from "../services/appConfig";
 
 const pages = [
   { id: 1, name: "My Requests" },
@@ -36,12 +40,29 @@ const requests = [
 
 const Dashboard = () => {
   const navigation = useNavigate();
+  const dispatch = useDispatch();
+  const details = useSelector((state) => state.loginReducer);
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
   const [anchorEl, setAnchorEl] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedRequest, setSelectedRequest] = useState("");
   const [currentTab, setCurrentTab] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const [profileInfo, setProfileInfo] = useState(details.profileInfo || []);
+
+  useEffect(() => {
+    async function fetchProfileInfo() {
+      const { response, error } = await getProfileDetails(
+        appConfig.API_BASE_URL,
+        dispatch
+      );
+      if (response) {
+        setProfileInfo(response?.data?.result);
+      }
+    }
+    fetchProfileInfo();
+  }, []);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -71,6 +92,12 @@ const Dashboard = () => {
 
   return (
     <Container disableGutters maxWidth={false}>
+      {loading && (
+        <>
+          <CircularLoader />
+          <DisabledBackground />
+        </>
+      )}
       <AppBar position="static" sx={{ backgroundColor: COLORS.blue_azure }}>
         <Container maxWidth={false}>
           <Toolbar disableGutters>
@@ -170,39 +197,9 @@ const Dashboard = () => {
             </Box>
 
             <Box sx={{ flexGrow: 0 }}>
-              <IconButton
-                onClick={handleOpenUserMenu}
-                sx={{ p: 0 }}
-                // onMouseEnter={handleOpenUserMenu}
-                // onMouseLeave={handleCloseUserMenu}
-              >
+              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Avatar alt="avatar" />
               </IconButton>
-              {/* <Popover
-                sx={{
-                  pointerEvents: "none",
-                  mt: "10px",
-                }}
-                open={Boolean(anchorElUser)}
-                anchorEl={anchorElUser}
-                anchorOrigin={{
-                  vertical: "bottom",
-                  horizontal: "left",
-                }}
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "left",
-                }}
-                onClose={handleCloseUserMenu}
-                disableRestoreFocus
-              >
-                <Box sx={{ p: 1 }}>
-                  <Typography>Vishwanath S</Typography>
-                  <Typography>Designation: Software Developer</Typography>
-                  <Typography>Ph no: 1234567890</Typography>
-                  <Typography>vishwanath.somavarad@excellarate.com</Typography>
-                </Box>
-              </Popover> */}
               <Menu
                 sx={{ mt: "45px" }}
                 id="menu-appbar"
@@ -220,18 +217,17 @@ const Dashboard = () => {
                 onClose={handleCloseUserMenu}
               >
                 <Box sx={{ px: 5, py: 0.5 }}>
-                  <Typography>Name: {PROFILE_INFO.NAME}</Typography>
-                  <Typography>
-                    Designation: {PROFILE_INFO.DESIGNATION}
-                  </Typography>
-                  <Typography>Ph no: {PROFILE_INFO.PHONE_NO}</Typography>
-                  <Typography>Email: {PROFILE_INFO.EMAIL}</Typography>
+                  <Typography>Name: {profileInfo[0]?.name}</Typography>
+                  <Typography>Designation: {profileInfo[0]?.desig}</Typography>
+                  <Typography>Ph no: {profileInfo[0]?.pnumber}</Typography>
+                  <Typography>Email: {profileInfo[0]?.email}</Typography>
                 </Box>
                 {ADMIN_PROFILE_CONSTANT.map((item) => (
                   <MenuItem
                     key={item.id}
                     onClick={() => {
                       localStorage.removeItem("token");
+                      localStorage.removeItem("role");
                       // setAuthHeaders(null);
                       handleCloseUserMenu();
                       navigation("/login");
@@ -292,7 +288,10 @@ const Dashboard = () => {
           );
         })}
       </Popover>
-      <Modal open={isModalOpen} onClose={() => setIsModalOpen(!isModalOpen)}>
+      <Modal
+        open={isModalOpen}
+        // onClose={() => setIsModalOpen(!isModalOpen)}
+      >
         <Box
           sx={{
             position: "absolute",
@@ -306,7 +305,12 @@ const Dashboard = () => {
             p: 4,
           }}
         >
-          {selectedRequest === 1 && <RoomRequest />}
+          {selectedRequest === 1 && (
+            <RoomRequest
+              setLoading={setLoading}
+              setIsModalOpen={setIsModalOpen}
+            />
+          )}
           {selectedRequest === 2 && <CancelOrExtendRequest />}
         </Box>
       </Modal>
