@@ -73,7 +73,7 @@ export const RQUEST_CONSTANT = [
   { id: "check_in", label: "Check In", align: "center" },
   { id: "check_out", label: "Check Out", align: "center" },
   { id: "purpose_of_visit", label: "Purpose Of Visit", align: "center" },
-  { id: "action", label: "Action", align: "center", minWidth: 250 },
+  { id: "action", label: "Action", align: "center", minWidth: 200 },
 ];
 
 export const REQUEST_TYPE = ["Pending", "Approved"];
@@ -128,3 +128,15 @@ export const PROFILE_INFO = {
   PHONE_NO: "1234567890",
   EMAIL: "abcdef@excellarate.com",
 };
+
+export const MY_RQUEST_CONSTANT = [
+  { id: "slNo", label: "Sl No.", align: "center" },
+  { id: "location", label: "Location", align: "center" },
+  { id: "project", label: "Project/ Client", align: "center" },
+  { id: "bu", label: "BU", align: "center" },
+  { id: "approved", label: "Approved By", align: "center" },
+  { id: "check_in", label: "Check In", align: "center" },
+  { id: "check_out", label: "Check Out", align: "center" },
+  { id: "arrival_time", label: "Arrival Time", align: "center" },
+  { id: "purpose_of_visit", label: "Purpose Of Visit", align: "center" },
+];

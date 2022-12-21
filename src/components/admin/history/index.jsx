@@ -161,11 +161,10 @@ const RoomDetails = () => {
   };
 
   return (
-    <Grid container>
+    <Grid container sx={{ px: 4 }}>
       <Grid
         item
         xs={12}
-        // sm={6}
         sx={{
           display: "flex",
           justifyContent: "flex-end",

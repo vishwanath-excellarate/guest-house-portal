@@ -40,7 +40,7 @@ export const CircularLoader = ({ size, color }) => {
         left: "50%",
         top: "50%",
         transform: "translate(-50%, -50%)",
-        zIndex: 2,
+        zIndex: 10,
         color: color,
       }}
     />
@@ -57,7 +57,7 @@ export const DisabledBackground = styled(Box)({
   position: "fixed",
   background: "#ccc",
   opacity: 0.5,
-  zIndex: 1,
+  zIndex: 10,
 });
 
 CircularLoader.propTypes = {

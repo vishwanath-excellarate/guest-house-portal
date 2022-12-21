@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 
 const CustomModal = ({ open, onClose, modalStyle, boxStyle, children }) => {
   return (
-    <Modal open={open} onClose={onClose} sx={modalStyle}>
+    <Modal open={open} onClose={onClose} sx={{ zIndex: 3, modalStyle }}>
       <Box
         sx={{
           position: "absolute",

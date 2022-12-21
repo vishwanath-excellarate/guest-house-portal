@@ -75,58 +75,50 @@ const Users = () => {
     return (
       <CustomModal
         open={isDeleteClicked}
-        // onClose={() => setIsDeleteClicked(!isDeleteClicked)}
+        onClose={() => setIsDeleteClicked(!isDeleteClicked)}
       >
-        <Box
+        <Typography component="h1" variant="h6" textAlign={"center"}>
+          {USER_SCREEN_CONSTANT.ARE_YOU_SURE}
+        </Typography>
+        <Button
+          onClick={async () => {
+            setLoading(true);
+            setIsDeleteClicked(!isDeleteClicked);
+            const { response, error } = await deleteUserRequest(
+              appConfig.API_BASE_URL,
+              selectedEmail,
+              dispatch
+            );
+            if (response) {
+              toast.success(response?.data?.message);
+            }
+            if (error) {
+              toast.error(error?.data.message);
+            }
+            setTimeout(() => {
+              setLoading(false);
+            }, 1000);
+          }}
+          variant="contained"
           sx={{
-            alignItems: "center",
-            display: "flex",
-            flexDirection: "column",
+            width: "100%",
+            marginTop: 3,
+            bgcolor: "#EE4B2B",
+            "&:hover": { backgroundColor: "#EE4B2B" },
           }}
         >
-          <Typography component="h6" variant="body1">
-            {USER_SCREEN_CONSTANT.ARE_YOU_SURE}
-          </Typography>
-          <Button
-            onClick={async () => {
-              setLoading(true);
-              setIsDeleteClicked(!isDeleteClicked);
-              const { response, error } = await deleteUserRequest(
-                appConfig.API_BASE_URL,
-                selectedEmail,
-                dispatch
-              );
-              if (response) {
-                toast.success(response?.data?.message);
-              }
-              if (error) {
-                toast.error(error?.data.message);
-              }
-              setTimeout(() => {
-                setLoading(false);
-              }, 1000);
-            }}
-            variant="contained"
-            sx={{
-              marginTop: 2,
-              bgcolor: "#EE4B2B",
-              "&:hover": { backgroundColor: '#EE4B2B'},
-            }}
-          >
-            Delete
-          </Button>
-        </Box>
+          Delete
+        </Button>
       </CustomModal>
     );
   };
 
   return (
-    <Grid container>
+    <Grid container sx={{ px: 4 }}>
       {loading && (
-        <>
+        <DisabledBackground>
           <CircularLoader />
-          <DisabledBackground />
-        </>
+        </DisabledBackground>
       )}
       <Grid
         item
@@ -146,7 +138,6 @@ const Users = () => {
             width: 150,
             height: 40,
             ...fontStyle(),
-            "&:hover": { backgroundColor: COLORS.blue_azure },
           }}
           onClick={() => setIsModalOpen(!isModalOpen)}
         >

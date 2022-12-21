@@ -80,7 +80,7 @@ const Rooms = () => {
   };
 
   return (
-    <Grid container>
+    <Grid container sx={{ px: 4 }}>
       <Grid
         item
         xl={12}

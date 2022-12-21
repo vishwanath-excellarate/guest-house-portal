@@ -11,6 +11,9 @@ const initialState = Object.freeze({
   userResult: [],
   userRequestStatus: null,
   userRequestError: null,
+  myReqResult: [],
+  myReqStatus: null,
+  myReqError: null,
 });
 
 export default function userRoomRequestReducer(state = initialState, action) {
@@ -45,28 +48,28 @@ export default function userRoomRequestReducer(state = initialState, action) {
     case USER_MY_REQUEST: {
       return {
         ...state,
-        userRequestError: null,
-        userRequestStatus: "started",
+        myReqError: null,
+        myReqStatus: "started",
       };
     }
 
     case USER_MY_REQUEST_SUCCESS: {
-      const data = action.payload;
+      const data = action.payload.result;
 
       return {
         ...state,
-        userRequestError: null,
-        userRequestStatus: "finished",
-        userResult: data,
+        myReqError: null,
+        myReqStatus: "finished",
+        myReqResult: data,
       };
     }
 
     case USER_MY_REQUEST_FAILURE: {
       return {
         ...state,
-        userRequestError: "error",
-        userRequestStatus: "failled",
-        userResult: [],
+        myReqError: "error",
+        myReqStatus: "failled",
+        myReqResult: [],
       };
     }
 

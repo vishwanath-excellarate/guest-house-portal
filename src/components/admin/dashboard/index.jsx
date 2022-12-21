@@ -236,7 +236,7 @@ const AdminDashboard = () => {
         alignItems="center"
         justifyContent="center"
         display={"flex"}
-        sx={{ paddingLeft: 5, paddingRight: 5 }}
+        // sx={{ paddingLeft: 5, paddingRight: 5 }}
       >
         {currentTab === 1 && <Users />}
         {currentTab === 2 && <Rooms />}

@@ -7,5 +7,6 @@ export const fontStyle = (bgColor, size, spacing) => {
     textTransform: "capitalize",
     fontSize: size || FONT_SIZE.medium,
     letterSpacing: spacing || 0.3,
+    "&:hover": { backgroundColor: bgColor || COLORS.blue_azure },
   };
 };
