@@ -6,6 +6,9 @@ import {
   GET_USER_REQUEST,
   GET_USER_SUCCESS,
   GET_USER_FAILURE,
+  ADD_ROOM_REQUEST,
+  ADD_ROOM_SUCCESS,
+  ADD_ROOM_FAILURE,
 } from "./User.action.constants";
 
 export async function addUserRequest(baseURL, data, dispatch) {

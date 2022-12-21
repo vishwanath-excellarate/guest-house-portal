@@ -4,6 +4,7 @@ import userReducer from "../admin/users/User.reducer";
 import userAccountRegReducer from "../user/accountReg/AccountRegister.reducer";
 import userRoomRequestReducer from "../Dashboard/dashboard.reducer";
 import roomRequestsReducer from "../admin/requests/requests.reducer";
+import roomReducer from "../admin/rooms/Room.reducer";
 
 export const reducer = combineReducers({
   loginReducer,
@@ -11,4 +12,5 @@ export const reducer = combineReducers({
   userAccountRegReducer,
   userRoomRequestReducer,
   roomRequestsReducer,
+  roomReducer,
 });
