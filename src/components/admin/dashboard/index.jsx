@@ -196,10 +196,20 @@ const AdminDashboard = () => {
                 onClose={handleCloseUserMenu}
               >
                 <Box sx={{ px: 5, py: 0.5 }}>
-                  <Typography>Name: {profileInfo[0]?.name}</Typography>
-                  <Typography>Designation: {profileInfo[0]?.desig}</Typography>
-                  <Typography>Ph no: {profileInfo[0]?.pnumber}</Typography>
-                  <Typography>Email: {profileInfo[0]?.email}</Typography>
+                  {profileInfo[0]?.name && (
+                    <Typography>Name: {profileInfo[0]?.name}</Typography>
+                  )}
+                  {profileInfo[0]?.desig && (
+                    <Typography>
+                      Designation: {profileInfo[0]?.desig}
+                    </Typography>
+                  )}
+                  {profileInfo[0]?.pnumber && (
+                    <Typography>Ph no: {profileInfo[0]?.pnumber}</Typography>
+                  )}
+                  {profileInfo[0]?.email && (
+                    <Typography>Email: {profileInfo[0]?.email}</Typography>
+                  )}
                 </Box>
                 {ADMIN_PROFILE_CONSTANT.map((item) => (
                   <MenuItem

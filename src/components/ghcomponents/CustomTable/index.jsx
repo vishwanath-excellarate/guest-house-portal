@@ -57,7 +57,11 @@ const CustomTable = ({
                       <TableCell
                         key={column.id}
                         align={column.align}
-                        sx={{ fontSize: 16, textTransform: "capitalize" }}
+                        sx={{
+                          fontSize: 16,
+                          textTransform:
+                            column.id === "email" ? "none" : "capitalize",
+                        }}
                       >
                         {typeof value === "undefined"
                           ? renderActionButton(row)

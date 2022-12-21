@@ -5,38 +5,40 @@ import CustomInput from "../../ghcomponents/CustomInput";
 import CloseIcon from "@mui/icons-material/Close";
 import { fontStyle } from "../../themes/Styles";
 import { COLORS } from "../../themes/Colors";
-import { addRooms,  } from "./Room.action";
+import { addRooms } from "./Room.action";
 import appConfig from "../../services/appConfig";
 import { useDispatch } from "react-redux";
+import { toast } from "react-toastify";
 
-
-
-const AddRoom = ({ isModalOpen, setIsModalOpen }) => {
+const AddRoom = ({ isModalOpen, setIsModalOpen, setLoading }) => {
   const dispatch = useDispatch();
   const [roomDetails, setRoomDetails] = useState({ location: "", roomNo: "" });
   const [isError, setIsError] = useState(false);
 
-  
   const handleSubmit = async () => {
     if (!roomDetails.location && !roomDetails.roomNo) {
       setIsError(true);
       return;
     } else {
       setIsError(false);
+      setLoading(true);
       const roomData = {
         location: roomDetails.location,
-        room_id : roomDetails.roomNo
-      
+        room_id: roomDetails.roomNo,
       };
-      const response = await addRooms(
+      const { response, error } = await addRooms(
         appConfig.API_BASE_URL,
         roomData,
         dispatch
       );
-      if (response.response) {
-        setIsModalOpen(false);
+      if (response) {
+        toast.success(response?.data?.message);
       }
-
+      if (error) {
+        toast.error(error?.data?.message);
+      }
+      setLoading(false);
+      setIsModalOpen(false);
     }
   };
 
