@@ -65,6 +65,7 @@ export const RQUEST_CONSTANT = [
   { id: "name", label: "Name", align: "center" },
   { id: "email", label: "Email", align: "center" },
   { id: "contact_no", label: "Contact No.", align: "center" },
+  { id: "gender", label: "Gender", align: "center" },
   { id: "location", label: "Location", align: "center" },
   { id: "project", label: "Project/ Client", align: "center" },
   { id: "bu", label: "BU", align: "center" },

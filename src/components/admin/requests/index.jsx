@@ -1,5 +1,6 @@
 import { Box, Button, Grid, Typography } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import {
   REQUEST_SCREEN_CONSTANT,
   REQUEST_TYPE,
@@ -9,96 +10,46 @@ import CustomModal from "../../ghcomponents/CustomModal";
 import CustomSelect from "../../ghcomponents/CustomSelect";
 import CustomTable from "../../ghcomponents/CustomTable";
 import NoDataFound from "../../ghcomponents/NoDataFound";
-
-const rows = [
-  {
-    slNo: 1,
-    name: "abc",
-    email: "abc@gmail.com",
-    contact_no: "1234567890",
-    location: "hubli",
-    project: "xyz",
-    bu: "BU-6",
-    approved: "Amit",
-    check_in: "12-12-2022",
-    check_out: "12-12-2022",
-    purpose_of_visit: "workation",
-  },
-  {
-    slNo: 2,
-    name: "abc2",
-    email: "abc2@gmail.com",
-    contact_no: "1234567890",
-    location: "hubli",
-    project: "xyz2",
-    bu: "BU-6",
-    approved: "Amit2",
-    check_in: "12-12-2022",
-    check_out: "12-12-2022",
-    purpose_of_visit: "workation",
-  },
-  {
-    slNo: 3,
-    name: "abc3",
-    email: "abc3@gmail.com",
-    contact_no: "1234567890",
-    location: "hubli",
-    project: "xyz3",
-    bu: "BU-6",
-    approved: "Amit3",
-    check_in: "12-12-2022",
-    check_out: "12-12-2022",
-    purpose_of_visit: "workation",
-  },
-  {
-    slNo: 4,
-    name: "abc",
-    email: "abc@gmail.com",
-    contact_no: "1234567890",
-    location: "hubli",
-    project: "xyz",
-    bu: "BU-6",
-    approved: "Amit",
-    check_in: "12-12-2022",
-    check_out: "12-12-2022",
-    purpose_of_visit: "workation",
-  },
-  {
-    slNo: 5,
-    name: "abc2",
-    email: "abc2@gmail.com",
-    contact_no: "1234567890",
-    location: "hubli",
-    project: "xyz2",
-    bu: "BU-6",
-    approved: "Amit2",
-    check_in: "12-12-2022",
-    check_out: "12-12-2022",
-    purpose_of_visit: "workation",
-  },
-  {
-    slNo: 6,
-    name: "abc3",
-    email: "vishwanath.s@excellarate.com",
-    contact_no: "1234567890",
-    location: "hubli",
-    project: "xyz3",
-    bu: "BU-6",
-    approved: "Amit3",
-    check_in: "12-12-2022",
-    check_out: "12-12-2022",
-    purpose_of_visit: "workation",
-  },
-];
+import appConfig from "../../services/appConfig";
+import { getAllRomRequests } from "./requests.action";
+import { CircularLoader, DisabledBackground } from "../../ghcomponents/Loader";
 
 const Requests = () => {
+  const dispatch = useDispatch();
+  const roomRequests = useSelector((state) => state.roomRequestsReducer);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteClicked, setIsDeleteClicked] = useState(false);
   const [requestType, setRequestType] = useState("");
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-  if (!rows.length) {
+  useEffect(() => {
+    const result = roomRequests?.allRoomRequests?.map((item, index) => ({
+      slNo: index + 1,
+      contact_no: item.pnumber,
+      project: item.client,
+      approved: item.approved_by,
+      purpose_of_visit: item.purpose,
+      ...item,
+    }));
+    setData(result);
+  }, [roomRequests.allRoomRequests]);
+
+  useEffect(() => {
+    async function fetchData() {
+      setLoading(true);
+      const { response, error } = await getAllRomRequests(
+        appConfig.API_BASE_URL,
+        dispatch
+      );
+      setLoading(false);
+    }
+    fetchData();
+  }, []);
+
+  if (!data.length) {
     return <NoDataFound />;
   }
   const handleChangePage = (event, newPage) => {
@@ -154,6 +105,12 @@ const Requests = () => {
 
   return (
     <Grid container>
+      {/* {loading && (
+        <>
+          <CircularLoader />
+          <DisabledBackground />
+        </>
+      )} */}
       <Grid
         item
         xs={12}
@@ -176,7 +133,7 @@ const Requests = () => {
       </Grid>
       <CustomTable
         columns={RQUEST_CONSTANT}
-        rows={rows}
+        rows={data}
         page={page}
         rowsPerPage={rowsPerPage}
         onPageChange={handleChangePage}

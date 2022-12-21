@@ -3,10 +3,12 @@ import loginReducer from "../login/Login.reducer";
 import userReducer from "../admin/users/User.reducer";
 import userAccountRegReducer from "../user/accountReg/AccountRegister.reducer";
 import userRoomRequestReducer from "../Dashboard/dashboard.reducer";
+import roomRequestsReducer from "../admin/requests/requests.reducer";
 
 export const reducer = combineReducers({
   loginReducer,
   userReducer,
   userAccountRegReducer,
   userRoomRequestReducer,
+  roomRequestsReducer,
 });

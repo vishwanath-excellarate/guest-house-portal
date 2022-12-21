@@ -14,6 +14,7 @@ import { COLORS } from "../../themes/Colors";
 import { fontStyle } from "../../themes/Styles";
 import AddUser from "./AddUser";
 import { deleteUserRequest, getUserRequest } from "./User.action";
+import { toast } from "react-toastify";
 
 const Users = () => {
   const dispatch = useDispatch();
@@ -87,14 +88,20 @@ const Users = () => {
             {USER_SCREEN_CONSTANT.ARE_YOU_SURE}
           </Typography>
           <Button
-            onClick={() => {
+            onClick={async () => {
               setLoading(true);
               setIsDeleteClicked(!isDeleteClicked);
-              const { response, error } = deleteUserRequest(
+              const { response, error } = await deleteUserRequest(
                 appConfig.API_BASE_URL,
                 selectedEmail,
                 dispatch
               );
+              if (response) {
+                toast.success(response?.data?.message);
+              }
+              if (error) {
+                toast.error(error?.data.message);
+              }
               setTimeout(() => {
                 setLoading(false);
               }, 1000);
@@ -103,6 +110,7 @@ const Users = () => {
             sx={{
               marginTop: 2,
               bgcolor: "#EE4B2B",
+              "&:hover": { backgroundColor: '#EE4B2B'},
             }}
           >
             Delete
@@ -138,6 +146,7 @@ const Users = () => {
             width: 150,
             height: 40,
             ...fontStyle(),
+            "&:hover": { backgroundColor: COLORS.blue_azure },
           }}
           onClick={() => setIsModalOpen(!isModalOpen)}
         >
@@ -153,7 +162,10 @@ const Users = () => {
         onRowsPerPageChange={handleChangeRowsPerPage}
         renderActionButton={(value) => (
           <Button
-            sx={{ bgcolor: "#C41E3A" }}
+            sx={{
+              bgcolor: "#C41E3A",
+              "&:hover": { backgroundColor: "#C41E3A" },
+            }}
             variant="contained"
             onClick={() => {
               setIsDeleteClicked(!isDeleteClicked);
