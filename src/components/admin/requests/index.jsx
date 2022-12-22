@@ -54,8 +54,9 @@ const Requests = () => {
 
   useEffect(() => {
     const result = roomRequests?.availableRooms?.map(
-      (item) => `${item.location} - ${item.room_id}`
+      (item) => `${item.location} - ${item.room_id} - ${item.uid}`
     );
+   
     setRoomsData(result);
   }, [roomRequests.availableRooms]);
 
@@ -86,7 +87,7 @@ const Requests = () => {
       setLoading(true);
       const data = {
         request_id: selectedRow.ruid,
-        room_id: selectedRoom.split("-").slice(1).toString(),
+        room_id: selectedRoom.split("-").slice(3).toString(),
       };
       const { response, error } = await allocateRoom(
         appConfig.API_BASE_URL,

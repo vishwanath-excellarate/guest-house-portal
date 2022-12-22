@@ -91,7 +91,7 @@ const MyRequests = ({
                 onClick={async () => {
                   setLoading(true);
                   const data = {
-                    room_id: value?.uid,
+                    room_id: value?.room_id,
                   };
                   const { response, error } = await checkOutRoom(
                     appConfig.API_BASE_URL,
