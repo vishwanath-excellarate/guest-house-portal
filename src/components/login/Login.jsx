@@ -118,10 +118,9 @@ const Login = ({ setIsAuthenticated, setRole }) => {
       }}
     >
       {loading && (
-        <>
+        <DisabledBackground>
           <CircularLoader />
-          <DisabledBackground />
-        </>
+        </DisabledBackground>
       )}
       <Box
         sx={{

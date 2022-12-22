@@ -34,13 +34,7 @@ const MyRequests = ({
   }, [myRoomReq.myReqResult]);
 
   useEffect(() => {
-    async function fetchMyRequests() {
-      const { response, error } = await userMyRequest(
-        appConfig.API_BASE_URL,
-        dispatch
-      );
-    }
-    fetchMyRequests();
+    userMyRequest(appConfig.API_BASE_URL, dispatch);
   }, []);
 
   const handleChangePage = (event, newPage) => {

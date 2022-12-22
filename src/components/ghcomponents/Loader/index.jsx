@@ -37,7 +37,7 @@ export const CircularLoader = ({ size, color }) => {
       size={size}
       sx={{
         position: "fixed",
-        left: "50%",
+        left: { xs: "41%", sm: "45%", md:"48%" },
         top: "50%",
         transform: "translate(-50%, -50%)",
         zIndex: 10,

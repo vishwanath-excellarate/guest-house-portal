@@ -23,6 +23,7 @@ export async function userRoomRequest(baseURL, data, dispatch) {
   );
   if (response) {
     dispatch({ type: USER_ROOM_REQUEST_SUCCESS, payload: response?.data });
+    await userMyRequest(baseURL, dispatch);
   }
   if (error) {
     dispatch({ type: USER_ROOM_REQUEST_FAILURE });

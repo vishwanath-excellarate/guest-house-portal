@@ -112,9 +112,7 @@ const RoomRequest = ({ setLoading, setIsModalOpen }) => {
       if (error) {
         toast.error(error?.data.message);
       }
-      setTimeout(() => {
-        setLoading(false);
-      }, 1000);
+      setLoading(false);
     }
   };
 
