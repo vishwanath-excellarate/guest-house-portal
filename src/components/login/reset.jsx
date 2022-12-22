@@ -1,51 +1,78 @@
-import { Box, Button, Container, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Container,
+  FormControl,
+  FormHelperText,
+  IconButton,
+  InputAdornment,
+  InputLabel,
+  OutlinedInput,
+  Typography,
+} from "@mui/material";
 
 import React, { useState } from "react";
 import { FORGOT_PASSWORD } from "../constants/commonString";
-import CustomInput from "../ghcomponents/CustomInput";
 import { fontStyle } from "../themes/Styles";
 import { reset } from "./Login.action";
 import { toast } from "react-toastify";
 import appConfig from "../services/appConfig";
-import { useDispatch, useSelector } from "react-redux";
-import { useLocation, useNavigate } from "react-router-dom";
-
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { CircularLoader, DisabledBackground } from "../ghcomponents/Loader";
 
 const ResetPassword = () => {
   const queryString = window.location.search;
   const urlParams = new URLSearchParams(queryString);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [pass, setPass] = useState("");
-  const [isError, setIsError] = useState(false);
+  const [errors, setErrors] = useState({
+    isPassword: false,
+    isNewPassword: false,
+  });
   const [loading, setLoading] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  
+  const [reserData, setReserData] = useState({ password: "", newPassword: "" });
+  const [showPassword, setShowPassword] = useState({
+    isPass1: false,
+    isPass2: false,
+  });
+  const [helperTest, setHelperTest] = useState({
+    text1: "Passwod Is Required",
+    text2: "New Password Is Required",
+  });
 
   const handleSubmit = async () => {
-    if (!pass.length) {
-      setIsError(true);
-      return;
+    if (!reserData.password && !reserData.newPassword) {
+      setErrors({ isPassword: true, isNewPassword: true });
+    } else if (!reserData.password) {
+      setErrors({ ...errors, isPassword: true });
+    } else if (!reserData.newPassword) {
+      setErrors({ ...errors, isNewPassword: true });
+    } else if (reserData.password !== reserData.newPassword) {
+      setErrors({ isPassword: true, isNewPassword: true });
+      setHelperTest({
+        text1: "Both Passwords Must Match",
+        text2: "Both Passwords Must Match",
+      });
     } else {
+      setErrors({ isPassword: false, isNewPassword: false });
       setLoading(true);
-      setIsError(false);
       const userData = {
         hash: {
           iv: urlParams.get("vi"),
-          content: urlParams.get("content")
+          content: urlParams.get("content"),
         },
-        password: pass
+        password: reserData.password,
       };
-      setIsModalOpen(false);
       const { response, error } = await reset(
         appConfig.API_BASE_URL,
         userData,
-        dispatch, 
+        dispatch,
         navigate
       );
       if (response) {
         toast.success(response?.data?.message);
-        setPass("");
       }
       if (error) {
         toast.error(error?.data.message);
@@ -65,6 +92,11 @@ const ResetPassword = () => {
         justifyContent: "center",
       }}
     >
+      {loading && (
+        <DisabledBackground>
+          <CircularLoader />
+        </DisabledBackground>
+      )}
       <Box
         sx={{
           display: "flex",
@@ -76,22 +108,89 @@ const ResetPassword = () => {
           {FORGOT_PASSWORD.RESET_TITLE}
         </Typography>
         <Box sx={{ mt: 2 }}>
-          <CustomInput
-            margin="normal"
-            required
-            fullWidth
-            id="password"
-            label="New Password"
-            name="password"
-            autoComplete="password"
-            error={isError}
-            helperText={isError && "Invalid Email Address"}
-            value={pass}
+          <FormControl variant="outlined" fullWidth margin="normal">
+            <InputLabel
+              required
+              htmlFor="outlined-adornment-password-1"
+              error={errors.isPassword}
+            >
+              Password
+            </InputLabel>
+            <OutlinedInput
+              required
+              id="outlined-adornment-password-1"
+              type={showPassword.isPass1 ? "text" : "password"}
+              value={reserData.password}
               onChange={(event) => {
-                setPass(event.target.value);
+                const value = event.target.value;
+                setReserData({ ...reserData, password: value });
+                setErrors({ ...errors, isPassword: value ? false : true });
               }}
-              
-          />
+              endAdornment={
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={() =>
+                      setShowPassword({
+                        ...showPassword,
+                        isPass1: !showPassword.isPass1,
+                      })
+                    }
+                    edge="end"
+                  >
+                    {showPassword.isPass1 ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              }
+              label="Password"
+              error={errors.isPassword}
+            />
+            {errors.isPassword && (
+              <FormHelperText error>{helperTest.text1}</FormHelperText>
+            )}
+          </FormControl>
+
+          <FormControl variant="outlined" fullWidth margin="normal">
+            <InputLabel
+              required
+              htmlFor="outlined-adornment-password-2"
+              error={errors.isNewPassword}
+            >
+              New Password
+            </InputLabel>
+            <OutlinedInput
+              required
+              id="outlined-adornment-password-2"
+              type={showPassword.isPass2 ? "text" : "password"}
+              value={reserData.newPassword}
+              onChange={(event) => {
+                const value = event.target.value;
+                setReserData({ ...reserData, newPassword: value });
+                setErrors({ ...errors, isNewPassword: value ? false : true });
+              }}
+              endAdornment={
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={() =>
+                      setShowPassword({
+                        ...showPassword,
+                        isPass2: !showPassword.isPass2,
+                      })
+                    }
+                    edge="end"
+                  >
+                    {showPassword.isPass2 ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              }
+              label="Password"
+              error={errors.isNewPassword}
+            />
+            {errors.isNewPassword && (
+              <FormHelperText error>{helperTest.text2}</FormHelperText>
+            )}
+          </FormControl>
 
           <Button
             type="submit"
@@ -99,7 +198,6 @@ const ResetPassword = () => {
             variant="contained"
             sx={{ mt: 3, mb: 2, ...fontStyle() }}
             onClick={() => handleSubmit()}
-
           >
             {FORGOT_PASSWORD.RESET}
           </Button>

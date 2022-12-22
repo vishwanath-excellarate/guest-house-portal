@@ -23,7 +23,7 @@ export const FORGOT_PASSWORD = {
   FORGOT_PASSWORD: "Forgot Password",
   SEND: "Send",
   RESET: "Update Password",
-  RESET_TITLE: "Enter your new password"
+  RESET_TITLE: "Reset Password",
 };
 
 export const ADMIN_APP_BAR_CONSTANT = [
@@ -88,19 +88,20 @@ export const HISTORY_CONSTANT = [
   { id: "name", label: "Name", align: "center" },
   { id: "email", label: "Email", align: "center" },
   { id: "contact_no", label: "Contact No.", align: "center" },
+  { id: "gender", label: "Gender", align: "center" },
   { id: "location", label: "Location", align: "center" },
   { id: "project", label: "Project/ Client", align: "center" },
   { id: "bu", label: "BU", align: "center" },
   { id: "approved", label: "Approved By", align: "center" },
   { id: "check_in", label: "Check In", align: "center" },
   { id: "check_out", label: "Check Out", align: "center" },
-  { id: "purpose_of_visit", label: "Purpose Of Visit", align: "center" },
-  { id: "alloted_room", label: "Alloted Room", align: "center" },
+  // { id: "alloted_room", label: "Alloted Room", align: "center" },
   {
-    id: "approved_current_time",
-    label: "Approved Current Time",
+    id: "arrival_time",
+    label: "Arrival Time",
     align: "center",
   },
+  { id: "purpose_of_visit", label: "Purpose Of Visit", align: "center" },
 ];
 
 export const HISTORY_SCREEN_CONSTANT = {

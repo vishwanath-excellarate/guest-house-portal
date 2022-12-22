@@ -1,115 +1,37 @@
-import { Box, Button, Grid, Typography } from "@mui/material";
-import React, { useState } from "react";
-import {
-  HISTORY_CONSTANT,
-  HISTORY_SCREEN_CONSTANT,
-  ROOM_STATUS,
-} from "../../constants/commonString";
-import CustomModal from "../../ghcomponents/CustomModal";
-import CustomSelect from "../../ghcomponents/CustomSelect";
+import { Grid } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { HISTORY_CONSTANT } from "../../constants/commonString";
 import CustomTable from "../../ghcomponents/CustomTable";
-
-const rows = [
-  {
-    slNo: 1,
-    name: "abc",
-    email: "abc@gmail.com",
-    contact_no: "1234567890",
-    location: "hubli",
-    project: "xyz",
-    bu: "BU-6",
-    approved: "Amit",
-    check_in: "12-12-2022",
-    check_out: "12-12-2022",
-    purpose_of_visit: "workation",
-    alloted_room: "p-101",
-    approved_current_time: "12-12-2022 12:36",
-  },
-  {
-    slNo: 2,
-    name: "abc2",
-    email: "abc2@gmail.com",
-    contact_no: "1234567890",
-    location: "hubli",
-    project: "xyz2",
-    bu: "BU-6",
-    approved: "Amit2",
-    check_in: "12-12-2022",
-    check_out: "12-12-2022",
-    purpose_of_visit: "workation",
-    alloted_room: "p-101",
-    approved_current_time: "12-12-2022 12:36",
-  },
-  {
-    slNo: 3,
-    name: "abc3",
-    email: "abc3@gmail.com",
-    contact_no: "1234567890",
-    location: "hubli",
-    project: "xyz3",
-    bu: "BU-6",
-    approved: "Amit3",
-    check_in: "12-12-2022",
-    check_out: "12-12-2022",
-    purpose_of_visit: "workation",
-    alloted_room: "p-101",
-    approved_current_time: "12-12-2022 12:36",
-  },
-  {
-    slNo: 4,
-    name: "abc",
-    email: "abc@gmail.com",
-    contact_no: "1234567890",
-    location: "hubli",
-    project: "xyz",
-    bu: "BU-6",
-    approved: "Amit",
-    check_in: "12-12-2022",
-    check_out: "12-12-2022",
-    purpose_of_visit: "workation",
-    alloted_room: "p-101",
-    approved_current_time: "12-12-2022 12:36",
-  },
-  {
-    slNo: 5,
-    name: "abc2",
-    email: "abc2@gmail.com",
-    contact_no: "1234567890",
-    location: "hubli",
-    project: "xyz2",
-    bu: "BU-6",
-    approved: "Amit2",
-    check_in: "12-12-2022",
-    check_out: "12-12-2022",
-    purpose_of_visit: "workation",
-    alloted_room: "p-101",
-    approved_current_time: "12-12-2022 12:36",
-  },
-  {
-    slNo: 6,
-    name: "abc3",
-    email: "vishwanath.s@excellarate.com",
-    contact_no: "1234567890",
-    location: "hubli",
-    project: "xyz3",
-    bu: "BU-6",
-    approved: "Amit3",
-    check_in: "12-12-2022",
-    check_out: "12-12-2022",
-    purpose_of_visit: "workation",
-    alloted_room: "p-101",
-    approved_current_time: "12-12-2022 12:36",
-  },
-];
+import NoDataFound from "../../ghcomponents/NoDataFound";
+import appConfig from "../../services/appConfig";
+import { getHistoryRequests } from "./history.action";
 
 const RoomDetails = () => {
+  const dispatch = useDispatch();
+  const historyResult = useSelector((state) => state.historyReqReducer);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isDeleteClicked, setIsDeleteClicked] = useState(false);
-  const [requestType, setRequestType] = useState("");
+  const [data, setData] = useState([]);
 
-  const handleChangePage = (event, newPage) => {
+  // console.log('historyResult.historyReqResult', historyResult.historyReqResult);
+  useEffect(() => {
+    getHistoryRequests(appConfig.API_BASE_URL, dispatch);
+  }, []);
+
+  useEffect(() => {
+    const result = historyResult.historyReqResult.map((item, index) => ({
+      slNo: index + 1,
+      contact_no: item.pnumber,
+      project: item.client,
+      approved: item.approved_by,
+      purpose_of_visit: item.purpose,
+      ...item,
+    }));
+    setData(result);
+  }, [historyResult.historyReqResult]);
+
+  const handleChangePage = (newPage) => {
     setPage(newPage);
   };
 
@@ -118,93 +40,20 @@ const RoomDetails = () => {
     setPage(0);
   };
 
-  const ModalComponent = () => {
-    return (
-      <CustomModal
-        open={isModalOpen}
-        onClose={() => setIsModalOpen(!isModalOpen)}
-      >
-        {/* <AddRoom isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} /> */}
-      </CustomModal>
-    );
-  };
-
-  const DeletePopUp = () => {
-    return (
-      <CustomModal
-        open={isDeleteClicked}
-        onClose={() => setIsDeleteClicked(!isDeleteClicked)}
-      >
-        <Box
-          sx={{
-            alignItems: "center",
-            display: "flex",
-            flexDirection: "column",
-          }}
-        >
-          <Typography component="h6" variant="body1" textAlign={"center"}>
-            {HISTORY_SCREEN_CONSTANT.ARE_YOU_SURE}
-          </Typography>
-          <Button
-            onClick={() => setIsDeleteClicked(!isDeleteClicked)}
-            variant="contained"
-            sx={{
-              marginTop: 2,
-              bgcolor: "#EE4B2B",
-            }}
-          >
-            Delete
-          </Button>
-        </Box>
-      </CustomModal>
-    );
-  };
+  if (!data.length) {
+    return <NoDataFound />;
+  }
 
   return (
-    <Grid container sx={{ px: 4 }}>
-      <Grid
-        item
-        xs={12}
-        sx={{
-          display: "flex",
-          justifyContent: "flex-end",
-          marginTop: 4,
-          marginBottom: 4,
-        }}
-      >
-        <CustomSelect
-          formStyle={{ minWidth: { xs: "60%", md: "20%" } }}
-          menuItems={ROOM_STATUS}
-          label={"Room Status"}
-          inputLabelText={"Room Status"}
-          value={requestType}
-          handleChange={(e) => setRequestType(e.target.value)}
-        />
-      </Grid>
+    <Grid container sx={{ px: 4, my: 8 }}>
       <CustomTable
         columns={HISTORY_CONSTANT}
-        rows={rows}
+        rows={data}
         page={page}
         rowsPerPage={rowsPerPage}
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
-        renderActionButton={() => (
-          <Box>
-            <Button sx={{ marginRight: 2 }} variant="contained">
-              Approve
-            </Button>
-            <Button
-              variant="contained"
-              sx={{ bgcolor: "#C41E3A" }}
-              onClick={() => setIsDeleteClicked(!isDeleteClicked)}
-            >
-              Decline
-            </Button>
-          </Box>
-        )}
       />
-      <ModalComponent />
-      <DeletePopUp />
     </Grid>
   );
 };

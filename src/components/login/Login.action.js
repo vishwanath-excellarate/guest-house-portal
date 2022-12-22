@@ -1,3 +1,4 @@
+import { getHistoryRequests } from "../admin/history/history.action";
 import {
   getAllRomRequests,
   getAvailableRoom,
@@ -15,7 +16,7 @@ import {
   PROFILE_REQUEST,
   PROFILE_REQUEST_SUCCESS,
   PROFILE_REQUEST_FAILURE,
-  FORGOT_REQUEST, 
+  FORGOT_REQUEST,
   FORGOT_SUCCESS,
   FORGOT_FAILURE,
   RESET_REQUEST,
@@ -37,6 +38,7 @@ export async function loginUserOrAdmin(baseURL, data, dispatch) {
       getAllRomRequests(baseURL, dispatch);
       getAvailableRoom(baseURL, dispatch);
       getExtendRomRequests(baseURL, dispatch);
+      getHistoryRequests(baseURL, dispatch);
     }
     if (response?.data.role === userRole.EMPLOYEE) {
       await userMyRequest(baseURL, dispatch);
@@ -77,7 +79,6 @@ export async function reset(baseURL, data, dispatch, navigate) {
   if (response) {
     dispatch({ type: RESET_SUCCESS, payload: response?.data });
     navigate("/login");
-
   }
   if (error) {
     dispatch({ type: RESET_FAILURE });

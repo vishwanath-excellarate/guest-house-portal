@@ -6,11 +6,8 @@ import { fontStyle } from "../themes/Styles";
 import { forgot } from "./Login.action";
 import { toast } from "react-toastify";
 import appConfig from "../services/appConfig";
-import { useDispatch, useSelector } from "react-redux";
-
-
-
-
+import { useDispatch } from "react-redux";
+import { CircularLoader, DisabledBackground } from "../ghcomponents/Loader";
 
 const ForgotPassword = () => {
   const dispatch = useDispatch();
@@ -18,9 +15,6 @@ const ForgotPassword = () => {
   const [email, setEmail] = useState("");
   const [isError, setIsError] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-
 
   const handleSubmit = async () => {
     if (!email.length) {
@@ -32,7 +26,6 @@ const ForgotPassword = () => {
       const userData = {
         email: email,
       };
-      setIsModalOpen(false);
       const { response, error } = await forgot(
         appConfig.API_BASE_URL,
         userData,
@@ -49,9 +42,6 @@ const ForgotPassword = () => {
     }
   };
 
-
-
-
   return (
     <Container
       component="div"
@@ -63,6 +53,11 @@ const ForgotPassword = () => {
         justifyContent: "center",
       }}
     >
+      {loading && (
+        <DisabledBackground>
+          <CircularLoader />
+        </DisabledBackground>
+      )}
       <Box
         sx={{
           display: "flex",
@@ -83,12 +78,13 @@ const ForgotPassword = () => {
             name="email"
             autoComplete="email"
             error={isError}
-          helperText={isError && "Invalid Email Address"}
-          value={email}
+            helperText={isError && "Invalid Email Address"}
+            value={email}
             onChange={(event) => {
-              setEmail(event.target.value);
+              const value = event.target.value;
+              setEmail(value);
+              setIsError(value ? false : true);
             }}
-            
           />
 
           <Button
@@ -97,7 +93,6 @@ const ForgotPassword = () => {
             variant="contained"
             sx={{ mt: 3, mb: 2, ...fontStyle() }}
             onClick={() => handleSubmit()}
-
           >
             {FORGOT_PASSWORD.SEND}
           </Button>
