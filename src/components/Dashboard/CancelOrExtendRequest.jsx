@@ -1,32 +1,68 @@
 import { Button, Grid, Typography } from "@mui/material";
 import { Box, Container } from "@mui/system";
+import moment from "moment";
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { toast } from "react-toastify";
 import { EXTEND_OR_CANCEL_REQUEST } from "../constants/commonString";
 import CustomInput from "../ghcomponents/CustomInput";
 import CustomSelect from "../ghcomponents/CustomSelect";
+import appConfig from "../services/appConfig";
 import { COLORS } from "../themes/Colors";
+import { extendRoomRequest } from "./dashboard.action";
 
-const CancelOrExtendRequest = () => {
+const CancelOrExtendRequest = ({
+  setLoading,
+  setIsModalOpen,
+  extendReqData,
+}) => {
+  const dispatch = useDispatch();
   const [formDetails, setFormDetails] = useState({
-    roomNo: "",
-    requestType: "",
+    // roomNo: "",
+    // requestType: "",
     extendDate: "",
     reason: "",
   });
+  const [error, setError] = useState({ isExtendDate: false, isReason: false });
+
+  const handleSubmit = async () => {
+    if (!formDetails.extendDate && !formDetails.reason) {
+      setError({ isExtendDate: true, isReason: true });
+    } else if (!formDetails.extendDate) {
+      setError({ ...error, isExtendDate: true });
+    } else if (!formDetails.reason) {
+      setError({ ...error, isReason: true });
+    } else {
+      setIsModalOpen(false);
+      setLoading(true);
+      const data = {
+        ruid: extendReqData?.ruid,
+        new_checkout: moment(formDetails.extendDate).format("DD/MM/YYYY"),
+        reason: formDetails.reason,
+      };
+      const { response, error } = await extendRoomRequest(
+        appConfig.API_BASE_URL,
+        data,
+        dispatch
+      );
+      if (response) {
+        toast.success(response?.data?.message);
+      }
+      if (error) {
+        toast.error(error?.data.message);
+      }
+      setLoading(false);
+    }
+  };
 
   return (
     <Container component="main" maxWidth="xs">
       <Typography variant="h5">
         {EXTEND_OR_CANCEL_REQUEST.EXTEND_REQUEST}
       </Typography>
-      <Box
-        component="form"
-        noValidate
-        onSubmit={() => console.log("hi")}
-        sx={{ mt: 3 }}
-      >
+      <Box sx={{ mt: 3 }}>
         <Grid container spacing={2}>
-          <Grid item xs={12}>
+          {/* <Grid item xs={12}>
             <CustomInput
               required
               fullWidth
@@ -58,9 +94,10 @@ const CancelOrExtendRequest = () => {
                 })
               }
             />
-          </Grid>
+          </Grid> */}
           <Grid item xs={12}>
             <CustomInput
+              error={error.isExtendDate}
               required
               fullWidth
               id="Date Of Extend"
@@ -70,31 +107,39 @@ const CancelOrExtendRequest = () => {
               type="date"
               InputLabelProps={{ shrink: true, required: true }}
               value={formDetails.extendDate}
-              onChange={(e) =>
+              onChange={(e) => {
+                const value = e.target.value;
+                console.log("value", value);
                 setFormDetails({
                   ...formDetails,
-                  extendDate: e.target.value,
-                })
-              }
+                  extendDate: value,
+                });
+                setError({ ...error, isExtendDate: value ? false : true });
+              }}
+              helperText={error.isExtendDate && "Extend Date Is Required"}
             />
           </Grid>
           <Grid item xs={12}>
             <CustomInput
+              error={error.isReason}
               required
               fullWidth
               multiline
               rows={5}
-              name="Reason For Cancelation / Extend"
-              label="Reason For Cancelation / Extend"
-              id="Reason For Cancelation / Extend"
-              autoComplete="Reason For Cancelation / Extend"
+              name="Reason For Extend"
+              label="Reason For Extend"
+              id="Reason For Extend"
+              autoComplete="Reason For Extend"
               value={formDetails.reason}
-              onChange={(e) =>
+              onChange={(e) => {
+                const value = e.target.value;
                 setFormDetails({
                   ...formDetails,
-                  reason: e.target.value,
-                })
-              }
+                  reason: value,
+                });
+                setError({ ...error, isReason: value ? false : true });
+              }}
+              helperText={error.isReason && "Reason for Extend Is Required"}
             />
           </Grid>
         </Grid>
@@ -102,7 +147,8 @@ const CancelOrExtendRequest = () => {
           type="submit"
           fullWidth
           variant="contained"
-          sx={{ mt: 3, mb: 2, backgroundColor: COLORS.blue_azure, }}
+          sx={{ mt: 3, mb: 2, backgroundColor: COLORS.blue_azure }}
+          onClick={() => handleSubmit()}
         >
           {EXTEND_OR_CANCEL_REQUEST.SEND}
         </Button>

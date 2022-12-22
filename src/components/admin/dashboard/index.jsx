@@ -28,6 +28,7 @@ import { setAuthHeaders } from "../../services/api";
 import { getProfileDetails } from "../../login/Login.action";
 import appConfig from "../../services/appConfig";
 import { useDispatch, useSelector } from "react-redux";
+import ExtendRequests from "../requests/ExtendRequests";
 
 const AdminDashboard = () => {
   const navigation = useNavigate();
@@ -251,7 +252,8 @@ const AdminDashboard = () => {
         {currentTab === 1 && <Users />}
         {currentTab === 2 && <Rooms />}
         {currentTab === 3 && <Requests />}
-        {currentTab === 4 && <RoomDetails />}
+        {currentTab === 4 && <ExtendRequests />}
+        {currentTab === 5 && <RoomDetails />}
       </Grid>
     </Container>
   );

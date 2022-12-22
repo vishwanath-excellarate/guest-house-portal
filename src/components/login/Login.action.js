@@ -1,4 +1,13 @@
-import { post, get, setAuthHeaders } from "../services/api";
+import {
+  getAllRomRequests,
+  getAvailableRoom,
+  getExtendRomRequests,
+} from "../admin/requests/requests.action";
+import { getRooms } from "../admin/rooms/Room.action";
+import { getUserRequest } from "../admin/users/User.action";
+import { userRole } from "../constants/commonString";
+import { userMyRequest } from "../Dashboard/dashboard.action";
+import { post, get } from "../services/api";
 import {
   LOGIN_REQUEST,
   LOGIN_SUCCESS,
@@ -15,7 +24,17 @@ export async function loginUserOrAdmin(baseURL, data, dispatch) {
     dispatch({ type: LOGIN_SUCCESS, payload: response?.data });
     localStorage.setItem("role", response?.data.role);
     localStorage.setItem("token", response.headers.authorization);
-    getProfileDetails(baseURL, dispatch);
+    await getProfileDetails(baseURL, dispatch);
+    if (response?.data.role === userRole.ADMIN) {
+      getUserRequest(baseURL, dispatch);
+      getRooms(baseURL, dispatch);
+      getAllRomRequests(baseURL, dispatch);
+      getAvailableRoom(baseURL, dispatch);
+      getExtendRomRequests(baseURL, dispatch);
+    }
+    if (response?.data.role === userRole.EMPLOYEE) {
+      await userMyRequest(baseURL, dispatch);
+    }
   }
   if (error) {
     dispatch({ type: LOGIN_FAILURE });

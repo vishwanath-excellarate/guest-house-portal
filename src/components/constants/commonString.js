@@ -28,7 +28,8 @@ export const ADMIN_APP_BAR_CONSTANT = [
   { id: 1, name: "Users" },
   { id: 2, name: "Rooms" },
   { id: 3, name: "Requests" },
-  { id: 4, name: "History" },
+  { id: 4, name: "Extend Requests" },
+  { id: 5, name: "History" },
 ];
 
 export const ADMIN_PROFILE_CONSTANT = [{ id: 1, name: "Logout" }];
@@ -139,4 +140,41 @@ export const MY_RQUEST_CONSTANT = [
   { id: "check_out", label: "Check Out", align: "center" },
   { id: "arrival_time", label: "Arrival Time", align: "center" },
   { id: "purpose_of_visit", label: "Purpose Of Visit", align: "center" },
+  { id: "action", label: "Action", align: "center", minWidth: 350 },
 ];
+
+export const EXTEND_RQUEST_CONSTANT = [
+  { id: "slNo", label: "Sl No.", align: "center" },
+  { id: "name", label: "Name", align: "center" },
+  { id: "email", label: "Email", align: "center" },
+  { id: "contact_no", label: "Contact No.", align: "center" },
+  { id: "gender", label: "Gender", align: "center" },
+  { id: "location", label: "Location", align: "center" },
+  { id: "project", label: "Project/ Client", align: "center" },
+  { id: "bu", label: "BU", align: "center" },
+  { id: "approved", label: "Approved By", align: "center" },
+  { id: "check_in", label: "Check In", align: "center" },
+  { id: "check_out", label: "Check Out", align: "center" },
+  { id: "new_checkout", label: "New Check Out", align: "center" },
+  { id: "arrival_time", label: "Arrival Time", align: "center" },
+  { id: "reason", label: "Reason", align: "center", minWidth: 200 },
+  { id: "purpose_of_visit", label: "Purpose Of Visit", align: "center" },
+  { id: "action", label: "Action", align: "center", minWidth: 300 },
+];
+
+export const APPROVED_RQUEST_CONSTANT = [
+  { id: "slNo", label: "Sl No.", align: "center" },
+  { id: "location", label: "Location", align: "center" },
+  { id: "project", label: "Project/ Client", align: "center" },
+  { id: "bu", label: "BU", align: "center" },
+  { id: "approved", label: "Approved By", align: "center" },
+  { id: "check_in", label: "Check In", align: "center" },
+  { id: "check_out", label: "Check Out", align: "center" },
+  { id: "arrival_time", label: "Arrival Time", align: "center" },
+  { id: "purpose_of_visit", label: "Purpose Of Visit", align: "center" },
+];
+
+export const userRole = {
+  ADMIN: "admin",
+  EMPLOYEE: "employee",
+};

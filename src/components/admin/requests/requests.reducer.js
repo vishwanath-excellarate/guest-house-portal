@@ -2,12 +2,14 @@ import {
   GET_ALL_REQUESTS,
   GET_AVAILABLE_ROOMS,
   ALLOCATE_ROOM_REQUEST,
+  EXTEND_ROOM_REQUESTS,
 } from "./requests.action.constants";
 
 const initialState = Object.freeze({
   allRoomRequests: [],
   availableRooms: [],
   roomAllocation: null,
+  extendRoomReqRes: [],
 });
 
 export default function roomRequestsReducer(state = initialState, action) {
@@ -33,6 +35,14 @@ export default function roomRequestsReducer(state = initialState, action) {
       return {
         ...state,
         roomAllocation: data,
+      };
+    }
+
+    case EXTEND_ROOM_REQUESTS: {
+      const data = action.payload;
+      return {
+        ...state,
+        extendRoomReqRes: data,
       };
     }
 

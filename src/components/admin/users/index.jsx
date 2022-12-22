@@ -42,7 +42,7 @@ const Users = () => {
     setData(result);
   }, [userDetails.getUserRes]);
 
-  if (!userDetails.getUserRes.length) {
+  if (!data.length) {
     return <NoDataFound />;
   }
 

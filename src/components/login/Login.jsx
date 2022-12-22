@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import Button from "@mui/material/Button";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
@@ -19,9 +19,8 @@ import {
 } from "@mui/material";
 import CustomInput from "../ghcomponents/CustomInput";
 import { EXCELLARATE_LOGO } from "../assets/images";
-import { SIGN_IN } from "../constants/commonString";
+import { SIGN_IN, userRole } from "../constants/commonString";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import { emailRegex } from "../constants/utils";
 import { COLORS } from "../themes/Colors";
 import { loginUserOrAdmin } from "./Login.action";
 import appConfig from "../services/appConfig";
@@ -44,10 +43,10 @@ const Login = ({ setIsAuthenticated, setRole }) => {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    const userRole = localStorage.getItem("role");
-    if (token && userRole === "admin") {
+    const role = localStorage.getItem("role");
+    if (token && role === userRole.ADMIN) {
       navigate("/admin-dashboard");
-    } else if (token && userRole === "employee") {
+    } else if (token && role === userRole.EMPLOYEE) {
       navigate("/dashboard");
     }
   }, []);
@@ -76,7 +75,7 @@ const Login = ({ setIsAuthenticated, setRole }) => {
         toast.success(response?.data?.message);
         setIsAuthenticated(Boolean(response.headers.authorization));
         setRole(response.data.role);
-        if (response.data.role === "admin") {
+        if (response.data.role === userRole.ADMIN) {
           navigate("/admin-dashboard");
         } else {
           navigate("/dashboard");

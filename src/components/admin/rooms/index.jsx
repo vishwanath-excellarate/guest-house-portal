@@ -27,14 +27,11 @@ const Rooms = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    async function fetchData() {
-      const result = roomDetails?.getRoomRes.map((item, index) => ({
-        slNo: index + 1,
-        ...item,
-      }));
-      setData(result);
-    }
-    fetchData();
+    const result = roomDetails?.getRoomRes.map((item, index) => ({
+      slNo: index + 1,
+      ...item,
+    }));
+    setData(result);
   }, [roomDetails?.getRoomRes]);
 
   useEffect(() => {

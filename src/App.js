@@ -4,6 +4,7 @@ import { lazy, Suspense, useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import PrivateRoute from "./components/routes/PrivateRoute";
 import { Toaster } from "./components/ghcomponents/Loader";
+import { userRole } from "./components/constants/commonString";
 
 const LoginPage = lazy(() => import("./components/login/Login"));
 const Register = lazy(() => import("./components/user/accountReg"));
@@ -50,7 +51,7 @@ const App = () => {
             path="/"
             element={
               <PrivateRoute
-                isAuthenticated={role === "employee" && isAuthenticated}
+                isAuthenticated={role === userRole.EMPLOYEE && isAuthenticated}
               />
             }
           >
@@ -61,7 +62,7 @@ const App = () => {
             path="/"
             element={
               <PrivateRoute
-                isAuthenticated={role === "admin" && isAuthenticated}
+                isAuthenticated={role === userRole.ADMIN && isAuthenticated}
               />
             }
           >

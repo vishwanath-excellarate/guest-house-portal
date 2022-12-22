@@ -5,6 +5,9 @@ import {
   USER_MY_REQUEST,
   USER_MY_REQUEST_SUCCESS,
   USER_MY_REQUEST_FAILURE,
+  EXTEND_ROOM_REQUEST,
+  EXTEND_ROOM_REQUEST_SUCCESS,
+  EXTEND_ROOM_REQUEST_FAILURE,
 } from "./dashboard.action.constants";
 
 const initialState = Object.freeze({

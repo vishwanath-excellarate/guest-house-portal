@@ -35,7 +35,7 @@ const pages = [
 ];
 const requests = [
   { id: 1, name: "Room Request" },
-  { id: 2, name: "Extend Request" },
+  // { id: 2, name: "Extend Request" },
 ];
 
 const Dashboard = () => {
@@ -50,6 +50,7 @@ const Dashboard = () => {
   const [currentTab, setCurrentTab] = useState(1);
   const [loading, setLoading] = useState(false);
   const [profileInfo, setProfileInfo] = useState(details.profileInfo || []);
+  const [extendReqData, setExtendReqData] = useState("");
 
   useEffect(() => {
     async function fetchProfileInfo() {
@@ -217,10 +218,20 @@ const Dashboard = () => {
                 onClose={handleCloseUserMenu}
               >
                 <Box sx={{ px: 5, py: 0.5 }}>
-                  <Typography>Name: {profileInfo[0]?.name}</Typography>
-                  <Typography>Designation: {profileInfo[0]?.desig}</Typography>
-                  <Typography>Ph no: {profileInfo[0]?.pnumber}</Typography>
-                  <Typography>Email: {profileInfo[0]?.email}</Typography>
+                  {profileInfo[0]?.name && (
+                    <Typography>Name: {profileInfo[0]?.name}</Typography>
+                  )}
+                  {profileInfo[0]?.desig && (
+                    <Typography>
+                      Designation: {profileInfo[0]?.desig}
+                    </Typography>
+                  )}
+                  {profileInfo[0]?.pnumber && (
+                    <Typography>Ph no: {profileInfo[0]?.pnumber}</Typography>
+                  )}
+                  {profileInfo[0]?.email && (
+                    <Typography>Email: {profileInfo[0]?.email}</Typography>
+                  )}
                 </Box>
                 {ADMIN_PROFILE_CONSTANT.map((item) => (
                   <MenuItem
@@ -311,7 +322,13 @@ const Dashboard = () => {
               setIsModalOpen={setIsModalOpen}
             />
           )}
-          {selectedRequest === 2 && <CancelOrExtendRequest />}
+          {selectedRequest === 2 && (
+            <CancelOrExtendRequest
+              setLoading={setLoading}
+              setIsModalOpen={setIsModalOpen}
+              extendReqData={extendReqData}
+            />
+          )}
         </Box>
       </Modal>
 
@@ -320,6 +337,8 @@ const Dashboard = () => {
           <MyRequests
             setSelectedRequest={setSelectedRequest}
             setIsModalOpen={setIsModalOpen}
+            setExtendReqData={setExtendReqData}
+            setLoading={setLoading}
           />
         )}
         {currentTab === 2 && <ApprovedRequests />}
