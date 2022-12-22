@@ -106,7 +106,11 @@ const AddRoom = ({ isModalOpen, setIsModalOpen, setLoading }) => {
         >
           Add
         </Button>
-        <Button variant="contained" sx={{ ...fontStyle(COLORS.red) }}>
+        <Button
+          variant="contained"
+          sx={{ ...fontStyle(COLORS.red) }}
+          onClick={() => setIsModalOpen(false)}
+        >
           Cacnel
         </Button>
       </Box>

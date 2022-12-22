@@ -42,10 +42,6 @@ const Users = () => {
     setData(result);
   }, [userDetails.getUserRes]);
 
-  if (!data.length) {
-    return <NoDataFound />;
-  }
-
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -120,53 +116,64 @@ const Users = () => {
           <CircularLoader />
         </DisabledBackground>
       )}
-      <Grid
-        item
-        xl={12}
-        xs={12}
-        sx={{
-          display: "flex",
-          justifyContent: "flex-end",
-          marginTop: 4,
-          marginBottom: 4,
-        }}
-      >
-        <Button
-          variant="contained"
-          color="primary"
-          sx={{
-            width: 150,
-            height: 40,
-            ...fontStyle(),
-          }}
-          onClick={() => setIsModalOpen(!isModalOpen)}
-        >
-          {USER_SCREEN_CONSTANT.ADD_USER}
-        </Button>
-      </Grid>
-      <CustomTable
-        columns={USERS_COLUMN}
-        rows={data}
-        page={page}
-        rowsPerPage={rowsPerPage}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-        renderActionButton={(value) => (
-          <Button
+      {!data.length ? (
+        <NoDataFound
+          title={"No Users Found ...!"}
+          isSubTitle
+          subTitle={"Create New User"}
+          onClick={() => setIsModalOpen(true)}
+        />
+      ) : (
+        <>
+          <Grid
+            item
+            xl={12}
+            xs={12}
             sx={{
-              bgcolor: "#C41E3A",
-              "&:hover": { backgroundColor: "#C41E3A" },
-            }}
-            variant="contained"
-            onClick={() => {
-              setIsDeleteClicked(!isDeleteClicked);
-              setSelectedEmail(value);
+              display: "flex",
+              justifyContent: "flex-end",
+              marginTop: 4,
+              marginBottom: 4,
             }}
           >
-            Delete
-          </Button>
-        )}
-      />
+            <Button
+              variant="contained"
+              color="primary"
+              sx={{
+                width: 150,
+                height: 40,
+                ...fontStyle(),
+              }}
+              onClick={() => setIsModalOpen(!isModalOpen)}
+            >
+              {USER_SCREEN_CONSTANT.ADD_USER}
+            </Button>
+          </Grid>
+          <CustomTable
+            columns={USERS_COLUMN}
+            rows={data}
+            page={page}
+            rowsPerPage={rowsPerPage}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+            renderActionButton={(value) => (
+              <Button
+                sx={{
+                  bgcolor: "#C41E3A",
+                  "&:hover": { backgroundColor: "#C41E3A" },
+                }}
+                variant="contained"
+                onClick={() => {
+                  setIsDeleteClicked(!isDeleteClicked);
+                  setSelectedEmail(value);
+                }}
+              >
+                Delete
+              </Button>
+            )}
+          />
+        </>
+      )}
       <ModalComponent />
       <DeletePopUp />
     </Grid>

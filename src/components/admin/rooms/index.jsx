@@ -38,10 +38,6 @@ const Rooms = () => {
     getRooms(appConfig.API_BASE_URL, dispatch);
   }, []);
 
-  if (!data.length) {
-    return <NoDataFound />;
-  }
-
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -114,51 +110,62 @@ const Rooms = () => {
           <CircularLoader />
         </DisabledBackground>
       )}
-      <Grid
-        item
-        xl={12}
-        xs={12}
-        sx={{
-          display: "flex",
-          justifyContent: "flex-end",
-          marginTop: 4,
-          marginBottom: 4,
-        }}
-      >
-        <Button
-          variant="contained"
-          color="primary"
-          sx={{ width: 150, height: 40, ...fontStyle() }}
-          onClick={() => setIsModalOpen(!isModalOpen)}
-        >
-          {ROOM_SCREEN_CONSTANT.ADD_ROOM}
-        </Button>
-      </Grid>
-      <CustomTable
-        columns={ROOMS_CONSTANT}
-        rows={data}
-        page={page}
-        rowsPerPage={rowsPerPage}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-        renderActionButton={(value) => (
-          <Box>
+      {!data.length ? (
+        <NoDataFound
+          title={"No Rooms Found ...!"}
+          isSubTitle
+          subTitle={"Create New Room"}
+          onClick={() => setIsModalOpen(true)}
+        />
+      ) : (
+        <>
+          <Grid
+            item
+            xl={12}
+            xs={12}
+            sx={{
+              display: "flex",
+              justifyContent: "flex-end",
+              marginTop: 4,
+              marginBottom: 4,
+            }}
+          >
             <Button
               variant="contained"
-              sx={{
-                bgcolor: "#C41E3A",
-                "&:hover": { backgroundColor: "#C41E3A" },
-              }}
-              onClick={() => {
-                setSelectRow(value);
-                setIsDeleteClicked(!isDeleteClicked);
-              }}
+              color="primary"
+              sx={{ width: 150, height: 40, ...fontStyle() }}
+              onClick={() => setIsModalOpen(!isModalOpen)}
             >
-              Delete
+              {ROOM_SCREEN_CONSTANT.ADD_ROOM}
             </Button>
-          </Box>
-        )}
-      />
+          </Grid>
+          <CustomTable
+            columns={ROOMS_CONSTANT}
+            rows={data}
+            page={page}
+            rowsPerPage={rowsPerPage}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+            renderActionButton={(value) => (
+              <Box>
+                <Button
+                  variant="contained"
+                  sx={{
+                    bgcolor: "#C41E3A",
+                    "&:hover": { backgroundColor: "#C41E3A" },
+                  }}
+                  onClick={() => {
+                    setSelectRow(value);
+                    setIsDeleteClicked(!isDeleteClicked);
+                  }}
+                >
+                  Delete
+                </Button>
+              </Box>
+            )}
+          />
+        </>
+      )}
       <ModalComponent />
       <DeletePopUp />
     </Grid>

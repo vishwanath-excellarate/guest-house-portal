@@ -41,7 +41,7 @@ const RoomDetails = () => {
   };
 
   if (!data.length) {
-    return <NoDataFound />;
+    return <NoDataFound title={"No History Found ...!"} />;
   }
 
   return (

@@ -69,7 +69,7 @@ const ExtendRequests = () => {
   };
 
   if (!data.length) {
-    return <NoDataFound />;
+    return <NoDataFound title={'No Extend Requests Found ...!'} />;
   }
 
   const DeletePopUp = () => {

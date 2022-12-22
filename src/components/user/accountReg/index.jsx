@@ -4,7 +4,7 @@ import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import CustomInput from "../../ghcomponents/CustomInput";
 import { ACCOUNT_SETUP } from "../../constants/commonString";
 import {
@@ -21,6 +21,8 @@ import CustomSelect from "../../ghcomponents/CustomSelect";
 import { userAccountReg } from "./AccountRegister.action";
 import appConfig from "../../services/appConfig";
 import { useDispatch } from "react-redux";
+import { toast } from "react-toastify";
+import { CircularLoader, DisabledBackground } from "../../ghcomponents/Loader";
 
 const AccountRegister = () => {
   const queryString = window.location.search;
@@ -28,6 +30,7 @@ const AccountRegister = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [userDetails, setUserDetails] = useState({
     fullName: "",
     designation: "",
@@ -43,7 +46,7 @@ const AccountRegister = () => {
     isPassword: false,
   });
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
     if (
@@ -70,6 +73,7 @@ const AccountRegister = () => {
     } else if (!userDetails.password) {
       setErrors({ ...errors, isPassword: true });
     } else {
+      setLoading(true);
       setErrors({
         isFullName: false,
         isDesignation: false,
@@ -88,12 +92,19 @@ const AccountRegister = () => {
         password: userDetails.password,
         number: userDetails.phoneNo,
       };
-      const { response, error } = userAccountReg(
+      const { response, error } = await userAccountReg(
         appConfig.API_BASE_URL,
         data,
         dispatch,
         navigate
       );
+      if (response) {
+        toast.success(response?.data?.message);
+      }
+      if (error) {
+        toast.error(error?.data.message);
+      }
+      setLoading(false);
     }
   };
 
@@ -153,6 +164,11 @@ const AccountRegister = () => {
         justifyContent: "center",
       }}
     >
+      {loading && (
+        <DisabledBackground>
+          <CircularLoader />
+        </DisabledBackground>
+      )}
       <Box
         sx={{
           display: "flex",
