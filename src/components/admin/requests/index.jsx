@@ -29,7 +29,7 @@ const Requests = () => {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteClicked, setIsDeleteClicked] = useState(false);
-  const [requestType, setRequestType] = useState("Pending");
+  const [requestType, setRequestType] = useState("All");
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [roomsData, setRoomsData] = useState([]);
@@ -38,9 +38,16 @@ const Requests = () => {
   const [selectedRow, setSelectedRow] = useState("");
 
   useEffect(() => {
-    let result = roomRequests?.allRoomRequests?.filter(
-      (item) => requestType.toLowerCase() === item.status
-    );
+    let result = [];
+    if (requestType === "All") {
+      result = roomRequests?.allRoomRequests.filter(
+        (item) => item.status === "approved" || item.status === "pending"
+      );
+    } else {
+      result = roomRequests?.allRoomRequests?.filter(
+        (item) => requestType.toLowerCase() === item.status
+      );
+    }
     result = result.map((item, index) => ({
       slNo: index + 1,
       contact_no: item.pnumber,
@@ -56,7 +63,6 @@ const Requests = () => {
     const result = roomRequests?.availableRooms?.map(
       (item) => `${item.location} - ${item.room_id} - ${item.uid}`
     );
-   
     setRoomsData(result);
   }, [roomRequests.availableRooms]);
 
@@ -263,7 +269,7 @@ const Requests = () => {
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
         renderActionButton={(value) =>
-          requestType.toLowerCase() === "pending" && (
+          value?.status.toLowerCase() === "pending" && (
             <Box sx={{ display: "flex", alignItems: "center" }}>
               <Button
                 sx={{ marginRight: 2, ...fontStyle() }}

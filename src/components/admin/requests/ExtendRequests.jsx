@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   EXTEND_RQUEST_CONSTANT,
   REQUEST_SCREEN_CONSTANT,
+  REQUEST_TYPE,
 } from "../../constants/commonString";
 import CustomModal from "../../ghcomponents/CustomModal";
 import CustomTable from "../../ghcomponents/CustomTable";
@@ -17,6 +18,7 @@ import {
 import { CircularLoader, DisabledBackground } from "../../ghcomponents/Loader";
 import { fontStyle } from "../../themes/Styles";
 import { toast } from "react-toastify";
+import CustomSelect from "../../ghcomponents/CustomSelect";
 
 const ExtendRequests = () => {
   const dispatch = useDispatch();
@@ -27,11 +29,19 @@ const ExtendRequests = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [selectedRow, setSelectedRow] = useState("");
+  const [requestType, setRequestType] = useState("All");
 
   useEffect(() => {
-    let result = roomRequests?.extendRoomReqRes?.filter(
-      (item) => item?.status === "pending"
-    );
+    let result = [];
+    if (requestType === "All") {
+      result = roomRequests?.extendRoomReqRes.filter(
+        (item) => item.status === "approved" || item.status === "pending"
+      );
+    } else {
+      result = roomRequests?.extendRoomReqRes?.filter(
+        (item) => requestType.toLowerCase() === item.status
+      );
+    }
     result = result.map((item, index) => ({
       slNo: index + 1,
       contact_no: item.pnumber,
@@ -41,7 +51,7 @@ const ExtendRequests = () => {
       ...item,
     }));
     setData(result);
-  }, [roomRequests.extendRoomReqRes]);
+  }, [roomRequests.extendRoomReqRes, requestType]);
 
   useEffect(() => {
     // setLoading(true);
@@ -140,12 +150,31 @@ const ExtendRequests = () => {
   };
 
   return (
-    <Grid container sx={{ px: 4, my: 8 }}>
+    <Grid container sx={{ px: 4 }}>
       {loading && (
         <DisabledBackground>
           <CircularLoader />
         </DisabledBackground>
       )}
+      <Grid
+        item
+        xs={12}
+        sx={{
+          display: "flex",
+          justifyContent: "flex-end",
+          marginTop: 4,
+          marginBottom: 4,
+        }}
+      >
+        <CustomSelect
+          formStyle={{ minWidth: { xs: "60%", md: "20%" } }}
+          menuItems={REQUEST_TYPE}
+          label={"Request Type"}
+          inputLabelText={"Request Type"}
+          value={requestType}
+          handleChange={(e) => setRequestType(e.target.value)}
+        />
+      </Grid>
       <CustomTable
         columns={EXTEND_RQUEST_CONSTANT}
         rows={data}

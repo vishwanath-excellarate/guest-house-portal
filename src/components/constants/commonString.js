@@ -79,7 +79,7 @@ export const RQUEST_CONSTANT = [
   { id: "action", label: "Action", align: "center", minWidth: 200 },
 ];
 
-export const REQUEST_TYPE = ["Pending", "Approved"];
+export const REQUEST_TYPE = ["All", "Pending", "Approved"];
 
 export const ROOM_STATUS = ["Booked", "Available"];
 

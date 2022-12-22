@@ -33,12 +33,12 @@ export async function loginUserOrAdmin(baseURL, data, dispatch) {
     localStorage.setItem("token", response.headers.authorization);
     await getProfileDetails(baseURL, dispatch);
     if (response?.data.role === userRole.ADMIN) {
-      getUserRequest(baseURL, dispatch);
-      getRooms(baseURL, dispatch);
-      getAllRomRequests(baseURL, dispatch);
-      getAvailableRoom(baseURL, dispatch);
-      getExtendRomRequests(baseURL, dispatch);
-      getHistoryRequests(baseURL, dispatch);
+      await getUserRequest(baseURL, dispatch);
+      await getRooms(baseURL, dispatch);
+      await getAllRomRequests(baseURL, dispatch);
+      await getAvailableRoom(baseURL, dispatch);
+      await getExtendRomRequests(baseURL, dispatch);
+      await getHistoryRequests(baseURL, dispatch);
     }
     if (response?.data.role === userRole.EMPLOYEE) {
       await userMyRequest(baseURL, dispatch);
