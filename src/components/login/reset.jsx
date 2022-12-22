@@ -1,46 +1,51 @@
 import { Box, Button, Container, Typography } from "@mui/material";
+
 import React, { useState } from "react";
 import { FORGOT_PASSWORD } from "../constants/commonString";
 import CustomInput from "../ghcomponents/CustomInput";
 import { fontStyle } from "../themes/Styles";
-import { forgot } from "./Login.action";
+import { reset } from "./Login.action";
 import { toast } from "react-toastify";
 import appConfig from "../services/appConfig";
 import { useDispatch, useSelector } from "react-redux";
+import { useLocation, useNavigate } from "react-router-dom";
 
 
-
-
-
-const ForgotPassword = () => {
+const ResetPassword = () => {
+  const queryString = window.location.search;
+  const urlParams = new URLSearchParams(queryString);
   const dispatch = useDispatch();
-
-  const [email, setEmail] = useState("");
+  const navigate = useNavigate();
+  const [pass, setPass] = useState("");
   const [isError, setIsError] = useState(false);
   const [loading, setLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-
+  
 
   const handleSubmit = async () => {
-    if (!email.length) {
+    if (!pass.length) {
       setIsError(true);
       return;
     } else {
       setLoading(true);
       setIsError(false);
       const userData = {
-        email: email,
+        hash: {
+          iv: urlParams.get("vi"),
+          content: urlParams.get("content")
+        },
+        password: pass
       };
       setIsModalOpen(false);
-      const { response, error } = await forgot(
+      const { response, error } = await reset(
         appConfig.API_BASE_URL,
         userData,
-        dispatch
+        dispatch, 
+        navigate
       );
       if (response) {
         toast.success(response?.data?.message);
-        setEmail("");
+        setPass("");
       }
       if (error) {
         toast.error(error?.data.message);
@@ -48,9 +53,6 @@ const ForgotPassword = () => {
       setLoading(false);
     }
   };
-
-
-
 
   return (
     <Container
@@ -71,24 +73,24 @@ const ForgotPassword = () => {
         }}
       >
         <Typography component="h1" variant="h5">
-          {FORGOT_PASSWORD.FORGOT_PASSWORD}
+          {FORGOT_PASSWORD.RESET_TITLE}
         </Typography>
         <Box sx={{ mt: 2 }}>
           <CustomInput
             margin="normal"
             required
             fullWidth
-            id="email"
-            label="Email"
-            name="email"
-            autoComplete="email"
+            id="password"
+            label="New Password"
+            name="password"
+            autoComplete="password"
             error={isError}
-          helperText={isError && "Invalid Email Address"}
-          value={email}
-            onChange={(event) => {
-              setEmail(event.target.value);
-            }}
-            
+            helperText={isError && "Invalid Email Address"}
+            value={pass}
+              onChange={(event) => {
+                setPass(event.target.value);
+              }}
+              
           />
 
           <Button
@@ -99,7 +101,7 @@ const ForgotPassword = () => {
             onClick={() => handleSubmit()}
 
           >
-            {FORGOT_PASSWORD.SEND}
+            {FORGOT_PASSWORD.RESET}
           </Button>
         </Box>
       </Box>
@@ -107,4 +109,4 @@ const ForgotPassword = () => {
   );
 };
 
-export default ForgotPassword;
+export default ResetPassword;
