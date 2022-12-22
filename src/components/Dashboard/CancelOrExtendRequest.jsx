@@ -10,6 +10,7 @@ import CustomSelect from "../ghcomponents/CustomSelect";
 import appConfig from "../services/appConfig";
 import { COLORS } from "../themes/Colors";
 import { extendRoomRequest } from "./dashboard.action";
+import CloseIcon from "@mui/icons-material/Close";
 
 const CancelOrExtendRequest = ({
   setLoading,
@@ -57,9 +58,26 @@ const CancelOrExtendRequest = ({
 
   return (
     <Container component="main" maxWidth="xs">
-      <Typography variant="h5">
-        {EXTEND_OR_CANCEL_REQUEST.EXTEND_REQUEST}
-      </Typography>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          flexDirection: "row",
+          paddingBottom: 1,
+        }}
+      >
+        <Typography variant="h5">
+          {EXTEND_OR_CANCEL_REQUEST.EXTEND_REQUEST}
+        </Typography>
+
+        <CloseIcon
+          onClick={() => {
+            setIsModalOpen(false);
+          }}
+        />
+      </Box>
+
       <Box sx={{ mt: 3 }}>
         <Grid container spacing={2}>
           {/* <Grid item xs={12}>

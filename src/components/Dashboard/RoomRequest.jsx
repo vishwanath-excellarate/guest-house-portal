@@ -16,6 +16,7 @@ import { COLORS } from "../themes/Colors";
 import { userRoomRequest } from "./dashboard.action";
 import moment from "moment";
 import { toast } from "react-toastify";
+import CloseIcon from "@mui/icons-material/Close";
 
 const RoomRequest = ({ setLoading, setIsModalOpen }) => {
   const dispatch = useDispatch();
@@ -118,7 +119,22 @@ const RoomRequest = ({ setLoading, setIsModalOpen }) => {
 
   return (
     <Container component="main" maxWidth="xs">
-      <Typography variant="h5">{ROOM_REQUEST.ROOM_REQUEST_FORM}</Typography>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          flexDirection: "row",
+          paddingBottom: 1,
+        }}
+      >
+        <Typography variant="h5">{ROOM_REQUEST.ROOM_REQUEST_FORM}</Typography>
+        <CloseIcon
+          onClick={() => {
+            setIsModalOpen(false);
+          }}
+        />
+      </Box>
       <Box component="form" sx={{ mt: 3 }}>
         <Grid container spacing={2}>
           <Grid item xs={12} sm={6}>

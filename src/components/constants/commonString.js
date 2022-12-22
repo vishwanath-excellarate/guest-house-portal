@@ -76,6 +76,7 @@ export const RQUEST_CONSTANT = [
   { id: "check_in", label: "Check In", align: "center" },
   { id: "check_out", label: "Check Out", align: "center" },
   { id: "purpose_of_visit", label: "Purpose Of Visit", align: "center" },
+  { id: "status", label: "Status", align: "center" },
   { id: "action", label: "Action", align: "center", minWidth: 200 },
 ];
 
@@ -102,6 +103,7 @@ export const HISTORY_CONSTANT = [
     align: "center",
   },
   { id: "purpose_of_visit", label: "Purpose Of Visit", align: "center" },
+  { id: "status", label: "Status", align: "center" },
 ];
 
 export const HISTORY_SCREEN_CONSTANT = {
@@ -143,6 +145,7 @@ export const MY_RQUEST_CONSTANT = [
   { id: "check_out", label: "Check Out", align: "center" },
   { id: "arrival_time", label: "Arrival Time", align: "center" },
   { id: "purpose_of_visit", label: "Purpose Of Visit", align: "center" },
+  { id: "status", label: "Status", align: "center" },
   { id: "action", label: "Action", align: "center", minWidth: 350 },
 ];
 
@@ -162,6 +165,7 @@ export const EXTEND_RQUEST_CONSTANT = [
   { id: "arrival_time", label: "Arrival Time", align: "center" },
   { id: "reason", label: "Reason", align: "center", minWidth: 200 },
   { id: "purpose_of_visit", label: "Purpose Of Visit", align: "center" },
+  { id: "status", label: "Status", align: "center" },
   { id: "action", label: "Action", align: "center", minWidth: 300 },
 ];
 
@@ -174,6 +178,7 @@ export const APPROVED_RQUEST_CONSTANT = [
   { id: "check_in", label: "Check In", align: "center" },
   { id: "check_out", label: "Check Out", align: "center" },
   { id: "arrival_time", label: "Arrival Time", align: "center" },
+  { id: "status", label: "Status", align: "center" },
   { id: "purpose_of_visit", label: "Purpose Of Visit", align: "center" },
 ];
 

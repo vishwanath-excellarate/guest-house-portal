@@ -16,7 +16,7 @@ const ApprovedRequests = () => {
 
   useEffect(() => {
     let result = myRoomReq?.myReqResult?.filter(
-      (item) => item.status === "approved"
+      (item) => item.status === "approved" || item.status === "extended"
     );
     result = result?.map((item, index) => ({
       slNo: index + 1,

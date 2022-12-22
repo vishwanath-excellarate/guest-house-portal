@@ -58,6 +58,16 @@ const CustomTable = ({
                         key={column.id}
                         align={column.align}
                         sx={{
+                          color:
+                            value === "declined" || value === "checkout"
+                              ? "#EE4B2B"
+                              : value === "approved"
+                              ? "#008000"
+                              : value === "extended"
+                              ? "#0089F9"
+                              : value === "pending"
+                              ? "#FFBF00"
+                              : "#000",
                           fontSize: 16,
                           textTransform:
                             column.id === "email" ? "none" : "capitalize",
