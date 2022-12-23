@@ -1,7 +1,15 @@
-import { Box, Button, FormHelperText, Grid, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Fab,
+  FormHelperText,
+  Grid,
+  Typography,
+} from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  DOWNLOAD,
   REQUEST_SCREEN_CONSTANT,
   REQUEST_TYPE,
   RQUEST_CONSTANT,
@@ -21,6 +29,9 @@ import { CircularLoader, DisabledBackground } from "../../ghcomponents/Loader";
 import { fontStyle } from "../../themes/Styles";
 import CloseIcon from "@mui/icons-material/Close";
 import { toast } from "react-toastify";
+import DownloadIcon from "@mui/icons-material/Download";
+import { exportToExcel } from "../../constants/exportToExcel";
+import { COLORS } from "../../themes/Colors";
 
 const Requests = () => {
   const dispatch = useDispatch();
@@ -300,6 +311,24 @@ const Requests = () => {
       />
       <ApproveModal />
       <DeletePopUp />
+
+      {data.length && (
+        <Fab
+          variant="extended"
+          color="primary"
+          aria-label="add"
+          sx={{
+            position: "fixed",
+            bottom: { xs: 20, md: 80 },
+            right: { xs: 20, md: 70 },
+            backgroundColor: COLORS.blue_azure,
+          }}
+          onClick={() => exportToExcel(data, "All-Requests")}
+        >
+          {DOWNLOAD}
+          <DownloadIcon sx={{ ml: 1 }} />
+        </Fab>
+      )}
     </Grid>
   );
 };

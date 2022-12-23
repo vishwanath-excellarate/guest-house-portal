@@ -1,6 +1,7 @@
-import { Box, Button, Grid, Typography } from "@mui/material";
+import { Box, Button, Fab, Grid, Typography } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import {
+  DOWNLOAD,
   ROOMS_CONSTANT,
   ROOM_SCREEN_CONSTANT,
 } from "../../constants/commonString";
@@ -14,6 +15,9 @@ import appConfig from "../../services/appConfig";
 import { useDispatch, useSelector } from "react-redux";
 import { CircularLoader, DisabledBackground } from "../../ghcomponents/Loader";
 import { toast } from "react-toastify";
+import DownloadIcon from "@mui/icons-material/Download";
+import { exportToExcel } from "../../constants/exportToExcel";
+import { COLORS } from "../../themes/Colors";
 
 const Rooms = () => {
   const dispatch = useDispatch();
@@ -168,6 +172,24 @@ const Rooms = () => {
       )}
       <ModalComponent />
       <DeletePopUp />
+
+      {data.length && (
+        <Fab
+          variant="extended"
+          color="primary"
+          aria-label="add"
+          sx={{
+            position: "fixed",
+            bottom: { xs: 20, md: 80 },
+            right: { xs: 20, md: 70 },
+            backgroundColor: COLORS.blue_azure,
+          }}
+          onClick={() => exportToExcel(data, "Rooms")}
+        >
+          {DOWNLOAD}
+          <DownloadIcon sx={{ ml: 1 }} />
+        </Fab>
+      )}
     </Grid>
   );
 };

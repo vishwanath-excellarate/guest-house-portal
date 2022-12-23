@@ -146,6 +146,7 @@ export const MY_RQUEST_CONSTANT = [
   { id: "check_out", label: "Check Out", align: "center" },
   { id: "arrival_time", label: "Arrival Time", align: "center" },
   { id: "purpose_of_visit", label: "Purpose Of Visit", align: "center" },
+  { id: "room_id", label: "Room No", align: "center" },
   { id: "status", label: "Status", align: "center" },
   { id: "action", label: "Action", align: "center", minWidth: 350 },
 ];
@@ -180,6 +181,7 @@ export const APPROVED_RQUEST_CONSTANT = [
   { id: "check_in", label: "Check In", align: "center" },
   { id: "check_out", label: "Check Out", align: "center" },
   { id: "arrival_time", label: "Arrival Time", align: "center" },
+  { id: "room_id", label: "Room No", align: "center" },
   { id: "status", label: "Status", align: "center" },
   { id: "purpose_of_visit", label: "Purpose Of Visit", align: "center" },
 ];
@@ -188,3 +190,5 @@ export const userRole = {
   ADMIN: "admin",
   EMPLOYEE: "employee",
 };
+
+export const DOWNLOAD = "download";

@@ -1,7 +1,8 @@
-import { Box, Button, Grid, Typography } from "@mui/material";
+import { Box, Button, Fab, Grid, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  DOWNLOAD,
   EXTEND_RQUEST_CONSTANT,
   REQUEST_SCREEN_CONSTANT,
   REQUEST_TYPE,
@@ -19,6 +20,9 @@ import { CircularLoader, DisabledBackground } from "../../ghcomponents/Loader";
 import { fontStyle } from "../../themes/Styles";
 import { toast } from "react-toastify";
 import CustomSelect from "../../ghcomponents/CustomSelect";
+import { COLORS } from "../../themes/Colors";
+import { exportToExcel } from "../../constants/exportToExcel";
+import DownloadIcon from "@mui/icons-material/Download";
 
 const ExtendRequests = () => {
   const dispatch = useDispatch();
@@ -69,7 +73,7 @@ const ExtendRequests = () => {
   };
 
   if (!data.length) {
-    return <NoDataFound title={'No Extend Requests Found ...!'} />;
+    return <NoDataFound title={"No Extend Requests Found ...!"} />;
   }
 
   const DeletePopUp = () => {
@@ -210,6 +214,24 @@ const ExtendRequests = () => {
         }
       />
       <DeletePopUp />
+
+      {data.length && (
+        <Fab
+          variant="extended"
+          color="primary"
+          aria-label="add"
+          sx={{
+            position: "fixed",
+            bottom: { xs: 20, md: 80 },
+            right: { xs: 20, md: 70 },
+            backgroundColor: COLORS.blue_azure,
+          }}
+          onClick={() => exportToExcel(data, "Extended-Requests")}
+        >
+          {DOWNLOAD}
+          <DownloadIcon sx={{ ml: 1 }} />
+        </Fab>
+      )}
     </Grid>
   );
 };

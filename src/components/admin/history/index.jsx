@@ -1,11 +1,14 @@
-import { Grid } from "@mui/material";
+import { Fab, Grid } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { HISTORY_CONSTANT } from "../../constants/commonString";
+import { DOWNLOAD, HISTORY_CONSTANT } from "../../constants/commonString";
+import { exportToExcel } from "../../constants/exportToExcel";
 import CustomTable from "../../ghcomponents/CustomTable";
 import NoDataFound from "../../ghcomponents/NoDataFound";
 import appConfig from "../../services/appConfig";
+import { COLORS } from "../../themes/Colors";
 import { getHistoryRequests } from "./history.action";
+import DownloadIcon from "@mui/icons-material/Download";
 
 const RoomDetails = () => {
   const dispatch = useDispatch();
@@ -54,6 +57,23 @@ const RoomDetails = () => {
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
+      {data.length && (
+        <Fab
+          variant="extended"
+          color="primary"
+          aria-label="add"
+          sx={{
+            position: "fixed",
+            bottom: { xs: 20, md: 80 },
+            right: { xs: 20, md: 70 },
+            backgroundColor: COLORS.blue_azure,
+          }}
+          onClick={() => exportToExcel(data, "History-Requests")}
+        >
+          {DOWNLOAD}
+          <DownloadIcon sx={{ ml: 1 }} />
+        </Fab>
+      )}
     </Grid>
   );
 };

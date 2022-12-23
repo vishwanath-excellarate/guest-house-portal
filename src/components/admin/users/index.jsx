@@ -1,7 +1,8 @@
-import { Box, Button, Grid, Typography } from "@mui/material";
+import { Box, Button, Fab, Grid, IconButton, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  DOWNLOAD,
   USERS_COLUMN,
   USER_SCREEN_CONSTANT,
 } from "../../constants/commonString";
@@ -15,6 +16,8 @@ import { fontStyle } from "../../themes/Styles";
 import AddUser from "./AddUser";
 import { deleteUserRequest, getUserRequest } from "./User.action";
 import { toast } from "react-toastify";
+import DownloadIcon from "@mui/icons-material/Download";
+import { exportToExcel } from "../../constants/exportToExcel";
 
 const Users = () => {
   const dispatch = useDispatch();
@@ -138,7 +141,6 @@ const Users = () => {
           >
             <Button
               variant="contained"
-              color="primary"
               sx={{
                 width: 150,
                 height: 40,
@@ -176,6 +178,24 @@ const Users = () => {
       )}
       <ModalComponent />
       <DeletePopUp />
+
+      {data.length && (
+        <Fab
+          variant="extended"
+          color="primary"
+          aria-label="add"
+          sx={{
+            position: "fixed",
+            bottom: { xs: 20, md: 80 },
+            right: { xs: 20, md: 70 },
+            backgroundColor: COLORS.blue_azure,
+          }}
+          onClick={() => exportToExcel(data, "Users")}
+        >
+          {DOWNLOAD}
+          <DownloadIcon sx={{ ml: 1 }} />
+        </Fab>
+      )}
     </Grid>
   );
 };

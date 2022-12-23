@@ -75,6 +75,8 @@ const CustomTable = ({
                       >
                         {typeof value === "undefined"
                           ? renderActionButton(row)
+                          : value === null
+                          ? "NA"
                           : value}
                       </TableCell>
                     );
