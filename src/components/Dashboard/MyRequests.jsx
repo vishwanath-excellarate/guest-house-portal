@@ -58,6 +58,86 @@ const MyRequests = ({
     );
   }
 
+  const renderActionButton = (value) => {
+    if (value.status === "approved") {
+      return (
+        <Box sx={{ display: "flex", alignItems: "center" }}>
+          <Button
+            sx={{ marginRight: 2, ...fontStyle() }}
+            variant="contained"
+            onClick={() => {
+              setSelectedRequest(2);
+              setIsModalOpen(true);
+              setExtendReqData(value);
+            }}
+          >
+            Extend Room Request
+          </Button>
+          <Button
+            variant="contained"
+            sx={{
+              ...fontStyle(),
+              bgcolor: "#C41E3A",
+              "&:hover": { backgroundColor: "#C41E3A" },
+            }}
+            onClick={async () => {
+              setLoading(true);
+              const data = {
+                room_id: value?.room_id,
+              };
+              const { response, error } = await checkOutRoom(
+                appConfig.API_BASE_URL,
+                data,
+                dispatch
+              );
+              if (response) {
+                toast.success(response?.data?.message);
+              }
+              if (error) {
+                toast.error(error?.data.message);
+              }
+              setLoading(false);
+            }}
+          >
+            Check Out
+          </Button>
+        </Box>
+      );
+    }
+    if (value.status === "extended") {
+      return (
+        <Button
+          variant="contained"
+          sx={{
+            ...fontStyle(),
+            bgcolor: "#C41E3A",
+            "&:hover": { backgroundColor: "#C41E3A" },
+          }}
+          onClick={async () => {
+            setLoading(true);
+            const data = {
+              room_id: value?.room_id,
+            };
+            const { response, error } = await checkOutRoom(
+              appConfig.API_BASE_URL,
+              data,
+              dispatch
+            );
+            if (response) {
+              toast.success(response?.data?.message);
+            }
+            if (error) {
+              toast.error(error?.data.message);
+            }
+            setLoading(false);
+          }}
+        >
+          Check Out
+        </Button>
+      );
+    }
+  };
+
   return (
     <Container component={"div"} maxWidth={false} sx={{ my: 6 }}>
       <CustomTable
@@ -67,51 +147,7 @@ const MyRequests = ({
         rowsPerPage={rowsPerPage}
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
-        renderActionButton={(value) =>
-          value.status === "approved" && (
-            <Box sx={{ display: "flex", alignItems: "center" }}>
-              <Button
-                sx={{ marginRight: 2, ...fontStyle() }}
-                variant="contained"
-                onClick={() => {
-                  setSelectedRequest(2);
-                  setIsModalOpen(true);
-                  setExtendReqData(value);
-                }}
-              >
-                Extend Room Request
-              </Button>
-              <Button
-                variant="contained"
-                sx={{
-                  ...fontStyle(),
-                  bgcolor: "#C41E3A",
-                  "&:hover": { backgroundColor: "#C41E3A" },
-                }}
-                onClick={async () => {
-                  setLoading(true);
-                  const data = {
-                    room_id: value?.room_id,
-                  };
-                  const { response, error } = await checkOutRoom(
-                    appConfig.API_BASE_URL,
-                    data,
-                    dispatch
-                  );
-                  if (response) {
-                    toast.success(response?.data?.message);
-                  }
-                  if (error) {
-                    toast.error(error?.data.message);
-                  }
-                  setLoading(false);
-                }}
-              >
-                Check Out
-              </Button>
-            </Box>
-          )
-        }
+        renderActionButton={(value) => renderActionButton(value)}
       />
     </Container>
   );

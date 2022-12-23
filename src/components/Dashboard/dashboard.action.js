@@ -52,6 +52,7 @@ export async function extendRoomRequest(baseURL, data, dispatch) {
   );
   if (response) {
     dispatch({ type: EXTEND_ROOM_REQUEST_SUCCESS, payload: response?.data });
+    await userMyRequest(baseURL, dispatch);
   }
   if (error) {
     dispatch({ type: EXTEND_ROOM_REQUEST_FAILURE });
@@ -68,6 +69,7 @@ export async function checkOutRoom(baseURL, data, dispatch) {
   );
   if (response) {
     dispatch({ type: CHECK_OUT_ROOM_REQUEST_SUCCESS, payload: response?.data });
+    await userMyRequest(baseURL, dispatch);
   }
   if (error) {
     dispatch({ type: CHECK_OUT_ROOM_REQUEST_FAILURE });

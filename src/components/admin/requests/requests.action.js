@@ -40,6 +40,8 @@ export async function allocateRoom(baseURL, data, dispatch) {
   );
   if (response) {
     dispatch({ type: ALLOCATE_ROOM_REQUEST, payload: response?.data });
+    await getAllRomRequests(baseURL, dispatch);
+    await getAvailableRoom(baseURL, dispatch);
   }
   if (error) {
     console.log("error", error);
