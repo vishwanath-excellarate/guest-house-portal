@@ -76,7 +76,6 @@ export const RQUEST_CONSTANT = [
   { id: "check_in", label: "Check In", align: "center" },
   { id: "check_out", label: "Check Out", align: "center" },
   { id: "room_id", label: "Room No", align: "center" },
-  { id: "constant_room_no", label: "Allotment Room", align: "center" },
   { id: "purpose_of_visit", label: "Purpose Of Visit", align: "center" },
   { id: "status", label: "Status", align: "center" },
   { id: "action", label: "Action", align: "center", minWidth: 200 },
@@ -148,6 +147,7 @@ export const MY_RQUEST_CONSTANT = [
   { id: "check_out", label: "Check Out", align: "center" },
   { id: "arrival_time", label: "Arrival Time", align: "center" },
   { id: "purpose_of_visit", label: "Purpose Of Visit", align: "center" },
+  { id: "constant_room_no", label: "Allotment Room", align: "center" },
   { id: "room_id", label: "Room No", align: "center" },
   { id: "status", label: "Status", align: "center" },
   { id: "action", label: "Action", align: "center", minWidth: 350 },
@@ -183,6 +183,7 @@ export const APPROVED_RQUEST_CONSTANT = [
   { id: "check_in", label: "Check In", align: "center" },
   { id: "check_out", label: "Check Out", align: "center" },
   { id: "arrival_time", label: "Arrival Time", align: "center" },
+  { id: "constant_room_no", label: "Allotment Room", align: "center" },
   { id: "room_id", label: "Room No", align: "center" },
   { id: "status", label: "Status", align: "center" },
   { id: "purpose_of_visit", label: "Purpose Of Visit", align: "center" },
@@ -194,3 +195,5 @@ export const userRole = {
 };
 
 export const DOWNLOAD = "download";
+
+export const SECRET_KEY = "excellarate 123456";
