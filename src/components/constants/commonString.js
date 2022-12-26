@@ -76,6 +76,7 @@ export const RQUEST_CONSTANT = [
   { id: "check_in", label: "Check In", align: "center" },
   { id: "check_out", label: "Check Out", align: "center" },
   { id: "room_id", label: "Room No", align: "center" },
+  { id: "constant_room_no", label: "Allotment Room", align: "center" },
   { id: "purpose_of_visit", label: "Purpose Of Visit", align: "center" },
   { id: "status", label: "Status", align: "center" },
   { id: "action", label: "Action", align: "center", minWidth: 200 },
@@ -103,6 +104,7 @@ export const HISTORY_CONSTANT = [
     label: "Arrival Time",
     align: "center",
   },
+  { id: "constant_room_no", label: "Allotment Room", align: "center" },
   { id: "purpose_of_visit", label: "Purpose Of Visit", align: "center" },
   { id: "status", label: "Status", align: "center" },
 ];
