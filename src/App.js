@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import PrivateRoute from "./components/routes/PrivateRoute";
 import { Toaster } from "./components/ghcomponents/Loader";
 import { userRole } from "./components/constants/commonString";
+import { getEncryptLocalStorage } from "./components/constants/utils";
 
 const LoginPage = lazy(() => import("./components/login/Login"));
 const Register = lazy(() => import("./components/user/accountReg"));
@@ -23,8 +24,8 @@ const App = () => {
   const [role, setRole] = useState("");
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    const fetchRole = localStorage.getItem("role");
+    const token = getEncryptLocalStorage("token");
+    const fetchRole = getEncryptLocalStorage("role");
     setIsAuthenticated(Boolean(token));
     setRole(fetchRole);
   }, []);

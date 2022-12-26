@@ -26,6 +26,10 @@ import { loginUserOrAdmin } from "./Login.action";
 import appConfig from "../services/appConfig";
 import { CircularLoader, DisabledBackground } from "../ghcomponents/Loader";
 import { toast } from "react-toastify";
+import {
+  expireDayCalculation,
+  getEncryptLocalStorage,
+} from "../constants/utils";
 
 const Login = ({ setIsAuthenticated, setRole }) => {
   const navigate = useNavigate();
@@ -42,12 +46,26 @@ const Login = ({ setIsAuthenticated, setRole }) => {
   });
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    const role = localStorage.getItem("role");
-    if (token && role === userRole.ADMIN) {
+    const token = getEncryptLocalStorage("token");
+    const role = getEncryptLocalStorage("role");
+    const loginSession = getEncryptLocalStorage("loginSession");
+    if (
+      token &&
+      role === userRole.ADMIN &&
+      loginSession !== expireDayCalculation()
+    ) {
       navigate("/admin-dashboard");
-    } else if (token && role === userRole.EMPLOYEE) {
+    } else if (
+      token &&
+      role === userRole.EMPLOYEE &&
+      loginSession !== expireDayCalculation()
+    ) {
       navigate("/dashboard");
+    } else {
+      localStorage.removeItem("token");
+      localStorage.removeItem("role");
+      localStorage.removeItem("loginSession");
+      navigate("/login");
     }
   }, []);
 

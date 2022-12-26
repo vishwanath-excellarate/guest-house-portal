@@ -1,7 +1,8 @@
 import axios from "axios";
+import { getEncryptLocalStorage } from "../constants/utils";
 
 export function post(apiBaseURL, location, body) {
-  const token = localStorage.getItem("token");
+  const token = getEncryptLocalStorage("token");
   const config = {
     headers: { Authorization: `Bearer ${token}` },
   };
@@ -31,7 +32,7 @@ export function put(apiBaseURL, location, body) {
 }
 
 export function get(apiBaseURL, location) {
-  const token = localStorage.getItem("token");
+  const token = getEncryptLocalStorage("token");
   const config = {
     headers: { Authorization: `Bearer ${token}` },
   };

@@ -218,7 +218,7 @@ const AdminDashboard = () => {
                     onClick={() => {
                       localStorage.removeItem("token");
                       localStorage.removeItem("role");
-                      // setAuthHeaders(null);
+                      localStorage.removeItem("loginSession");
                       handleCloseUserMenu();
                       navigation("/login");
                     }}

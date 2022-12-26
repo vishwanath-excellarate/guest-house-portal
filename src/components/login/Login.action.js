@@ -7,6 +7,7 @@ import {
 import { getRooms } from "../admin/rooms/Room.action";
 import { getUserRequest } from "../admin/users/User.action";
 import { userRole } from "../constants/commonString";
+import { setEncryptLocalStorage } from "../constants/utils";
 import { userMyRequest } from "../Dashboard/dashboard.action";
 import { post, get } from "../services/api";
 import {
@@ -29,8 +30,9 @@ export async function loginUserOrAdmin(baseURL, data, dispatch) {
   const { error, response } = await post(`${baseURL}`, `${"/login"}`, data);
   if (response) {
     dispatch({ type: LOGIN_SUCCESS, payload: response?.data });
-    localStorage.setItem("role", response?.data.role);
-    localStorage.setItem("token", response.headers.authorization);
+    setEncryptLocalStorage("role", response?.data.role);
+    setEncryptLocalStorage("token", response.headers.authorization);
+    setEncryptLocalStorage("loginSession", new Date().toLocaleDateString());
     await getProfileDetails(baseURL, dispatch);
     if (response?.data.role === userRole.ADMIN) {
       await getUserRequest(baseURL, dispatch);
