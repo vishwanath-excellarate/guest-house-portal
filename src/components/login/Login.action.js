@@ -32,7 +32,7 @@ export async function loginUserOrAdmin(baseURL, data, dispatch) {
     dispatch({ type: LOGIN_SUCCESS, payload: response?.data });
     setEncryptLocalStorage("role", response?.data.role);
     setEncryptLocalStorage("token", response.headers.authorization);
-    setEncryptLocalStorage("loginSession", new Date().toLocaleDateString());
+    setEncryptLocalStorage("loginSession", new Date().getTime(), false);
     await getProfileDetails(baseURL, dispatch);
     if (response?.data.role === userRole.ADMIN) {
       await getUserRequest(baseURL, dispatch);

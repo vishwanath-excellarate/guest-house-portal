@@ -26,10 +26,7 @@ import { loginUserOrAdmin } from "./Login.action";
 import appConfig from "../services/appConfig";
 import { CircularLoader, DisabledBackground } from "../ghcomponents/Loader";
 import { toast } from "react-toastify";
-import {
-  expireDayCalculation,
-  getEncryptLocalStorage,
-} from "../constants/utils";
+import { getEncryptLocalStorage } from "../constants/utils";
 
 const Login = ({ setIsAuthenticated, setRole }) => {
   const navigate = useNavigate();
@@ -48,24 +45,10 @@ const Login = ({ setIsAuthenticated, setRole }) => {
   useEffect(() => {
     const token = getEncryptLocalStorage("token");
     const role = getEncryptLocalStorage("role");
-    const loginSession = getEncryptLocalStorage("loginSession");
-    if (
-      token &&
-      role === userRole.ADMIN &&
-      loginSession !== expireDayCalculation()
-    ) {
+    if (token && role === userRole.ADMIN) {
       navigate("/admin-dashboard");
-    } else if (
-      token &&
-      role === userRole.EMPLOYEE &&
-      loginSession !== expireDayCalculation()
-    ) {
+    } else if (token && role === userRole.EMPLOYEE) {
       navigate("/dashboard");
-    } else {
-      localStorage.removeItem("token");
-      localStorage.removeItem("role");
-      localStorage.removeItem("loginSession");
-      navigate("/login");
     }
   }, []);
 

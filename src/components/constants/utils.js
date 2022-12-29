@@ -3,11 +3,10 @@ import { SECRET_KEY } from "./commonString";
 
 export const emailRegex = new RegExp("[a-z0-9]+@excellarate.com");
 
-export const expireDayCalculation = (days = 1) => {
-  let date = new Date();
-  date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
-  const expires = date.toLocaleDateString();
-  return expires;
+export const expireDayCalculation = (setupTime, hours = 24) => {
+  const now = new Date().getTime();
+  const isTimeExpired = now - setupTime > hours * 60 * 60 * 1000;
+  return isTimeExpired;
 };
 
 export const setEncryptLocalStorage = (key, value, encrypted = true) => {
