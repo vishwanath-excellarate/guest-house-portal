@@ -106,6 +106,7 @@ const Requests = () => {
         request_id: selectedRow.ruid,
         room_id: selectedRoom.split("-").slice(3).toString().trim(),
         constant_room_id: selectedRoom.split("-").slice(1, 3).join("-").trim(),
+        email: selectedRow?.email,
       };
       const { response, error } = await allocateRoom(
         appConfig.API_BASE_URL,
