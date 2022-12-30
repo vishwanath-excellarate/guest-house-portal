@@ -1,6 +1,7 @@
 import { Box, Button, Fab, Grid, Typography } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import {
+  COMMON_STRING,
   DOWNLOAD,
   ROOMS_CONSTANT,
   ROOM_SCREEN_CONSTANT,
@@ -18,6 +19,7 @@ import { toast } from "react-toastify";
 import DownloadIcon from "@mui/icons-material/Download";
 import { exportToExcel } from "../../constants/exportToExcel";
 import { COLORS } from "../../themes/Colors";
+import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 
 const Rooms = () => {
   const dispatch = useDispatch();
@@ -72,37 +74,50 @@ const Rooms = () => {
         open={isDeleteClicked}
         onClose={() => setIsDeleteClicked(!isDeleteClicked)}
       >
-        <Typography component="h1" variant="h6" textAlign={"center"}>
-          {ROOM_SCREEN_CONSTANT.ARE_YOU_SURE}
-        </Typography>
-        <Button
-          onClick={async () => {
-            setLoading(true);
-            const data = { uid: selectRow?.uid };
-            const { response, error } = await deleteRoomRequest(
-              appConfig.API_BASE_URL,
-              data,
-              dispatch
-            );
-            if (response) {
-              toast.success(response?.data?.message);
-            }
-            if (error) {
-              toast.error(error?.data?.message);
-            }
-            setLoading(false);
-            setIsDeleteClicked(!isDeleteClicked);
-          }}
-          variant="contained"
-          sx={{
-            width: "100%",
-            marginTop: 3,
-            bgcolor: "#EE4B2B",
-            "&:hover": { backgroundColor: "#EE4B2B" },
-          }}
-        >
-          Delete
-        </Button>
+        <Box display={"flex"} alignItems="center" flexDirection={"column"}>
+          <ErrorOutlineIcon sx={{ fontSize: 70, color: COLORS.bright_red }} />
+          <Typography
+            component="h6"
+            sx={{ fontSize: 24, letterSpacing: 0.4, fontWeight: "bold", px: 1 }}
+          >
+            {ROOM_SCREEN_CONSTANT.ARE_YOU_SURE}
+          </Typography>
+          <Typography
+            component="h6"
+            sx={{ fontSize: 16, letterSpacing: 0.3, paddingTop: 0.5 }}
+          >
+            {ROOM_SCREEN_CONSTANT.SUB_TEXT}
+          </Typography>
+
+          <Button
+            onClick={async () => {
+              setLoading(true);
+              const data = { uid: selectRow?.uid };
+              const { response, error } = await deleteRoomRequest(
+                appConfig.API_BASE_URL,
+                data,
+                dispatch
+              );
+              if (response) {
+                toast.success(response?.data?.message);
+              }
+              if (error) {
+                toast.error(error?.data?.message);
+              }
+              setLoading(false);
+              setIsDeleteClicked(!isDeleteClicked);
+            }}
+            variant="contained"
+            sx={{
+              width: "100%",
+              marginTop: 2,
+              bgcolor: COLORS.bright_red,
+              "&:hover": { backgroundColor: COLORS.bright_red },
+            }}
+          >
+            {COMMON_STRING.DELETE}
+          </Button>
+        </Box>
       </CustomModal>
     );
   };
@@ -155,15 +170,15 @@ const Rooms = () => {
                 <Button
                   variant="contained"
                   sx={{
-                    bgcolor: "#C41E3A",
-                    "&:hover": { backgroundColor: "#C41E3A" },
+                    bgcolor: COLORS.bright_red,
+                    "&:hover": { backgroundColor: COLORS.bright_red },
                   }}
                   onClick={() => {
                     setSelectRow(value);
                     setIsDeleteClicked(!isDeleteClicked);
                   }}
                 >
-                  Delete
+                  {COMMON_STRING.DELETE}
                 </Button>
               </Box>
             )}

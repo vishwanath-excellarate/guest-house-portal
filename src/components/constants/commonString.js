@@ -1,3 +1,13 @@
+export const COMMON_STRING = {
+  DELETE: "Delete",
+  APPROVE: "Approve",
+  DECLINE: "Decline",
+  CHECK_OUT: "Check Out",
+  EXTEND_ROOM_REQUEST: "Extend Room Request",
+  SEND: "Send",
+  EXTEND_REQUEST: "Extend Request",
+};
+
 export const SIGN_IN = {
   SIGN_IN: "Sign In",
   REMEMBER_ME: "Remember me",
@@ -43,12 +53,14 @@ export const USERS_COLUMN = [
 ];
 
 export const USER_SCREEN_CONSTANT = {
-  ARE_YOU_SURE: "Are you sure? you want to delete this email",
+  ARE_YOU_SURE: "Delete the mail?",
+  SUB_TEXT: "You will not be able to recover it",
   ADD_USER: "Add User",
 };
 
 export const ROOM_SCREEN_CONSTANT = {
-  ARE_YOU_SURE: "Are you sure? you want to delete this room details",
+  ARE_YOU_SURE: "Delete the room?",
+  SUB_TEXT: "You will not be able to recover it",
   ADD_ROOM: "Add Room",
 };
 
@@ -60,7 +72,8 @@ export const ROOMS_CONSTANT = [
 ];
 
 export const REQUEST_SCREEN_CONSTANT = {
-  ARE_YOU_SURE: "Are you sure? you want to delete this request",
+  ARE_YOU_SURE: "Delete the request?",
+  SUB_TEXT: "You will not be able to recover it",
 };
 
 export const RQUEST_CONSTANT = [

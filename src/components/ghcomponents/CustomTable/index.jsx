@@ -10,6 +10,7 @@ import {
   TablePagination,
   TableRow,
 } from "@mui/material";
+import { COLORS } from "../../themes/Colors";
 
 const CustomTable = ({
   columns,
@@ -60,14 +61,14 @@ const CustomTable = ({
                         sx={{
                           color:
                             value === "declined" || value === "checkout"
-                              ? "#EE4B2B"
+                              ? COLORS.bright_red
                               : value === "approved"
-                              ? "#008000"
+                              ? COLORS.green
                               : value === "extended"
-                              ? "#0089F9"
+                              ? COLORS.blue_azure
                               : value === "pending"
-                              ? "#FFBF00"
-                              : "#000",
+                              ? COLORS.yellow
+                              : COLORS.black,
                           fontSize: 16,
                           textTransform:
                             column.id === "email" ? "none" : "capitalize",

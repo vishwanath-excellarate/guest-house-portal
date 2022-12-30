@@ -9,6 +9,7 @@ import {
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  COMMON_STRING,
   DOWNLOAD,
   REQUEST_SCREEN_CONSTANT,
   REQUEST_TYPE,
@@ -32,6 +33,7 @@ import { toast } from "react-toastify";
 import DownloadIcon from "@mui/icons-material/Download";
 import { exportToExcel } from "../../constants/exportToExcel";
 import { COLORS } from "../../themes/Colors";
+import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 
 const Requests = () => {
   const dispatch = useDispatch();
@@ -187,7 +189,7 @@ const Requests = () => {
           }}
           onClick={() => handleSubmit()}
         >
-          Approve
+          {COMMON_STRING.APPROVE}
         </Button>
       </CustomModal>
     );
@@ -199,17 +201,21 @@ const Requests = () => {
         open={isDeleteClicked}
         onClose={() => setIsDeleteClicked(!isDeleteClicked)}
       >
-        <Box
-          sx={{
-            paddingBottom: 1,
-          }}
-        >
-          <Typography component="h1" variant="h6" textAlign={"center"}>
+        <Box display={"flex"} alignItems="center" flexDirection={"column"}>
+          <ErrorOutlineIcon sx={{ fontSize: 70, color: COLORS.bright_red }} />
+          <Typography
+            component="h6"
+            sx={{ fontSize: 24, letterSpacing: 0.4, fontWeight: "bold", px: 1 }}
+          >
             {REQUEST_SCREEN_CONSTANT.ARE_YOU_SURE}
           </Typography>
-        </Box>
+          <Typography
+            component="h6"
+            sx={{ fontSize: 16, letterSpacing: 0.3, paddingTop: 0.5 }}
+          >
+            {REQUEST_SCREEN_CONSTANT.SUB_TEXT}
+          </Typography>
 
-        <Box sx={{ mt: 2 }}>
           <Button
             onClick={async () => {
               setLoading(true);
@@ -237,11 +243,11 @@ const Requests = () => {
             sx={{
               width: "100%",
               marginTop: 2,
-              bgcolor: "#EE4B2B",
-              "&:hover": { backgroundColor: "#EE4B2B" },
+              bgcolor: COLORS.bright_red,
+              "&:hover": { backgroundColor: COLORS.bright_red },
             }}
           >
-            Delete
+            {COMMON_STRING.DELETE}
           </Button>
         </Box>
       </CustomModal>
@@ -292,20 +298,22 @@ const Requests = () => {
                   setSelectedRow(value);
                 }}
               >
-                Approve
+                {COMMON_STRING.APPROVE}
               </Button>
               <Button
                 variant="contained"
                 sx={{
-                  bgcolor: "#C41E3A",
-                  "&:hover": { backgroundColor: "#C41E3A" },
+                  ...fontStyle(),
+                  letterSpacing: 0.4,
+                  bgcolor: COLORS.bright_red,
+                  "&:hover": { backgroundColor: COLORS.bright_red },
                 }}
                 onClick={() => {
                   setIsDeleteClicked(!isDeleteClicked);
                   setSelectedRow(value);
                 }}
               >
-                Decline
+                {COMMON_STRING.DECLINE}
               </Button>
             </Box>
           )

@@ -7,4 +7,7 @@ export const COLORS = {
   purple: "#a22cff",
   green_shade: "#74d800",
   red: "#ff0000",
+  bright_red: "#EE4B2B",
+  green: "#008000",
+  yellow: "#FFBF00",
 };

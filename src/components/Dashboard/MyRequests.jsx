@@ -5,10 +5,11 @@ import { checkOutRoom, userMyRequest } from "./dashboard.action";
 import appConfig from "../services/appConfig";
 import { useDispatch, useSelector } from "react-redux";
 import CustomTable from "../ghcomponents/CustomTable";
-import { MY_RQUEST_CONSTANT } from "../constants/commonString";
+import { COMMON_STRING, MY_RQUEST_CONSTANT } from "../constants/commonString";
 import { Box, Button } from "@mui/material";
 import { fontStyle } from "../themes/Styles";
 import { toast } from "react-toastify";
+import { COLORS } from "../themes/Colors";
 
 const MyRequests = ({
   setSelectedRequest,
@@ -71,14 +72,14 @@ const MyRequests = ({
               setExtendReqData(value);
             }}
           >
-            Extend Room Request
+            {COMMON_STRING.EXTEND_ROOM_REQUEST}
           </Button>
           <Button
             variant="contained"
             sx={{
               ...fontStyle(),
-              bgcolor: "#C41E3A",
-              "&:hover": { backgroundColor: "#C41E3A" },
+              bgcolor: COLORS.bright_red,
+              "&:hover": { backgroundColor: COLORS.bright_red },
             }}
             onClick={async () => {
               setLoading(true);
@@ -99,7 +100,7 @@ const MyRequests = ({
               setLoading(false);
             }}
           >
-            Check Out
+            {COMMON_STRING.CHECK_OUT}
           </Button>
         </Box>
       );
@@ -132,7 +133,7 @@ const MyRequests = ({
             setLoading(false);
           }}
         >
-          Check Out
+          {COMMON_STRING.CHECK_OUT}
         </Button>
       );
     }

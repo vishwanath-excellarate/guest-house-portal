@@ -1,7 +1,8 @@
-import { Box, Button, Fab, Grid, IconButton, Typography } from "@mui/material";
+import { Box, Button, Fab, Grid, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  COMMON_STRING,
   DOWNLOAD,
   USERS_COLUMN,
   USER_SCREEN_CONSTANT,
@@ -18,6 +19,7 @@ import { deleteUserRequest, getUserRequest } from "./User.action";
 import { toast } from "react-toastify";
 import DownloadIcon from "@mui/icons-material/Download";
 import { exportToExcel } from "../../constants/exportToExcel";
+import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 
 const Users = () => {
   const dispatch = useDispatch();
@@ -76,38 +78,50 @@ const Users = () => {
         open={isDeleteClicked}
         onClose={() => setIsDeleteClicked(!isDeleteClicked)}
       >
-        <Typography component="h1" variant="h6" textAlign={"center"}>
-          {USER_SCREEN_CONSTANT.ARE_YOU_SURE}
-        </Typography>
-        <Button
-          onClick={async () => {
-            setLoading(true);
-            setIsDeleteClicked(!isDeleteClicked);
-            const { response, error } = await deleteUserRequest(
-              appConfig.API_BASE_URL,
-              selectedEmail,
-              dispatch
-            );
-            if (response) {
-              toast.success(response?.data?.message);
-            }
-            if (error) {
-              toast.error(error?.data.message);
-            }
-            setTimeout(() => {
-              setLoading(false);
-            }, 1000);
-          }}
-          variant="contained"
-          sx={{
-            width: "100%",
-            marginTop: 3,
-            bgcolor: "#EE4B2B",
-            "&:hover": { backgroundColor: "#EE4B2B" },
-          }}
-        >
-          Delete
-        </Button>
+        <Box display={"flex"} alignItems="center" flexDirection={"column"}>
+          <ErrorOutlineIcon sx={{ fontSize: 70, color: COLORS.bright_red }} />
+          <Typography
+            component="h6"
+            sx={{ fontSize: 24, letterSpacing: 0.4, fontWeight: "bold", px: 1 }}
+          >
+            {USER_SCREEN_CONSTANT.ARE_YOU_SURE}
+          </Typography>
+          <Typography
+            component="h6"
+            sx={{ fontSize: 16, letterSpacing: 0.3, paddingTop: 0.5 }}
+          >
+            {USER_SCREEN_CONSTANT.SUB_TEXT}
+          </Typography>
+          <Button
+            onClick={async () => {
+              setLoading(true);
+              setIsDeleteClicked(!isDeleteClicked);
+              const { response, error } = await deleteUserRequest(
+                appConfig.API_BASE_URL,
+                selectedEmail,
+                dispatch
+              );
+              if (response) {
+                toast.success(response?.data?.message);
+              }
+              if (error) {
+                toast.error(error?.data.message);
+              }
+              setTimeout(() => {
+                setLoading(false);
+              }, 1000);
+            }}
+            variant="contained"
+            sx={{
+              width: "100%",
+              marginTop: 2,
+              bgcolor: COLORS.bright_red,
+              "&:hover": { backgroundColor: COLORS.bright_red },
+            }}
+          >
+            {COMMON_STRING.DELETE}
+          </Button>
+        </Box>
       </CustomModal>
     );
   };
@@ -161,8 +175,8 @@ const Users = () => {
             renderActionButton={(value) => (
               <Button
                 sx={{
-                  bgcolor: "#C41E3A",
-                  "&:hover": { backgroundColor: "#C41E3A" },
+                  bgcolor: COLORS.bright_red,
+                  "&:hover": { backgroundColor: COLORS.bright_red },
                 }}
                 variant="contained"
                 onClick={() => {
@@ -170,7 +184,7 @@ const Users = () => {
                   setSelectedEmail(value);
                 }}
               >
-                Delete
+                {COMMON_STRING.DELETE}
               </Button>
             )}
           />

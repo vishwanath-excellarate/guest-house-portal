@@ -2,6 +2,7 @@ import { Box, Button, Fab, Grid, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  COMMON_STRING,
   DOWNLOAD,
   EXTEND_RQUEST_CONSTANT,
   REQUEST_SCREEN_CONSTANT,
@@ -23,6 +24,7 @@ import CustomSelect from "../../ghcomponents/CustomSelect";
 import { COLORS } from "../../themes/Colors";
 import { exportToExcel } from "../../constants/exportToExcel";
 import DownloadIcon from "@mui/icons-material/Download";
+import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 
 const ExtendRequests = () => {
   const dispatch = useDispatch();
@@ -82,28 +84,32 @@ const ExtendRequests = () => {
         open={isDeleteClicked}
         onClose={() => setIsDeleteClicked(!isDeleteClicked)}
       >
-        <Box
-          sx={{
-            paddingBottom: 1,
-          }}
-        >
-          <Typography component="h1" variant="h6" textAlign={"center"}>
+        <Box display={"flex"} alignItems="center" flexDirection={"column"}>
+          <ErrorOutlineIcon sx={{ fontSize: 70, color: COLORS.bright_red }} />
+          <Typography
+            component="h6"
+            sx={{ fontSize: 24, letterSpacing: 0.4, fontWeight: "bold", px: 1 }}
+          >
             {REQUEST_SCREEN_CONSTANT.ARE_YOU_SURE}
           </Typography>
-        </Box>
+          <Typography
+            component="h6"
+            sx={{ fontSize: 16, letterSpacing: 0.3, paddingTop: 0.5 }}
+          >
+            {REQUEST_SCREEN_CONSTANT.SUB_TEXT}
+          </Typography>
 
-        <Box sx={{ mt: 2 }}>
           <Button
             onClick={() => onDeleteClicked()}
             variant="contained"
             sx={{
               width: "100%",
               marginTop: 2,
-              bgcolor: "#EE4B2B",
-              "&:hover": { backgroundColor: "#EE4B2B" },
+              bgcolor: COLORS.bright_red,
+              "&:hover": { backgroundColor: COLORS.bright_red },
             }}
           >
-            Delete
+            {COMMON_STRING.DELETE}
           </Button>
         </Box>
       </CustomModal>
@@ -194,20 +200,22 @@ const ExtendRequests = () => {
                 variant="contained"
                 onClick={() => onExtendRequestSubmit(value)}
               >
-                Extend Request
+                {COMMON_STRING.EXTEND_REQUEST}
               </Button>
               <Button
                 variant="contained"
                 sx={{
-                  bgcolor: "#C41E3A",
-                  "&:hover": { backgroundColor: "#C41E3A" },
+                  ...fontStyle(),
+                  letterSpacing: 0.4,
+                  bgcolor: COLORS.bright_red,
+                  "&:hover": { backgroundColor: COLORS.bright_red },
                 }}
                 onClick={() => {
                   setIsDeleteClicked(!isDeleteClicked);
                   setSelectedRow(value);
                 }}
               >
-                Decline
+                {COMMON_STRING.DECLINE}
               </Button>
             </Box>
           )
