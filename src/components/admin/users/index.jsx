@@ -33,10 +33,7 @@ const Users = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const { response, error } = getUserRequest(
-      appConfig.API_BASE_URL,
-      dispatch
-    );
+    getUserRequest(appConfig.API_BASE_URL, dispatch);
   }, []);
 
   useEffect(() => {
@@ -107,9 +104,7 @@ const Users = () => {
               if (error) {
                 toast.error(error?.data.message);
               }
-              setTimeout(() => {
-                setLoading(false);
-              }, 1000);
+              setLoading(false);
             }}
             variant="contained"
             sx={{

@@ -111,8 +111,8 @@ const MyRequests = ({
           variant="contained"
           sx={{
             ...fontStyle(),
-            bgcolor: "#C41E3A",
-            "&:hover": { backgroundColor: "#C41E3A" },
+            bgcolor: COLORS.bright_red,
+            "&:hover": { backgroundColor: COLORS.bright_red },
           }}
           onClick={async () => {
             setLoading(true);

@@ -1,6 +1,4 @@
-export const environment = "production"; // THIS LINE NEED TO UPDATE
-
-export const isdevmode = false;
+export const environment = "production"; // THIS LINE NEED to be updated through "production" or "development"
 
 const API_BASE_URL = {
   development: process.env.REACT_APP_DEV_URL,
