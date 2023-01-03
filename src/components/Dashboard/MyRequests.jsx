@@ -78,6 +78,8 @@ const MyRequests = ({
             variant="contained"
             sx={{
               ...fontStyle(),
+              width: 120,
+              height: 40,
               bgcolor: COLORS.bright_red,
               "&:hover": { backgroundColor: COLORS.bright_red },
             }}
@@ -111,6 +113,8 @@ const MyRequests = ({
           variant="contained"
           sx={{
             ...fontStyle(),
+            width: 120,
+            height: 40,
             bgcolor: COLORS.bright_red,
             "&:hover": { backgroundColor: COLORS.bright_red },
           }}

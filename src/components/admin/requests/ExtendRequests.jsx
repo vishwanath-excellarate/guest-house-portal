@@ -65,7 +65,7 @@ const ExtendRequests = () => {
     // setLoading(false);
   }, []);
 
-  const handleChangePage = (newPage) => {
+  const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
 

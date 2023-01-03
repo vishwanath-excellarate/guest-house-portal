@@ -170,6 +170,8 @@ const Users = () => {
             renderActionButton={(value) => (
               <Button
                 sx={{
+                  width: 120,
+                  height: 40,
                   bgcolor: COLORS.bright_red,
                   "&:hover": { backgroundColor: COLORS.bright_red },
                 }}

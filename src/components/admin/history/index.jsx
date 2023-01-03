@@ -34,7 +34,7 @@ const RoomDetails = () => {
     setData(result);
   }, [historyResult.historyReqResult]);
 
-  const handleChangePage = (newPage) => {
+  const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
 

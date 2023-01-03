@@ -163,7 +163,7 @@ const AdminDashboard = () => {
                   onClick={() => handleCloseNavMenu(page)}
                   sx={{
                     my: 2,
-                    color: "#fff",
+                    color: COLORS.white,
                     display: "block",
                     px: 2,
                     textTransform: "capitalize",
