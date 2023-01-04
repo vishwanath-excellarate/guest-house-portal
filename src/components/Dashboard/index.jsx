@@ -318,6 +318,7 @@ const Dashboard = () => {
         >
           {selectedRequest === 1 && (
             <RoomRequest
+              loading={loading}
               setLoading={setLoading}
               setIsModalOpen={setIsModalOpen}
             />

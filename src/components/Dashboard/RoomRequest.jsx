@@ -18,7 +18,7 @@ import moment from "moment";
 import { toast } from "react-toastify";
 import CloseIcon from "@mui/icons-material/Close";
 
-const RoomRequest = ({ setLoading, setIsModalOpen }) => {
+const RoomRequest = ({ loading, setLoading, setIsModalOpen }) => {
   const dispatch = useDispatch();
   const [roomRequestFormDetails, setRoomRequestFormDetails] = useState({
     buName: "",
@@ -313,6 +313,7 @@ const RoomRequest = ({ setLoading, setIsModalOpen }) => {
           </Grid>
         </Grid>
         <Button
+          disabled={loading}
           type="submit"
           fullWidth
           variant="contained"

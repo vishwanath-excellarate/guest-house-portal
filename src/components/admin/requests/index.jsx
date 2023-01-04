@@ -34,6 +34,7 @@ import DownloadIcon from "@mui/icons-material/Download";
 import { exportToExcel } from "../../constants/exportToExcel";
 import { COLORS } from "../../themes/Colors";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
+import CustomInput from "../../ghcomponents/CustomInput";
 
 const Requests = () => {
   const dispatch = useDispatch();
@@ -49,6 +50,7 @@ const Requests = () => {
   const [selectedRoom, setSelectedRoom] = useState("");
   const [error, setError] = useState(false);
   const [selectedRow, setSelectedRow] = useState("");
+  const [reason, setReason] = useState("");
 
   useEffect(() => {
     let result = [];
@@ -195,65 +197,6 @@ const Requests = () => {
     );
   };
 
-  const DeletePopUp = () => {
-    return (
-      <CustomModal
-        open={isDeleteClicked}
-        onClose={() => setIsDeleteClicked(!isDeleteClicked)}
-      >
-        <Box display={"flex"} alignItems="center" flexDirection={"column"}>
-          <ErrorOutlineIcon sx={{ fontSize: 70, color: COLORS.bright_red }} />
-          <Typography
-            component="h6"
-            sx={{ fontSize: 24, letterSpacing: 0.4, fontWeight: "bold", px: 1 }}
-          >
-            {REQUEST_SCREEN_CONSTANT.ARE_YOU_SURE}
-          </Typography>
-          <Typography
-            component="h6"
-            sx={{ fontSize: 16, letterSpacing: 0.3, paddingTop: 0.5 }}
-          >
-            {REQUEST_SCREEN_CONSTANT.SUB_TEXT}
-          </Typography>
-
-          <Button
-            onClick={async () => {
-              setLoading(true);
-              const data = {
-                request_id: selectedRow.ruid,
-              };
-
-              const { response, error } = await deleteRoomRequest(
-                appConfig.API_BASE_URL,
-                data,
-                dispatch
-              );
-              if (response) {
-                toast.success(response?.data?.message);
-                await getAllRomRequests(appConfig.API_BASE_URL, dispatch);
-              }
-              if (error) {
-                toast.error(error?.data.message);
-              }
-              setIsDeleteClicked(!isDeleteClicked);
-              setLoading(false);
-              setSelectedRow("");
-            }}
-            variant="contained"
-            sx={{
-              width: "100%",
-              marginTop: 2,
-              bgcolor: COLORS.bright_red,
-              "&:hover": { backgroundColor: COLORS.bright_red },
-            }}
-          >
-            {COMMON_STRING.DELETE}
-          </Button>
-        </Box>
-      </CustomModal>
-    );
-  };
-
   return (
     <Grid container sx={{ px: 4 }}>
       {loading && (
@@ -291,7 +234,7 @@ const Requests = () => {
           value?.status.toLowerCase() === "pending" && (
             <Box sx={{ display: "flex", alignItems: "center" }}>
               <Button
-                sx={{ marginRight: 2, ...fontStyle() }}
+                sx={{ marginRight: 2, ...fontStyle(), width: 120, height: 40 }}
                 variant="contained"
                 onClick={() => {
                   setIsModalOpen(!isModalOpen);
@@ -304,6 +247,8 @@ const Requests = () => {
                 variant="contained"
                 sx={{
                   ...fontStyle(),
+                  width: 120,
+                  height: 40,
                   letterSpacing: 0.4,
                   bgcolor: COLORS.bright_red,
                   "&:hover": { backgroundColor: COLORS.bright_red },
@@ -320,7 +265,75 @@ const Requests = () => {
         }
       />
       <ApproveModal />
-      <DeletePopUp />
+      
+      <CustomModal
+        open={isDeleteClicked}
+        onClose={() => {
+          setIsDeleteClicked(!isDeleteClicked);
+          setReason("");
+        }}
+      >
+        <Box display={"flex"} alignItems="center" flexDirection={"column"}>
+          <ErrorOutlineIcon sx={{ fontSize: 70, color: COLORS.bright_red }} />
+          <Typography
+            component="h6"
+            sx={{ fontSize: 24, letterSpacing: 0.4, fontWeight: "bold", px: 1 }}
+          >
+            {REQUEST_SCREEN_CONSTANT.ARE_YOU_SURE}
+          </Typography>
+          <Typography
+            component="h6"
+            sx={{ fontSize: 16, letterSpacing: 0.3, paddingTop: 0.5 }}
+          >
+            {REQUEST_SCREEN_CONSTANT.SUB_TEXT}
+          </Typography>
+          <CustomInput
+            autoFocus={false}
+            sx={{ my: 2 }}
+            required
+            fullWidth
+            id="Reason"
+            label="Reason for decline"
+            name="Reason"
+            value={reason}
+            onChange={(event) => setReason(event.target.value)}
+          />
+          <Button
+            onClick={async () => {
+              setLoading(true);
+              const data = {
+                request_id: selectedRow.ruid,
+                decline_reason: reason,
+              };
+
+              const { response, error } = await deleteRoomRequest(
+                appConfig.API_BASE_URL,
+                data,
+                dispatch
+              );
+              if (response) {
+                toast.success(response?.data?.message);
+                await getAllRomRequests(appConfig.API_BASE_URL, dispatch);
+              }
+              if (error) {
+                toast.error(error?.data.message);
+              }
+              setIsDeleteClicked(!isDeleteClicked);
+              setLoading(false);
+              setSelectedRow("");
+            }}
+            variant="contained"
+            sx={{
+              width: "100%",
+              bgcolor: COLORS.bright_red,
+              "&:hover": { backgroundColor: COLORS.bright_red },
+            }}
+            disabled={!reason.length}
+          >
+            {COMMON_STRING.DELETE}
+          </Button>
+        </Box>
+      </CustomModal>
 
       {data.length && (
         <Fab
