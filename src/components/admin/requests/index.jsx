@@ -1,9 +1,9 @@
 import {
   Box,
   Button,
+  Container,
   Fab,
   FormHelperText,
-  Grid,
   Typography,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
@@ -198,74 +198,80 @@ const Requests = () => {
   };
 
   return (
-    <Grid container sx={{ px: 4 }}>
+    <Container disableGutters maxWidth={false}>
       {loading && (
         <DisabledBackground>
           <CircularLoader />
         </DisabledBackground>
       )}
-      <Grid
-        item
-        xs={12}
-        sx={{
-          display: "flex",
-          justifyContent: "flex-end",
-          marginTop: 4,
-          marginBottom: 4,
-        }}
-      >
-        <CustomSelect
-          formStyle={{ minWidth: { xs: "60%", md: "20%" } }}
-          menuItems={REQUEST_TYPE}
-          label={"Request Type"}
-          inputLabelText={"Request Type"}
-          value={requestType}
-          handleChange={(e) => setRequestType(e.target.value)}
+      <Box sx={{ px: 4 }}>
+        <Container
+          disableGutters
+          maxWidth={false}
+          sx={{
+            display: "flex",
+            justifyContent: "flex-end",
+            my: 4,
+          }}
+        >
+          <CustomSelect
+            formStyle={{ minWidth: { xs: "60%", md: "20%" } }}
+            menuItems={REQUEST_TYPE}
+            label={"Request Type"}
+            inputLabelText={"Request Type"}
+            value={requestType}
+            handleChange={(e) => setRequestType(e.target.value)}
+          />
+        </Container>
+        <CustomTable
+          columns={RQUEST_CONSTANT}
+          rows={data}
+          page={page}
+          rowsPerPage={rowsPerPage}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+          renderActionButton={(value) =>
+            value?.status.toLowerCase() === "pending" && (
+              <Box sx={{ display: "flex", alignItems: "center" }}>
+                <Button
+                  sx={{
+                    marginRight: 2,
+                    ...fontStyle(),
+                    width: 120,
+                    height: 40,
+                  }}
+                  variant="contained"
+                  onClick={() => {
+                    setIsModalOpen(!isModalOpen);
+                    setSelectedRow(value);
+                  }}
+                >
+                  {COMMON_STRING.APPROVE}
+                </Button>
+                <Button
+                  variant="contained"
+                  sx={{
+                    ...fontStyle(),
+                    width: 120,
+                    height: 40,
+                    letterSpacing: 0.4,
+                    bgcolor: COLORS.bright_red,
+                    "&:hover": { backgroundColor: COLORS.bright_red },
+                  }}
+                  onClick={() => {
+                    setIsDeleteClicked(!isDeleteClicked);
+                    setSelectedRow(value);
+                  }}
+                >
+                  {COMMON_STRING.DECLINE}
+                </Button>
+              </Box>
+            )
+          }
         />
-      </Grid>
-      <CustomTable
-        columns={RQUEST_CONSTANT}
-        rows={data}
-        page={page}
-        rowsPerPage={rowsPerPage}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-        renderActionButton={(value) =>
-          value?.status.toLowerCase() === "pending" && (
-            <Box sx={{ display: "flex", alignItems: "center" }}>
-              <Button
-                sx={{ marginRight: 2, ...fontStyle(), width: 120, height: 40 }}
-                variant="contained"
-                onClick={() => {
-                  setIsModalOpen(!isModalOpen);
-                  setSelectedRow(value);
-                }}
-              >
-                {COMMON_STRING.APPROVE}
-              </Button>
-              <Button
-                variant="contained"
-                sx={{
-                  ...fontStyle(),
-                  width: 120,
-                  height: 40,
-                  letterSpacing: 0.4,
-                  bgcolor: COLORS.bright_red,
-                  "&:hover": { backgroundColor: COLORS.bright_red },
-                }}
-                onClick={() => {
-                  setIsDeleteClicked(!isDeleteClicked);
-                  setSelectedRow(value);
-                }}
-              >
-                {COMMON_STRING.DECLINE}
-              </Button>
-            </Box>
-          )
-        }
-      />
+      </Box>
       <ApproveModal />
-      
+
       <CustomModal
         open={isDeleteClicked}
         onClose={() => {
@@ -352,7 +358,7 @@ const Requests = () => {
           <DownloadIcon sx={{ ml: 1 }} />
         </Fab>
       )}
-    </Grid>
+    </Container>
   );
 };
 

@@ -94,10 +94,9 @@ const Dashboard = () => {
   return (
     <Container disableGutters maxWidth={false}>
       {loading && (
-        <>
+        <DisabledBackground>
           <CircularLoader />
-          <DisabledBackground />
-        </>
+        </DisabledBackground>
       )}
       <AppBar position="static" sx={{ backgroundColor: COLORS.blue_azure }}>
         <Container maxWidth={false}>

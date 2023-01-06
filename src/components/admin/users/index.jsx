@@ -1,4 +1,4 @@
-import { Box, Button, Fab, Grid, Typography } from "@mui/material";
+import { Box, Button, Container, Fab, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -122,7 +122,7 @@ const Users = () => {
   };
 
   return (
-    <Grid container sx={{ px: 4 }}>
+    <Container disableGutters maxWidth={false}>
       {loading && (
         <DisabledBackground>
           <CircularLoader />
@@ -136,16 +136,14 @@ const Users = () => {
           onClick={() => setIsModalOpen(true)}
         />
       ) : (
-        <>
-          <Grid
-            item
-            xl={12}
-            xs={12}
+        <Box sx={{ px: 4 }}>
+          <Container
+            maxWidth={false}
+            disableGutters
             sx={{
               display: "flex",
               justifyContent: "flex-end",
-              marginTop: 4,
-              marginBottom: 4,
+              my: 4,
             }}
           >
             <Button
@@ -159,7 +157,7 @@ const Users = () => {
             >
               {USER_SCREEN_CONSTANT.ADD_USER}
             </Button>
-          </Grid>
+          </Container>
           <CustomTable
             columns={USERS_COLUMN}
             rows={data}
@@ -185,7 +183,7 @@ const Users = () => {
               </Button>
             )}
           />
-        </>
+        </Box>
       )}
       <ModalComponent />
       <DeletePopUp />
@@ -207,7 +205,7 @@ const Users = () => {
           <DownloadIcon sx={{ ml: 1 }} />
         </Fab>
       )}
-    </Grid>
+    </Container>
   );
 };
 

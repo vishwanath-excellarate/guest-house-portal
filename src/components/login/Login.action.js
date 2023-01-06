@@ -36,11 +36,11 @@ export async function loginUserOrAdmin(baseURL, data, dispatch) {
     await getProfileDetails(baseURL, dispatch);
     if (response?.data.role === userRole.ADMIN) {
       await getUserRequest(baseURL, dispatch);
-      await getRooms(baseURL, dispatch);
-      await getAllRomRequests(baseURL, dispatch);
-      await getAvailableRoom(baseURL, dispatch);
-      await getExtendRomRequests(baseURL, dispatch);
-      await getHistoryRequests(baseURL, dispatch);
+      // await getRooms(baseURL, dispatch);
+      // await getAllRomRequests(baseURL, dispatch);
+      // await getAvailableRoom(baseURL, dispatch);
+      // await getExtendRomRequests(baseURL, dispatch);
+      // await getHistoryRequests(baseURL, dispatch);
     }
     if (response?.data.role === userRole.EMPLOYEE) {
       await userMyRequest(baseURL, dispatch);

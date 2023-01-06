@@ -1,4 +1,4 @@
-import { Box, Button, Fab, Grid, Typography } from "@mui/material";
+import { Box, Button, Container, Fab, Typography } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import {
   COMMON_STRING,
@@ -123,7 +123,7 @@ const Rooms = () => {
   };
 
   return (
-    <Grid container sx={{ px: 4 }}>
+    <Container disableGutters maxWidth={false}>
       {loading && (
         <DisabledBackground>
           <CircularLoader />
@@ -137,16 +137,14 @@ const Rooms = () => {
           onClick={() => setIsModalOpen(true)}
         />
       ) : (
-        <>
-          <Grid
-            item
-            xl={12}
-            xs={12}
+        <Box sx={{ px: 4 }}>
+          <Container
+            maxWidth={false}
+            disableGutters
             sx={{
               display: "flex",
               justifyContent: "flex-end",
-              marginTop: 4,
-              marginBottom: 4,
+              my: 4,
             }}
           >
             <Button
@@ -157,7 +155,7 @@ const Rooms = () => {
             >
               {ROOM_SCREEN_CONSTANT.ADD_ROOM}
             </Button>
-          </Grid>
+          </Container>
           <CustomTable
             columns={ROOMS_CONSTANT}
             rows={data}
@@ -185,7 +183,7 @@ const Rooms = () => {
               </Box>
             )}
           />
-        </>
+        </Box>
       )}
       <ModalComponent />
       <DeletePopUp />
@@ -207,7 +205,7 @@ const Rooms = () => {
           <DownloadIcon sx={{ ml: 1 }} />
         </Fab>
       )}
-    </Grid>
+    </Container>
   );
 };
 
