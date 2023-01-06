@@ -26,7 +26,7 @@ import {
 } from "./Login.action.constant";
 
 export async function loginUserOrAdmin(baseURL, data, dispatch) {
-  dispatch({ type: LOGIN_REQUEST });
+  dispatch({ type: LOGIN_REQUEST })
   const { error, response } = await post(`${baseURL}`, `${"/login"}`, data);
   if (response) {
     dispatch({ type: LOGIN_SUCCESS, payload: response?.data });
