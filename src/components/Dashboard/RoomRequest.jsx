@@ -8,7 +8,7 @@ import {
 import { Box } from "@mui/system";
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { ROOM_REQUEST } from "../constants/commonString";
+import { BU_LIST, ROOM_REQUEST } from "../constants/commonString";
 import CustomInput from "../ghcomponents/CustomInput";
 import CustomSelect from "../ghcomponents/CustomSelect";
 import appConfig from "../services/appConfig";
@@ -141,7 +141,7 @@ const RoomRequest = ({ loading, setLoading, setIsModalOpen }) => {
             <CustomSelect
               error={errors.isBu}
               formStyle={{ minWidth: "100%" }}
-              menuItems={["BU-1", "BU-2", "BU-3", "BU-4", "BU-5", "BU-6"]}
+              menuItems={BU_LIST}
               label={"Choose BU"}
               inputLabelText={"Choose BU"}
               value={roomRequestFormDetails.buName}

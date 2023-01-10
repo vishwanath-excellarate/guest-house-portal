@@ -210,3 +210,19 @@ export const userRole = {
 export const DOWNLOAD = "download";
 
 export const SECRET_KEY = "excellarate 123456";
+
+export const BU_LIST = [
+  "BU-1-(CHC)",
+  "BU-3-(DX)",
+  "BU-4-(MS)",
+  "BU-6-(SDQ)",
+  "BU-7-(ADI)",
+  "BU-8",
+  "BU-10",
+  "Hyd-1-(HC)",
+  "Hyd-2-(FIN)",
+  "Hyd-3-(EM)",
+  "G&A",
+  "S&M",
+  "NoOps HBU",
+];
